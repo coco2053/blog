@@ -18,9 +18,9 @@ CREATE TABLE user (
                 id_user INT AUTO_INCREMENT NOT NULL,
                 mail VARCHAR(255) NOT NULL,
                 pass VARCHAR(255) NOT NULL,
-                nickname VARCHAR(50) NOT NULL,
+                username VARCHAR(50) NOT NULL,
                 lastname VARCHAR(100) NOT NULL,
-                name VARCHAR(100) NOT NULL,
+                firstname VARCHAR(100) NOT NULL,
                 id_role INT NOT NULL,
                 PRIMARY KEY (id_user)
 );

@@ -2,13 +2,15 @@
 class Post
 {
 
-	private $_id,
+	private $_id_post,
 			$_id_user,
 			$_title,
 			$_chapo,
 			$_content,
 			$_creation_date,
-			$_update_date;
+			$_update_date,
+			$_username;
+
 
   public function __construct(array $formData)
   {
@@ -31,9 +33,9 @@ class Post
 
   // GETTERS //  
 
-  public function id()
+  public function id_post()
   {
-    return $this->_id;
+    return $this->_id_post;
   }
 
     public function id_user()
@@ -67,15 +69,20 @@ class Post
     return $this->_update_date;
   }
 
+  public function username()
+  {
+    return $this->_username;
+  }
+
 
   // SETTERS //  
-  public function setId($id)
+  public function setId_post($id_post)
   {
-    $id = (int) $id;
+    $id_post = (int) $id_post;
     
-    if ($id > 0)
+    if ($id_post > 0)
     {
-      $this->_id = $id;
+      $this->_id_post = $id_post;
     }
   }
 
@@ -112,4 +119,29 @@ class Post
       $this->_content = $content;
     }
   }
+
+  public function setCreation_date($creation_date)
+  {
+    if (is_string($creation_date))
+    {
+      $this->_creation_date = $creation_date;
+    }
+  }
+
+  public function setUpdate_date($update_date)
+  {
+    if (is_string($update_date))
+    {
+      $this->_update_date = $update_date;
+    }
+  }
+
+  public function setUsername($username)
+  {
+    if (is_string($username))
+    {
+      $this->_username = $username;
+    }
+  }  
+
 }

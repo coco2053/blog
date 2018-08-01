@@ -1,0 +1,7 @@
+{
+"require": {
+  "php": ">=7.0",
+
+  "swiftmailer/swiftmailer": "v6.1.2"
+}
+}

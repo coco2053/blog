@@ -1,35 +1,59 @@
 <?php
 
-// On enregistre notre autoload.
-
-function chargerClasse($classname)
-
+class Frontend
 {
+    protected $manager,
+              $db;
 
-  require 'model/'.$classname.'.php';
+    public function __construct()
+    {
+        $this->db = new PDO('mysql:host=localhost;dbname=blog;charset=utf8', 'root', '');
 
-}
+        $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING); //On émet une alerte à chaque fois qu'une requête a échoué.
 
-spl_autoload_register('chargerClasse');
-
-$db = new PDO('mysql:host=localhost;dbname=blog;charset=utf8', 'root', '');
-
-$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING); //On émet une alerte à chaque fois qu'une requête a échoué.
-
-$manager = new PostManager($db);
+        $this->manager = new PostManager($this->db);
+    }
 
 
-function getPost($id_post)
-{
-    global $manager;
-    $post = $manager->get($id_post);
+    function getPost($id_post)
+    {
 
-    require('view/frontend/postView.php');
-}
+        $post = $this->manager->get($id_post);
 
-function getPosts()
-{
-    global $manager;
-    $posts = $manager->getList();
-    require('view/frontend/postsListView.php');
+        require('view/frontend/postView.php');
+    }
+
+    function getPosts()
+    {
+        $posts = $this->manager->getList();
+        require('view/frontend/postsListView.php');
+    }
+
+        // GETTERS //
+
+    public function manager()
+    {
+        return $this->id_post;
+    }
+
+    public function db()
+    {
+        return $this->id_user;
+    }
+
+        // SETTERS //
+
+    public function setManager($manager)
+    {
+
+        $this->manager = $manager;
+
+    }
+
+    public function setDb($db)
+    {
+
+        $this->db = $db;
+
+    }
 }

@@ -1,7 +1,7 @@
 <?php
 
 $_SESSION['id_user'] = '1';
-require('controller/frontend.php');
+require('controller/Frontend.php');
 require('controller/backend.php');
 
 
@@ -22,7 +22,8 @@ try {
 
             if (isset($_GET['id']) && $_GET['id'] > 0) {
 
-                getPost($_GET['id']);
+                $frontend = New Frontend();
+                $frontend->getPost($_GET['id']);
 
             } else {
 
@@ -31,7 +32,8 @@ try {
 
         } elseif ($_GET['action'] == 'postsList') {
 
-            getPosts();
+                $frontend = New Frontend();
+                $frontend->getPosts();
 
         } elseif ($_GET['action'] == 'writePostView') {
 
@@ -40,7 +42,8 @@ try {
 
     } else {
 
-        getPosts();
+        $frontend = New Frontend();
+        $frontend->getPosts();
     }
 } catch (Exception $e) {
 

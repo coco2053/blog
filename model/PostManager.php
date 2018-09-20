@@ -2,7 +2,7 @@
 
 class PostManager
 {
-    private $_db; // Instance de PDO
+    protected $db; // Instance de PDO
 
     public function __construct($db)
     {
@@ -13,7 +13,7 @@ class PostManager
     {
 
         // Préparation de la requête d'insertion.
-        $q = $this->_db->prepare('INSERT INTO post(title, chapo, content, creation_date, update_date, id_user)
+        $q = $this->db->prepare('INSERT INTO post(title, chapo, content, creation_date, update_date, id_user)
                                   VALUES (:title, :chapo, :content, NOW(), NOW(), :id_user)');
 
         // Assignation des valeurs du post.
@@ -26,21 +26,21 @@ class PostManager
         $q->execute();
 
         // Hydratation du post passé en paramètre avec assignation de son identifiant.
-        $post->hydrate(['id' => $this->_db->lastInsertId()]);
+        $post->hydrate(['id' => $this->db->lastInsertId()]);
   }
 
     public function delete(Post $post)
     {
 
       // Exécute une requête de type DELETE.
-      $this->_db->exec('DELETE FROM post WHERE id_post = '.$post->id());
+      $this->db->exec('DELETE FROM post WHERE id_post = '.$post->id());
     }
 
     public function update(Post $post)
     {
 
         // Prépare une requête de type UPDATE.
-        $q = $this->_db->prepare('UPDATE post
+        $q = $this->db->prepare('UPDATE post
                                   SET
                                   title = :title,
                                   chapo = :chapo,
@@ -109,7 +109,7 @@ class PostManager
     {
 
         // Exécution d'une requête COUNT() avec une clause WHERE, et retourne un boolean.
-        $q = $this->_db->prepare('SELECT COUNT(*) FROM post WHERE title = :title');
+        $q = $this->db->prepare('SELECT COUNT(*) FROM post WHERE title = :title');
         $q->execute([':title' => $info]);
 
         return (bool) $q->fetchColumn();
@@ -118,7 +118,7 @@ class PostManager
     public function setDb(PDO $db)
     {
 
-        $this->_db = $db;
+        $this->db = $db;
     }
 
 }

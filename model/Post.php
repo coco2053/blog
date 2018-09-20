@@ -2,14 +2,14 @@
 class Post
 {
 
-    private $_id_post,
-            $_id_user,
-            $_title,
-            $_chapo,
-            $_content,
-            $_creation_date,
-            $_update_date,
-            $_username;
+    protected $id_post,
+              $id_user,
+              $title,
+              $chapo,
+              $content,
+              $creation_date,
+              $update_date,
+              $username;
 
 
     public function __construct(array $formData)
@@ -37,42 +37,42 @@ class Post
 
     public function id_post()
     {
-        return $this->_id_post;
+        return $this->id_post;
     }
 
     public function id_user()
     {
-        return $this->_id_user;
+        return $this->id_user;
     }
 
     public function title()
     {
-        return $this->_title;
+        return $this->title;
     }
 
     public function chapo()
     {
-        return $this->_chapo;
+        return $this->chapo;
     }
 
     public function content()
     {
-        return $this->_content;
+        return $this->content;
     }
 
     public function creation_date()
     {
-        return $this->_creation_date;
+        return $this->creation_date;
     }
 
     public function update_date()
     {
-        return $this->_update_date;
+        return $this->update_date;
     }
 
     public function username()
     {
-        return $this->_username;
+        return $this->username;
     }
 
     // SETTERS //
@@ -82,7 +82,7 @@ class Post
 
         if ($id_post > 0) {
 
-            $this->_id_post = $id_post;
+            $this->id_post = $id_post;
         }
     }
 
@@ -92,7 +92,7 @@ class Post
 
         if ($id_user > 0) {
 
-          $this->_id_user = $id_user;
+          $this->id_user = $id_user;
         }
     }
 
@@ -100,7 +100,7 @@ class Post
     {
         if (is_string($title)) {
 
-          $this->_title = $title;
+          $this->title = $title;
         }
     }
 
@@ -108,7 +108,7 @@ class Post
     {
         if (is_string($chapo)) {
 
-          $this->_chapo = $chapo;
+          $this->chapo = $chapo;
         }
     }
 
@@ -116,7 +116,7 @@ class Post
     {
         if (is_string($content)) {
 
-            $this->_content = $content;
+            $this->content = $content;
         }
     }
 
@@ -124,7 +124,7 @@ class Post
     {
         if (is_string($creation_date)) {
 
-            $this->_creation_date = $creation_date;
+            $this->creation_date = $creation_date;
         }
     }
 
@@ -132,7 +132,7 @@ class Post
     {
         if (is_string($update_date)) {
 
-            $this->_update_date = $update_date;
+            $this->update_date = $update_date;
         }
     }
 
@@ -140,7 +140,7 @@ class Post
     {
         if (is_string($username)) {
 
-            $this->_username = $username;
+            $this->username = $username;
         }
     }
 

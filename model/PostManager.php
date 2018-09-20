@@ -65,7 +65,7 @@ class PostManager
     {
 
         $posts = [];
-        $q = $this->_db->query('SELECT
+        $q = $this->db->query('SELECT
                                 post.id_post,
                                 post.title,
                                 post.chapo,
@@ -89,7 +89,7 @@ class PostManager
     public function get($id_post)
     {
 
-        $q = $this->_db->prepare('SELECT
+        $q = $this->db->prepare('SELECT
                                 post.title, post.chapo, post.content,
                                 DATE_FORMAT(post.creation_date, \'%d/%m/%Y à %Hh%imin%ss\') AS creation_date ,
                                 DATE_FORMAT(post.update_date, \'%d/%m/%Y à %Hh%imin%ss\') AS update_date,

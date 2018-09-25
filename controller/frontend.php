@@ -1,5 +1,8 @@
 <?php
 
+require('model/PostManager.php');
+require('model/Post.php');
+
 class Frontend
 {
     protected $manager,

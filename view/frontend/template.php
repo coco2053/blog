@@ -48,6 +48,8 @@
           <h1 class="my-4"><?= $title ?>
             <small><?= $description ?></small>
           </h1>
+
+
           <?= $content ?>
 
           <!-- Pagination -->

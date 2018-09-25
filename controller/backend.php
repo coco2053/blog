@@ -1,33 +1,72 @@
 <?php
 
-function chargerClasse($classname)
+class Backend
 {
-  require 'model/'.$classname.'.php';
-}
-spl_autoload_register('chargerClasse');
+    protected $manager,
+              $db;
 
-$db = new PDO('mysql:host=localhost;dbname=blog;charset=utf8', 'root', '');
+    public function __construct()
+    {
+        $this->db = new PDO('mysql:host=localhost;dbname=blog;charset=utf8', 'root', '');
 
-$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING); //On émet une alerte à chaque fois qu'une requête a échoué.
+        $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING); //On émet une alerte à chaque fois qu'une requête a échoué.
 
-$manager = new PostManager($db);
+        $this->manager = new PostManager($this->db);
+    }
 
-function writePostView()
-{
-    require('view/backend/writePost.php');
-}
+    function addPost($formData)
+    {
 
-function addPost($formData)
-{
-    global $manager;
-    if (!$manager->exists($formData['title'])) {
+    if (!$this->manager->exists($formData['title'])) {
 
         $post = new Post($formData);
-        $manager->add($post);
+        $this->manager->add($post);
 
     } else {
 
         throw new Exception('Cet article existe déja !</br>');
 
+        }
+    }
+
+    function writePostView()
+    {
+    require('view/backend/writePost.php');
+    }
+
+
+
+        // GETTERS //
+
+    public function manager()
+    {
+        return $this->id_post;
+    }
+
+    public function db()
+    {
+        return $this->id_user;
+    }
+
+        // SETTERS //
+
+    public function setManager($manager)
+    {
+
+        $this->manager = $manager;
+
+    }
+
+    public function setDb($db)
+    {
+
+        $this->db = $db;
+
     }
 }
+
+
+
+
+
+

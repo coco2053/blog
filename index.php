@@ -2,21 +2,31 @@
 
 $_SESSION['id_user'] = '1';
 require('controller/Frontend.php');
-require('controller/backend.php');
+require('controller/Backend.php');
 
 
 try {
 
     if (isset($_GET['action'])) {
 
-        if ($_GET['action'] == 'addPost') {
+        if ($_GET['action'] == 'addPostView') {
 
-        $formData = ['title' => htmlspecialchars($_POST['title']),
-            'chapo' => htmlspecialchars($_POST['chapo']),
-            'content' => htmlspecialchars($_POST['content']),
-            'id_user' => htmlspecialchars($_SESSION['id_user'])];
+                $backend = New Backend();
+                $backend->writePostView();
 
-        addPost($formData);
+
+
+
+        } elseif ($_GET['action'] == 'addPost') {
+
+               $formData = ['title' => htmlspecialchars($_POST['title']),
+                            'chapo' => htmlspecialchars($_POST['chapo']),
+                            'content' => htmlspecialchars($_POST['content']),
+                            'id_user' => htmlspecialchars($_SESSION['id_user'])];
+
+                $backend = New Backend();
+                $backend->addPost($formData);
+
 
         } elseif ($_GET['action'] == 'readPost') {
 

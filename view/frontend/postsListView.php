@@ -3,11 +3,18 @@ $title = 'Blog';
 $description = 'Les derniers billets:';
 ob_start();
 
+?>
+<p>
+<a class="btn btn-primary" href='?action=addPostView'>Ecrire un article</a>
+</p>
+<?php
+
 foreach ($posts as $onePost) {
 ?>
 
 <div class="row">
   <div class="col-md-7">
+
     <a href="#">
       <img class="img-fluid rounded mb-3 mb-md-0" src="http://placehold.it/700x300" alt="">
     </a>

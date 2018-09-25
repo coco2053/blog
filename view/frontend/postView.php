@@ -6,6 +6,9 @@ ob_start();
 
 <div class="row">
   <div class="col-md-12">
+    <p>
+    <a class="btn btn-primary" href='?action=addPostView'>Ecrire un article</a>
+  </p>
     <a href="#">
       <img class="img-fluid rounded mb-3 mb-md-0" src="http://placehold.it/700x300" alt="">
     </a>

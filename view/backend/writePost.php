@@ -1,18 +1,15 @@
 <?php
-$title = 'Mon blog';
+$title = 'Ecrire un article';
+$description = 'Blog';
 ob_start();
 ?>
 
-<h1>Mon super blog !</h1>
-<p>Derniers billets du blog :</p>
+<div class="row">
+  <div class="col-md-7">
 
     <form action="index.php?action=addPost" method="post">
 
-
-        <h2>Ecrire un article</h2>
-
         <p>
-
             Titre :<input type="text" name="title" maxlength="50" /> </br>
 
             Chapo :<input type="text" name="chapo" maxlength="100" /> </br>
@@ -21,10 +18,13 @@ ob_start();
 
             <input type="submit" value="Envoyer" name="addPost" /></br>
 
-
         </p>
 
     </form>
+
+  </div>
+</div>
+<hr>
 
 <?php $content = ob_get_clean();
 

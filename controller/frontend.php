@@ -36,12 +36,12 @@ class Frontend
 
     public function manager()
     {
-        return $this->id_post;
+        return $this->manager;
     }
 
     public function db()
     {
-        return $this->id_user;
+        return $this->db;
     }
 
         // SETTERS //

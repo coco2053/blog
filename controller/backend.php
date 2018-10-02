@@ -7,11 +7,8 @@ class Backend
 
     public function __construct()
     {
-        $this->db = new PDO('mysql:host=localhost;dbname=blog;charset=utf8', 'root', '');
-
-        $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING); //On émet une alerte à chaque fois qu'une requête a échoué.
-
-        $this->manager = new PostManager($this->db);
+        $this->db = DBFactory::getMysqlConnexionWithPDO();
+        $this->manager = new PostManagerPDO($this->db);
     }
 
     function addPost($formData)

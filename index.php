@@ -3,6 +3,7 @@
 $_SESSION['id_user'] = '1';
 require('controller/Frontend.php');
 require('controller/Backend.php');
+require ('model/autoload.php');
 
 
 try {
@@ -92,8 +93,22 @@ try {
 
         } elseif ($_GET['action'] == 'writePostView') {
 
-            writePostView();
+                $backend = New Backend();
+                $backend->writePostView();
+
+        } elseif ($_GET['action'] == 'signUpView') {
+
+        $frontend = New Frontend();
+        $frontend->signUpView();
+
+        } elseif ($_GET['action'] == 'signInView') {
+
+        $frontend = New Frontend();
+        $frontend->signInView();
+
         }
+
+
 
     } else {
 
@@ -106,3 +121,4 @@ try {
 
     require('view/errorView.php');
 }
+

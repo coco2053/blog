@@ -1,8 +1,5 @@
 <?php
 
-require('model/PostManager.php');
-require('model/Post.php');
-
 class Frontend
 {
     protected $manager,
@@ -10,11 +7,8 @@ class Frontend
 
     public function __construct()
     {
-        $this->db = new PDO('mysql:host=localhost;dbname=blog;charset=utf8', 'root', '');
-
-        $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING); //On émet une alerte à chaque fois qu'une requête a échoué.
-
-        $this->manager = new PostManager($this->db);
+        $this->db = DBFactory::getMysqlConnexionWithPDO();
+        $this->manager = new PostManagerPDO($this->db);
     }
 
 
@@ -30,6 +24,18 @@ class Frontend
     {
         $posts = $this->manager->getList();
         require('view/frontend/postsListView.php');
+    }
+
+    function signUpView()
+    {
+
+        require('view/frontend/signupView.php');
+    }
+
+    function signInView()
+    {
+
+        require('view/frontend/signinView.php');
     }
 
         // GETTERS //

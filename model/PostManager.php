@@ -1,136 +1,50 @@
 <?php
 
-class PostManager
+abstract class PostManager
 {
-    protected $db; // Instance de PDO
+  /**
+   * Méthode permettant d'ajouter un post.
+   * @param $post Post Le post à ajouter
+   * @return void
+   */
 
-    public function __construct($db)
-    {
-        $this->setDb($db);
-    }
+    abstract public function add(Post $post);
 
-    public function add(Post $post)
-    {
+  /**
+   * Méthode permettant de supprimer un post.
+   * @param $id int L'identifiant du post à supprimer
+   * @return void
+   */
 
-        // Préparation de la requête d'insertion.
-        $q = $this->db->prepare('INSERT INTO post(title, chapo, content, creation_date, update_date, id_user)
-                                  VALUES (:title, :chapo, :content, NOW(), NOW(), :id_user)');
+    abstract public function delete($id_post);
 
-        // Assignation des valeurs du post.
-        $q->bindValue(':title', $post->title());
-        $q->bindValue(':chapo', $post->chapo());
-        $q->bindValue(':content', $post->content());
-        $q->bindValue(':id_user', $post->id_user());
+  /**
+   * Méthode permettant de modifier un post.
+   * @param $post Post le post à modifier
+   * @return void
+   */
+    abstract public function update(Post $post);
 
-        // Exécution de la requête.
-        $q->execute();
+  /**
+   * Méthode retournant une liste de posts demandés.
+   * @return array La liste des post. Chaque entrée est une instance de Post.
+   */
+    abstract public function getList();
 
-        // Hydratation du post passé en paramètre avec assignation de son identifiant.
-        $post->hydrate(['id_post' => $this->db->lastInsertId()]);
+  /**
+   * Méthode retournant un post précis.
+   * @param $id int L'identifiant du post à récupérer
+   * @return Post Le post demandé
+   */
 
-  }
-
-    public function delete($id_post)
-    {
-
-      // Exécute une requête de type DELETE.
-      $this->db->exec('DELETE FROM post WHERE id_post = '.(int) $id_post);
-
-
-      /*$q = $this->db->prepare('DELETE FROM post WHERE id_post = :id_post');
-        $q->execute([':id_post' => $id_post]);*/
-
-    }
-
-    public function update(Post $post)
-    {
-
-        // Prépare une requête de type UPDATE.
-        $q = $this->db->prepare('UPDATE post
-                                  SET
-                                  title = :title,
-                                  chapo = :chapo,
-                                  content = :content,
-                                  update_date = NOW(),
-                                  id_user = :id_user
-                                  WHERE
-                                  id_post = :id_post');
-
-       //$q = $this->db->prepare('UPDATE     personnages_v3 SET degats = :degats, timeEndormi = :timeEndormi, atout = :atout WHERE id = :id');
-
-        // Assignation des valeurs à la requête.
-        $q->bindValue(':title', $post->title(), PDO::PARAM_STR);
-        $q->bindValue(':chapo', $post->chapo(), PDO::PARAM_STR);
-        $q->bindValue(':content', $post->content(), PDO::PARAM_STR);
-        $q->bindValue(':id_user', $post->id_user(), PDO::PARAM_INT);
-        $q->bindValue(':id_post', $post->id_post(), PDO::PARAM_INT);
+    abstract public function get($id_post);
 
 
-        // Exécution de la requête.
-        $q->execute();
-    }
+  /**
+   * Méthode permettant de vérifier si un post existe déja.
+   * @param $info string Le titre du post à vérifier
+   * @return bool
+   */
 
-
-
-
-    public function getList()
-    {
-
-        $posts = [];
-        $q = $this->db->query('SELECT
-                                post.id_post,
-                                post.title,
-                                post.chapo,
-                                post.content,
-                                DATE_FORMAT(post.creation_date, \'%d/%m/%Y à %Hh%imin%ss\') AS creation_date,
-                                DATE_FORMAT(post.update_date, \'%d/%m/%Y à %Hh%imin%ss\') AS update_date,
-                                user.username
-                                FROM post
-                                INNER JOIN user
-                                ON post.id_user = user.id_user
-                                ORDER BY post.creation_date');
-
-        // Le résultat sera un tableau d'instances de Post.
-        while ($data = $q->fetch(PDO::FETCH_ASSOC)) {
-            $posts[] = new Post($data);
-        }
-
-        return $posts;
-    }
-
-    public function get($id_post)
-    {
-
-        $q = $this->db->prepare('SELECT
-                                post.id_post, post.title, post.chapo, post.content,
-                                DATE_FORMAT(post.creation_date, \'%d/%m/%Y à %Hh%imin%ss\') AS creation_date ,
-                                DATE_FORMAT(post.update_date, \'%d/%m/%Y à %Hh%imin%ss\') AS update_date,
-                                user.username
-                                FROM post
-                                INNER JOIN user
-                                ON post.id_user = user.id_user
-                                WHERE id_post = :id_post');
-        $q->execute([':id_post' => $id_post]);
-        $data = $q->fetch(PDO::FETCH_ASSOC);
-
-        return new Post($data);
-
-    }
-
-    public function exists($info)
-    {
-
-        // Exécution d'une requête COUNT() avec une clause WHERE, et retourne un boolean.
-        $q = $this->db->prepare('SELECT COUNT(*) FROM post WHERE title = :title');
-        $q->execute([':title' => $info]);
-
-        return (bool) $q->fetchColumn();
-    }
-
-    public function setDb(PDO $db)
-    {
-
-        $this->db = $db;
-    }
-
+    abstract public function exists($info);
 }

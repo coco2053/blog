@@ -9,6 +9,7 @@ class User
               $username,
               $firstname,
               $lastname,
+              $valid,
               $signin_date,
               $signup_date;
 
@@ -81,7 +82,13 @@ class User
         return $this->username;
     }
 
+    public function valid()
+    {
+        return $this->valid;
+    }
+
     // SETTERS //
+
     public function setId_user($id_user)
     {
         $id_usert = (int) $id_user;
@@ -158,4 +165,11 @@ class User
         }
     }
 
+    public function setValid($valid)
+    {
+        if (is_string($valid)) {
+
+            $this->valid = $valid;
+        }
+    }
 }

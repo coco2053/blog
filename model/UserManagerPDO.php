@@ -57,7 +57,7 @@ class UserManagerPDO extends UserManager
                                 user.firstname,
                                 user.valid,
                                 DATE_FORMAT(user.signin_date, \'%d/%m/%Y à %Hh%imin%ss\') AS signin_date,
-                                DATE_FORMAT(user.signup_date, \'%d/%m/%Y à %Hh%imin%ss\') AS signup_date,
+                                DATE_FORMAT(user.signup_date, \'%d/%m/%Y à %Hh%imin%ss\') AS signup_date
                                 FROM user
                                 ORDER BY user.signin_date');
 
@@ -146,17 +146,39 @@ class UserManagerPDO extends UserManager
      public function checkPassword($formData)
 
     {
-        $q = $bdd->prepare('SELECT email, password
+        $q = $this->db->prepare('SELECT email, password, id_user
                               FROM user
                               WHERE email = :email');
 
-        $q->execute([':email' => $formaData['email']);
+        $q->execute([':email' => $formData['email']]);
 
         $result = $q->fetch();
+        $id = $result['id_user'];
 
         // Comparaison du pass envoyé via le formulaire avec celui de la base
-        return (bool) password_verify($formData['password'], $result['password']);
+        if (password_verify($formData['password'], $result['password'])) {
 
+            return $id;
+        } else {
+            return NULL;
+        }
+
+    }
+
+     public function updateSignupDate($id_user)
+     {
+        $q = $this->db->prepare('UPDATE user
+                              SET
+                              signup_date = NOW()
+
+                              WHERE
+                              id_user = :id_user');
+
+        // Assignation des valeurs à la requête.
+        $q->bindValue(':id_user', $id_user, PDO::PARAM_INT);
+
+         // Exécution de la requête.
+        $q->execute();
     }
 
     public function exists($info)
@@ -164,7 +186,7 @@ class UserManagerPDO extends UserManager
 
         // Exécution d'une requête COUNT() avec une clause WHERE, et retourne un boolean.
         $q = $this->db->prepare('SELECT COUNT(*) FROM user WHERE email = :email');
-        $q->execute([':email' => $email]);
+        $q->execute([':email' => $info]);
 
         return (bool) $q->fetchColumn();
     }

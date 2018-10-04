@@ -1,5 +1,5 @@
 <?php
-$title = 'Blog';
+$title = 'Les derniers billets :';
 $description = 'Les derniers billets:';
 ob_start();
 

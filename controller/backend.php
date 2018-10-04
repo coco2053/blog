@@ -2,27 +2,29 @@
 
 class Backend
 {
-    protected $manager,
+    protected $postmanager,
+              $useranager,
               $db;
 
     public function __construct()
     {
         $this->db = DBFactory::getMysqlConnexionWithPDO();
-        $this->manager = new PostManagerPDO($this->db);
+        $this->postmanager = new PostmanagerPDO($this->db);
+        $this->usermanager = new UsermanagerPDO($this->db);
     }
 
     function addPost($formData)
     {
 
-    if (!$this->manager->exists($formData['title'])) {
+    if (!$this->postmanager->exists($formData['title'])) {
 
         $post = new Post($formData);
-        $this->manager->add($post);
-        $post = $this->manager->get($post->id_post());
+        $this->postmanager->add($post);
+        $post = $this->postmanager->get($post->id_post());
         require('view/frontend/postView.php');
 
 
-        /* Je voudrais afficher le post qui vient d'étre crée mais je n'y arrive pas. $this->manager->get($post->id_post()); */
+        /* Je voudrais afficher le post qui vient d'étre crée mais je n'y arrive pas. $this->postmanager->get($post->id_post()); */
 
     } else {
 
@@ -39,7 +41,7 @@ class Backend
     function editPostView($id_post)
 
     {
-       $post = $this->manager->get($id_post);
+       $post = $this->postmanager->get($id_post);
        $_SESSION['post'] = serialize( $post );
 
        require('view/backend/editPost.php');
@@ -49,8 +51,8 @@ class Backend
 
     {
        $post = new Post($formData);
-       $this->manager->update($post);
-       $post = $this->manager->get($post->id_post());
+       $this->postmanager->update($post);
+       $post = $this->postmanager->get($post->id_post());
        require('view/frontend/postView.php');
 
     }
@@ -59,17 +61,46 @@ class Backend
 
     {
 
-       $this->manager->delete($id_post);
+       $this->postmanager->delete($id_post);
 
        header('location: index.php');
 
     }
 
+    function getUser($id_user)
+
+    {
+
+       $user = $this->usermanager->get($id_user);
+
+       require('view/backend/userView.php');
+
+       $this->usermanager->updateSignupDate($id_user);
+
+    }
+
+    function getUsers()
+
+    {
+
+       $users = $this->usermanager->getList();
+
+       require('view/backend/usersListView.php');
+
+
+
+    }
+
         // GETTERS //
 
-    public function manager()
+    public function postmanager()
     {
-        return $this->manager;
+        return $this->postmanager;
+    }
+
+    public function usermanager()
+    {
+        return $this->usermanager;
     }
 
     public function db()
@@ -79,10 +110,18 @@ class Backend
 
         // SETTERS //
 
-    public function setManager($manager)
+    public function setPostmanager($postmanager)
     {
 
-        $this->manager = $manager;
+        $this->postmanager = $postmanager;
+
+    }
+
+
+    public function setUsermanager($usermanager)
+    {
+
+        $this->usermanager = $usermanager;
 
     }
 

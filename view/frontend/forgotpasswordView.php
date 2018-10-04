@@ -1,6 +1,6 @@
 <?php
-$title = 'Se connecter';
-$description = 'Blog';
+$title = 'Mot de passe oublié';
+
 ob_start();
 ?>
 
@@ -9,26 +9,13 @@ ob_start();
 
 
               <!-- Formulaire de connexion -->
-          <form id = 'form_ins' method = "post" action = "index.php?action=signUp">
+          <form id = 'form_ins' method = "post" action = "index.php?action=forgotPassword">
             <table>
                 <tbody>
                   <tr>
                 <td><label>Email</label></td>
                 <td><input type="text" name="email" required /> </td>
               </tr>
-
-              <tr>
-                <td><label>Mot de passe</label></td>
-                <td><input type="password" name="password" required /> </td>
-              </tr>
-
-              <!--
-              <tr>
-                <td><label for="remeber_me">Connexion automatique</label></td>
-                <td><input type="checkbox" id="remember_me" name="connexion_auto" value="souvenir"></td>
-
-                </tr>
-                -->
 
               <tr>
                 <td><label></label></td>
@@ -39,7 +26,7 @@ ob_start();
 
         </form>
 
-        <p><a href='?action=forgotPasswordView'>Mot de passe oublié</a></p>
+        <p><a href='?action=forgotPassword'>Mot de passe oublié</a></p>
         <p>Pas encore inscrit ?</p>
         <p><a class="btn btn-primary" href='?action=signInView'>S'inscrire</a></p>
   </div>

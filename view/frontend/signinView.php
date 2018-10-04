@@ -8,35 +8,40 @@ ob_start();
   <div class="col-md-7">
 
 
-              <!-- Formulaire d'inscription -->
-          <form id = 'form_ins' method = "post" action = "index.php?action=SignIn">
+          <!-- Formulaire d'inscription -->
+          <form id = 'form_ins' method = "post" action = "?action=signIn">
             <table>
                 <tbody>
-                  <tr>
-                <td><label>Email</label></td>
-                <td><input type="text" name="email" required /> </td>
+
+              <tr>
+                <td><label>Adresse email</label></td>
+                <td><input type="text" name="email"  required/> </td>
+
               </tr>
 
-                  <tr>
+              <tr>
                 <td><label>Pseudo</label></td>
                 <td><input type="text" name="username" required /> </td>
               </tr>
-              <tr>
 
-                  <tr>
+              <tr>
                 <td><label>Nom</label></td>
                 <td><input type="text" name="lastname" required /> </td>
               </tr>
-              <tr>
 
-                  <tr>
-                <td><label>Prenom</label></td>
+              <tr>
+                <td><label>Prénom</label></td>
                 <td><input type="text" name="firstname" required /> </td>
               </tr>
-              <tr>
 
+              <tr>
                 <td><label>Mot de passe</label></td>
                 <td><input type="password" name="password" required /> </td>
+              </tr>
+
+              <tr>
+                <td><label>Entrez à nouveau votre mot de passe</label></td>
+                <td><input type="password" name="passwordbis" required /> </br></td>
               </tr>
 
               <tr>

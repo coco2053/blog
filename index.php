@@ -86,6 +86,19 @@ try {
                 throw new Exception('Aucun identifiant de billet envoyé');
             }
 
+        } elseif ($_GET['action'] == 'getUser') {
+
+            if (isset($_GET['id']) && $_GET['id'] > 0) {
+
+                $backend = New Backend();
+                $backend->getUser($_GET['id']);
+
+
+            } else {
+
+                throw new Exception('Aucun identifiant de billet envoyé');
+            }
+
         } elseif ($_GET['action'] == 'postsList') {
 
                 $frontend = New Frontend();
@@ -95,6 +108,18 @@ try {
 
                 $backend = New Backend();
                 $backend->writePostView();
+
+        } elseif ($_GET['action'] == 'forgotPasswordView') {
+
+        $frontend = New Frontend();
+        $frontend->forgotPasswordView();
+
+
+        } elseif ($_GET['action'] == 'forgotPassword') {
+
+        $frontend = New Frontend();
+        $frontend->forgotPassword();
+
 
         } elseif ($_GET['action'] == 'signUpView') {
 
@@ -106,9 +131,30 @@ try {
         $frontend = New Frontend();
         $frontend->signInView();
 
+        } elseif ($_GET['action'] == 'getUsersView') {
+
+        $backend = New Backend();
+        $backend->getUsers();
+
+        } elseif ($_GET['action'] == 'signUp') {
+
+            // On check que le formulaire a été envoyé
+            if (isset($_POST['email'])) {
+
+                $frontend = New Frontend();
+                $frontend->signUp();
+            }
+
+        } elseif ($_GET['action'] == 'signIn') {
+
+            // On check que le formulaire a été envoyé
+            if (isset($_POST['email'])) {
+
+                $frontend = New Frontend();
+                $frontend->signIn();
+            }
+
         }
-
-
 
     } else {
 

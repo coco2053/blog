@@ -99,7 +99,7 @@ class User
         }
     }
 
-    public function setId_role($id_user)
+    public function setId_role($id_role)
     {
         $id_role = (int) $id_role;
 
@@ -149,7 +149,7 @@ class User
         }
     }
 
-    public function setSignup_date($signin_date)
+    public function setSignup_date($signup_date)
     {
         if (is_string($signup_date)) {
 

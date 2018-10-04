@@ -45,7 +45,7 @@ abstract class UserManager
    * @return bool
    */
 
-    abstract public function isValid();
+    abstract public function isValid($id_user);
 
   /**
    * Méthode permettant de valider un user.

@@ -15,7 +15,7 @@ ob_start();
 
               <tr>
                 <td><label>Adresse email</label></td>
-                <td><input type="text" name="email"  required/> </td>
+                <td><input type="email" name="email"  required/> </td>
 
               </tr>
 
@@ -61,5 +61,5 @@ ob_start();
 
 <?php $content = ob_get_clean();
 
-require('template.php');
+include 'template.php';
 ?>

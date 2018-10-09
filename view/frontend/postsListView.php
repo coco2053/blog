@@ -37,5 +37,4 @@ foreach ($posts as $onePost) {
 
 $content = ob_get_clean();
 
-require('template.php');
-
+include 'template.php';

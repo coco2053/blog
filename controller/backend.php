@@ -3,14 +3,14 @@
 class Backend
 {
     protected $postmanager,
-              $useranager,
+              $usermanager,
               $db;
 
     public function __construct()
     {
         $this->db = DBFactory::getMysqlConnexionWithPDO();
-        $this->postmanager = new PostmanagerPDO($this->db);
-        $this->usermanager = new UsermanagerPDO($this->db);
+        $this->postmanager = new PostManagerPDO($this->db);
+        $this->usermanager = new UserManagerPDO($this->db);
     }
 
     function addPost($formData)
@@ -21,10 +21,7 @@ class Backend
         $post = new Post($formData);
         $this->postmanager->add($post);
         $post = $this->postmanager->get($post->id_post());
-        require('view/frontend/postView.php');
-
-
-        /* Je voudrais afficher le post qui vient d'étre crée mais je n'y arrive pas. $this->postmanager->get($post->id_post()); */
+        include 'view/frontend/postView.php';
 
     } else {
 
@@ -35,7 +32,7 @@ class Backend
 
     function writePostView()
     {
-        require('view/backend/writePost.php');
+        include 'view/backend/writePost.php';
     }
 
     function editPostView($id_post)
@@ -44,7 +41,7 @@ class Backend
        $post = $this->postmanager->get($id_post);
        $_SESSION['post'] = serialize( $post );
 
-       require('view/backend/editPost.php');
+       include 'view/backend/editPost.php';
     }
 
     function editPost($formData)
@@ -53,7 +50,7 @@ class Backend
        $post = new Post($formData);
        $this->postmanager->update($post);
        $post = $this->postmanager->get($post->id_post());
-       require('view/frontend/postView.php');
+       include 'view/frontend/postView.php';
 
     }
 
@@ -73,7 +70,7 @@ class Backend
 
        $user = $this->usermanager->get($id_user);
 
-       require('view/backend/userView.php');
+       include 'view/backend/userView.php';
 
        $this->usermanager->updateSignupDate($id_user);
 
@@ -85,7 +82,7 @@ class Backend
 
        $users = $this->usermanager->getList();
 
-       require('view/backend/usersListView.php');
+       include 'view/backend/usersListView.php';
 
 
 
@@ -132,9 +129,3 @@ class Backend
 
     }
 }
-
-
-
-
-
-

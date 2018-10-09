@@ -1,9 +1,9 @@
 <?php
 
 $_SESSION['id_user'] = '1';
-require('controller/Frontend.php');
-require('controller/Backend.php');
-require ('model/autoload.php');
+include 'controller/Frontend.php';
+include 'controller/Backend.php';
+include  'model/autoload.php';
 
 
 try {
@@ -14,9 +14,6 @@ try {
 
                 $backend = New Backend();
                 $backend->writePostView();
-
-
-
 
         } elseif ($_GET['action'] == 'addPost') {
 
@@ -120,6 +117,16 @@ try {
         $frontend = New Frontend();
         $frontend->forgotPassword();
 
+        } elseif ($_GET['action'] == 'resetPasswordView') {
+
+        $frontend = New Frontend();
+        $frontend->resetPasswordView();
+
+       } elseif ($_GET['action'] == 'resetPassword') {
+
+        $frontend = New Frontend();
+        $frontend->resetPassword();
+
 
         } elseif ($_GET['action'] == 'signUpView') {
 
@@ -165,6 +172,6 @@ try {
 
     $errorMessage = $e->getMessage();
 
-    require('view/errorView.php');
+    include 'view/errorView.php';
 }
 

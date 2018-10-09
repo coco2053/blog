@@ -23,10 +23,10 @@ ob_start();
     </form>
 
   </div>
-</div>
-<hr>
+</div
+><hr>
 
 <?php $content = ob_get_clean();
 
-require('frontend\..\template.php');
+include 'template.php';
 ?>

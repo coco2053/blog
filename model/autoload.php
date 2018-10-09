@@ -8,7 +8,7 @@ function autoload($classname)
 
   {
 
-    require $file;
+    include $file;
 
   }
 

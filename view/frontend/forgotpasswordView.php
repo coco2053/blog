@@ -14,7 +14,7 @@ ob_start();
                 <tbody>
                   <tr>
                 <td><label>Email</label></td>
-                <td><input type="text" name="email" required /> </td>
+                <td><input type="email" name="email" required /> </td>
               </tr>
 
               <tr>
@@ -25,8 +25,6 @@ ob_start();
           </table>
 
         </form>
-
-        <p><a href='?action=forgotPassword'>Mot de passe oublié</a></p>
         <p>Pas encore inscrit ?</p>
         <p><a class="btn btn-primary" href='?action=signInView'>S'inscrire</a></p>
   </div>
@@ -35,5 +33,5 @@ ob_start();
 
 <?php $content = ob_get_clean();
 
-require('template.php');
+include 'template.php';
 ?>

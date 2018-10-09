@@ -28,5 +28,5 @@ ob_start();
 
 <?php $content = ob_get_clean();
 
-require('frontend\..\template.php');
+include 'template.php';
 ?>

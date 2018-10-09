@@ -70,41 +70,64 @@ class PostManagerPDO extends PostManager
 
     public function getList()
     {
-        $posts = [];
-        $q = $this->db->query('SELECT
-                                post.id_post,
-                                post.title,
-                                post.chapo,
-                                post.content,
-                                DATE_FORMAT(post.creation_date, \'%d/%m/%Y à %Hh%imin%ss\') AS creation_date,
-                                DATE_FORMAT(post.update_date, \'%d/%m/%Y à %Hh%imin%ss\') AS update_date,
-                                user.username
-                                FROM post
-                                INNER JOIN user
-                                ON post.id_user = user.id_user
-                                ORDER BY post.creation_date');
-        // Le résultat sera un tableau d'instances de Post.
-        while ($data = $q->fetch(PDO::FETCH_ASSOC)) {
-            $posts[] = new Post($data);
+
+        $sql = 'SELECT
+                    post.id_post,
+                    post.title,
+                    post.chapo,
+                    post.content,
+                    post.creation_date AS creation_date,
+                    post.update_date AS update_date,
+                    user.username
+                    FROM post
+                    INNER JOIN user
+                    ON post.id_user = user.id_user
+                    ORDER BY post.creation_date';
+
+
+        $q = $this->db->query($sql);
+        $q->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Post');
+        $posts = $q->fetchAll();
+
+        // On parcourt notre liste de news pour pouvoir placer des instances de DateTime en guise de dates d'ajout et de modification.
+
+        foreach ($posts as $post) {
+
+            $post->setCreation_date(new DateTime($post->creation_date()));
+            $post->setUpdate_date(new DateTime($post->update_date()));
+
         }
+
+        $q->closeCursor();
+
         return $posts;
+
     }
+
     public function get($id_post)
     {
-
         $q = $this->db->prepare('SELECT
                                 post.id_post, post.title, post.chapo, post.content,
-                                DATE_FORMAT(post.creation_date, \'%d/%m/%Y à %Hh%imin%ss\') AS creation_date ,
-                                DATE_FORMAT(post.update_date, \'%d/%m/%Y à %Hh%imin%ss\') AS update_date,
+                                post.creation_date AS creation_date,
+                                post.update_date AS update_date,
                                 user.username
                                 FROM post
                                 INNER JOIN user
                                 ON post.id_user = user.id_user
                                 WHERE id_post = :id_post');
-        $q->execute([':id_post' => $id_post]);
-        $data = $q->fetch(PDO::FETCH_ASSOC);
 
-        return new Post($data);
+        $q->bindValue(':id_post', (int) $id_post, PDO::PARAM_INT);
+
+        $q->execute();
+
+        $q->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Post');
+
+        $post = $q->fetch();
+
+        $post->setCreation_date(new DateTime($post->creation_date()));
+        $post->setUpdate_date(new DateTime($post->update_date()));
+
+        return $post;
 
     }
 

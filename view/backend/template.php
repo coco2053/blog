@@ -46,8 +46,9 @@
 
           <!-- Page Heading -->
           <h1 class="my-4"><?= $title ?>
-           <!-- <small><?= $description ?></small>-->
+            <!-- <small><?= $description ?></small> -->
           </h1>
+
 
           <?= $content ?>
 
@@ -80,9 +81,10 @@
         <!-- /.container -->
 
         <!-- Footer -->
-        <footer class="py-5 bg-dark">
+        <footer class="py-2 bg-dark fixed-bottom">
           <div class="container">
             <p class="m-0 text-center text-white">Copyright &copy; Tondo Design 2018</p>
+            <p> <a class="btn text-center btn-primary" href='?action=signUpView'>Se connecter</a>
           </div>
           <!-- /.container -->
         </footer>

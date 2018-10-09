@@ -14,12 +14,17 @@ class User
               $signup_date;
 
 
-    public function __construct(array $formData)
+    public function __construct($formData = [])
     {
+
+    if (!empty($formData)) {
 
         $this->hydrate($formData);
 
+        }
+
     }
+
 
     public function hydrate(array $formData)
     {
@@ -141,20 +146,17 @@ class User
         }
     }
 
-    public function setSignin_date($signin_date)
+    public function setSignin_date(DateTime $signin_date)
     {
-        if (is_string($signin_date)) {
 
-            $this->signin_date = $signin_date;
-        }
+        $this->signin_date = $signin_date->format('d/m/Y à H:i:s');
     }
 
-    public function setSignup_date($signup_date)
+    public function setSignup_date(DateTime $signup_date)
     {
-        if (is_string($signup_date)) {
 
-            $this->signup_date = $signup_date;
-        }
+        $this->signup_date = $signup_date->format('d/m/Y à H:i:s');
+
     }
 
     public function setUsername($username)

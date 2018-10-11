@@ -1,5 +1,5 @@
 <?php
-$title = 'Inscription';
+$title = 'Se connecter';
 $description = 'Blog';
 ob_start();
 ?>
@@ -8,30 +8,13 @@ ob_start();
   <div class="col-md-7">
 
 
-          <!-- Formulaire d'inscription -->
+              <!-- Formulaire de connexion -->
           <form id = 'form_ins' method = "post" action = "?action=signIn">
             <table>
                 <tbody>
-
-              <tr>
-                <td><label>Adresse email</label></td>
-                <td><input type="email" name="email"  required/> </td>
-
-              </tr>
-
-              <tr>
-                <td><label>Pseudo</label></td>
-                <td><input type="text" name="username" required /> </td>
-              </tr>
-
-              <tr>
-                <td><label>Nom</label></td>
-                <td><input type="text" name="lastname" required /> </td>
-              </tr>
-
-              <tr>
-                <td><label>Prénom</label></td>
-                <td><input type="text" name="firstname" required /> </td>
+                  <tr>
+                <td><label>Email</label></td>
+                <td><input type="email" name="email" required /> </td>
               </tr>
 
               <tr>
@@ -39,10 +22,13 @@ ob_start();
                 <td><input type="password" name="password" required /> </td>
               </tr>
 
+              <!--
               <tr>
-                <td><label>Entrez à nouveau votre mot de passe</label></td>
-                <td><input type="password" name="passwordbis" required /> </br></td>
-              </tr>
+                <td><label for="remeber_me">Connexion automatique</label></td>
+                <td><input type="checkbox" id="remember_me" name="connexion_auto" value="souvenir"></td>
+
+                </tr>
+                -->
 
               <tr>
                 <td><label></label></td>
@@ -53,8 +39,9 @@ ob_start();
 
         </form>
 
-        <p>Déja inscrit ?</p>
-        <p><a class="btn btn-primary" href='?action=signUpView'>Se connecter</a></p>
+        <p><a href='?action=forgotPasswordView'>Mot de passe oublié</a></p>
+        <p>Pas encore inscrit ?</p>
+        <p><a class="btn btn-primary" href='?action=signUpView'>S'inscrire</a></p>
   </div>
 </div>
 <hr>

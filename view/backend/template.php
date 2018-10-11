@@ -84,7 +84,7 @@
         <footer class="py-2 bg-dark fixed-bottom">
           <div class="container">
             <p class="m-0 text-center text-white">Copyright &copy; Tondo Design 2018</p>
-            <p> <a class="btn text-center btn-primary" href='?action=signUpView'>Se connecter</a>
+            <p> <a class="btn text-center btn-primary" href='?action=signInView'>Se connecter</a>
           </div>
           <!-- /.container -->
         </footer>

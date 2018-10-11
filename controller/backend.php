@@ -72,19 +72,56 @@ class Backend
 
        include 'view/backend/userView.php';
 
-       $this->usermanager->updateSignupDate($id_user);
+       $this->usermanager->updateSigninDate($id_user);
 
     }
 
-    function getUsers()
+    function getUsers($id_user)
 
     {
 
-       $users = $this->usermanager->getList();
+       $users = $this->usermanager->getList($id_user);
 
        include 'view/backend/usersListView.php';
 
+    }
 
+    function validateUser($id_user)
+
+    {
+
+       $users = $this->usermanager->validate($id_user);
+
+       //header('location: '. $_SERVER["HTTP_REFERER"]);
+
+    }
+
+    function signOut()
+
+    {
+       $_SESSION = array();
+       session_destroy();
+       header('location: index.php');
+
+    }
+
+    function getPendingUsers($id_user)
+
+    {
+
+       $users = $this->usermanager->getPendingList($id_user);
+
+       include 'view/backend/pendingUsersListView.php';
+
+    }
+
+    function deleteUser($id_user)
+
+    {
+
+       $this->usermanager->delete($id_user);
+
+       header('location: index.php?action=getUsersView');
 
     }
 

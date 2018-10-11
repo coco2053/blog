@@ -45,24 +45,65 @@ class UserManagerPDO extends UserManager
     }
 
 
-    public function getList()
+    public function getList($id_user)
     {
 
-        $sql = 'SELECT
-                    user.id_user,
-                    user.email,
-                    user.username,
-                    user.lastname,
-                    user.firstname,
-                    user.valid,
-                    user.signin_date AS signin_date,
-                    user.signup_date AS signup_date,
-                    user.username
-                    FROM user
-                    ORDER BY user.signin_date';
+        $q = $this->db->prepare('SELECT
+                                user.id_user,
+                                user.email,
+                                user.username,
+                                user.lastname,
+                                user.firstname,
+                                user.valid,
+                                user.signin_date AS signin_date,
+                                user.signup_date AS signup_date,
+                                user.username
+                                FROM user
+                                WHERE user.id_user != :id_user
+                                ORDER BY user.signup_date');
+
+        $q->bindValue(':id_user', (int) $id_user, PDO::PARAM_INT);
+
+        $q->execute();
+        $q->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'User');
+        $users = $q->fetchAll();
+
+        // On parcourt notre liste de news pour pouvoir placer des instances de DateTime en guise de dates d'ajout et de modification.
+
+        foreach ($users as $user) {
+
+            $user->setSignin_date(new DateTime($user->signin_date()));
+            $user->setSignup_date(new DateTime($user->signup_date()));
+
+        }
+
+        $q->closeCursor();
+
+        return $users;
+    }
+
+    public function getPendingList($id_user)
+    {
+
+        $q = $this->db->prepare('SELECT
+                                        user.id_user,
+                                        user.email,
+                                        user.username,
+                                        user.lastname,
+                                        user.firstname,
+                                        user.valid,
+                                        user.signin_date AS signin_date,
+                                        user.signup_date AS signup_date,
+                                        user.username
+                                        FROM user
+                                        WHERE user.valid = \'No\'
+                                        AND user.id_user != :id_user
+                                        ORDER BY user.signup_date');
 
 
-        $q = $this->db->query($sql);
+        $q->bindValue(':id_user', (int) $id_user, PDO::PARAM_INT);
+
+        $q->execute();
         $q->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'User');
         $users = $q->fetchAll();
 
@@ -85,11 +126,14 @@ class UserManagerPDO extends UserManager
 
 
         $q = $this->db->prepare('SELECT
-                                user.id_user, user.email, user.username, user.lastname, user.firstname, user.valid,
+                                user.id_user, user.email, user.username, user.lastname,
+                                user.firstname, user.valid, role.name AS role_name, permission.action_list AS perm_action,
                                 user.signin_date AS signin_date,
                                 user.signup_date AS signup_date,
                                 user.username
                                 FROM user
+                                LEFT JOIN role ON user.id_role = role.id_role
+                                LEFT JOIN permission ON role.id_permission = permission.id_permission
                                 WHERE id_user = :id_user');
 
         $q->bindValue(':id_user', (int) $id_user, PDO::PARAM_INT);
@@ -103,34 +147,10 @@ class UserManagerPDO extends UserManager
         $user->setSignin_date(new DateTime($user->signin_date()));
         $user->setSignup_date(new DateTime($user->signup_date()));
 
+        $_SESSION['user'] = $user;
         return $user;
 
 
-    }
-
-    public function getPending()
-    {
-
-        $users = [];
-        $q = $this->db->query('SELECT
-                                user.id_user,
-                                user.email,
-                                user.username,
-                                user.lastname,
-                                user.firstname,
-                                user.valid,
-                                DATE_FORMAT(user.signin_date, \'%d/%m/%Y à %Hh%imin%ss\') AS signin_date,
-                                DATE_FORMAT(user.signup_date, \'%d/%m/%Y à %Hh%imin%ss\') AS signup_date,
-                                FROM user
-                                WHERE user.valid = No
-                                ORDER BY user.signin_date');
-
-        // Le résultat sera un tableau d'instances de User.
-        while ($data = $q->fetch(PDO::FETCH_ASSOC)) {
-            $users[] = new User($data);
-        }
-
-        return $users;
     }
 
     public function isValid($id_user)
@@ -146,7 +166,7 @@ class UserManagerPDO extends UserManager
     }
 
 
-    public function validate(User $user)
+    public function validate($id_user)
     {
 
         // Prépare une requête de type UPDATE.
@@ -158,7 +178,7 @@ class UserManagerPDO extends UserManager
 
         // Assignation des valeurs à la requête.
         $q->bindValue(':valid', 'Yes', PDO::PARAM_STR);
-        $q->bindValue(':id_user', $user->id_user(), PDO::PARAM_INT);
+        $q->bindValue(':id_user', $id_user, PDO::PARAM_INT);
 
 
         // Exécution de la requête.
@@ -187,11 +207,11 @@ class UserManagerPDO extends UserManager
 
     }
 
-     public function updateSignupDate($id_user)
+     public function updateSigninDate($id_user)
      {
         $q = $this->db->prepare('UPDATE user
                                  SET
-                                 signup_date = NOW()
+                                 signin_date = NOW()
                                  WHERE
                                  id_user = :id_user');
 

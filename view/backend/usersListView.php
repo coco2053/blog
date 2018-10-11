@@ -19,7 +19,8 @@ ob_start();
                      <th>Nom</th>
                      <th>Validé ?</th>
                      <th>Date d'inscription</th>
-                     <th>Date de connextion</th>
+                     <th>Date de connexion</th>
+                     <th>Suppression</th>
                  </tr>
              </thead>
              <tbody> <!-- Corps du tableau -->
@@ -33,8 +34,9 @@ ob_start();
                       <td><?=htmlspecialchars($oneUser->firstname())?></td>
                       <td><?=htmlspecialchars($oneUser->lastname())?></td>
                       <td><?=htmlspecialchars($oneUser->Valid())?></td>
-                      <td><?=htmlspecialchars($oneUser->signin_date())?></td>
                       <td><?=htmlspecialchars($oneUser->signup_date())?></td>
+                      <td><?=htmlspecialchars($oneUser->signin_date())?></td>
+                      <td><a class="btn btn-danger" href='?action=deleteUser&id=<?=htmlspecialchars($oneUser->id_user())?>'onclick="return confirm('Etes-vous sûr ?');">Supprimer</a></td>
                   </tr>
                   <?php } ?>
               </tbody>

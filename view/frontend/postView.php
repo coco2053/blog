@@ -22,7 +22,7 @@ ob_start();
             Auteur : <?=htmlspecialchars($post->username())?></br>
         </div>
         <p><a class="btn btn-primary" href='?action=editPostView&id=<?=htmlspecialchars($post->id_post())?>'>Modifier l'article</a></p>
-        <p><a class="btn btn-danger" href='?action=deletePost&id=<?=htmlspecialchars($post->id_post())?>'>Supprimer l'article</a></p>
+        <p><a class="btn btn-danger" href='?action=deletePost&id=<?=htmlspecialchars($post->id_post())?>'onclick="return confirm('Etes-vous sûr ?');">Supprimer l'article</a></p>
         <a href="index.php">Retour à la liste des billets</a>
     </div>
     <hr>

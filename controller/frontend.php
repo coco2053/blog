@@ -88,47 +88,43 @@ class Frontend
     function forgotPassword()
     {
 
-    // envoyer un mail à l'utilisateur avec le lien pour reinitialiser le mdp.
+        // envoyer un mail à l'utilisateur avec le lien pour reinitialiser le mdp.
 
-        // On check que l'adresse mail soit valide
-        if (preg_match("#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#", $_POST['email'])) {
+        // On check que l'adresse email soit dans la bdd
+        if ($this->usermanager->exists($_POST['email'])) {
 
-            $email_valid = true;
+            include_once 'vendor/autoload.php';
+
+            // Create the Transport
+            $transport = (new Swift_SmtpTransport('smtp.gmail.com', 587, 'tls'))
+                ->setUsername('bastienvacherand@gmail.com')
+                ->setPassword('nouscnous')
+                ->setStreamOptions(array('ssl' => array(
+                                         'verify_peer' => false,
+                                         'verify_peer_name' => false,
+                                         'allow_self_signed' => true)));
+
+
+            // Create the Mailer using your created Transport
+            $mailer = new Swift_Mailer($transport);
+
+            // Create a message
+            $message = (new Swift_Message())
+
+                ->setSubject('Blog, réinitialisez votre mot de passe')
+                ->setFrom(['bastienvacherand@gmail.com' => 'Baste'])
+                ->setTo([htmlspecialchars($_POST['email']), 'coco@kaduc.com'])
+                ->setBody('Cliquez sur le lien pour <a href=\'http://localhost/blog/index.php?action=resetPasswordView&email='. htmlspecialchars($_POST['email']).'\'>réinitialiser votre mot de passe.</a>', 'text/html');
+
+            // Send the message
+            $result = $mailer->send($message);
+
+            throw new Exception('Un email vous a été envoyé à ' . htmlspecialchars($_POST['email']) . ' comprenant un lien pour réinitialiser votre mot de passe.');
 
         } else {
 
-            throw new Exception('L\'adresse ' . htmlspecialchars($_POST['email']) . ' n\'est pas valide, recommencez !');
-
+            throw new Exception('L\'adresse ' . htmlspecialchars($_POST['email']) . ' n\'est pas enregistrée !');
         }
-
-        include_once 'vendor/autoload.php';
-
-        // Create the Transport
-        $transport = (new Swift_SmtpTransport('smtp.gmail.com', 587, 'tls'))
-            ->setUsername('bastienvacherand@gmail.com')
-            ->setPassword('nouscnous')
-            ->setStreamOptions(array('ssl' => array(
-                                     'verify_peer' => false,
-                                     'verify_peer_name' => false,
-                                     'allow_self_signed' => true)));
-
-
-        // Create the Mailer using your created Transport
-        $mailer = new Swift_Mailer($transport);
-
-        // Create a message
-        $message = (new Swift_Message())
-
-            ->setSubject('Blog, réinitialisez votre mot de passe')
-            ->setFrom(['bastienvacherand@gmail.com' => 'Baste'])
-            ->setTo([htmlspecialchars($_POST['email']), 'coco@kaduc.com'])
-            ->setBody('Cliquez sur le lien pour <a href=\'http://localhost/blog/index.php?action=resetPasswordView&email='. htmlspecialchars($_POST['email']).'\'>réinitialiser votre mot de passe.</a>', 'text/html');
-
-        // Send the message
-        $result = $mailer->send($message);
-
-        throw new Exception('Un email vous a été envoyé à ' . htmlspecialchars($_POST['email']) . ' comprenant un lien pour réinitialiser votre mot de passe.');
-
     }
 
     function signInView()
@@ -137,7 +133,7 @@ class Frontend
         include 'view/frontend/signinView.php';
     }
 
-    function signUp()
+    function signIn()
     {
 
         $formData = ['email' => htmlspecialchars($_POST['email']),
@@ -145,6 +141,7 @@ class Frontend
 
          if (null !== $this->usermanager->checkPassword($formData)) {
 
+            session_start();
             header ('Location: index.php?action=getUser&id=' . $this->usermanager->checkPassword($formData));
 
        } else {
@@ -154,7 +151,7 @@ class Frontend
 
     }
 
-    function signIn()
+    function signUp()
     {
 
         // On check que le pseudo soit valide

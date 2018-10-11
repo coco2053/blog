@@ -12,16 +12,17 @@ ob_start();
       </div>
         <div class="col-md-12">
           <p><?=htmlspecialchars($user->firstname())?> <?=htmlspecialchars($user->lastname())?></p>
-            Date d'inscription : <?=$user->signin_date()?></br>
-            Derniere connexion : <?=htmlspecialchars($user->signup_date())?></br>
+            Date d'inscription : <?=$user->signup_date()?></br>
+            Derniere connexion : <?=htmlspecialchars($user->signin_date())?></br>
 
-            <a class="btn btn-primary" href='?action=getUsersView'>Gestion des comptes</a>
+            <a class="btn btn-primary" href='?action=getUsersView&id=<?=htmlspecialchars($user->id_user())?>'>Gestion des comptes</a>
 
         </div>
     </div>
     <hr>
 
 <?php
+print_r ($_SESSION['user']);
 $content = ob_get_clean();
 include 'template.php';
 ?>

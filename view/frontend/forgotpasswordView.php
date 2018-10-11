@@ -26,7 +26,7 @@ ob_start();
 
         </form>
         <p>Pas encore inscrit ?</p>
-        <p><a class="btn btn-primary" href='?action=signInView'>S'inscrire</a></p>
+        <p><a class="btn btn-primary" href='?action=signUpView'>S'inscrire</a></p>
   </div>
 </div>
 <hr>

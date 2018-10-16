@@ -139,14 +139,29 @@ class Frontend
         $formData = ['email' => htmlspecialchars($_POST['email']),
                      'password' => htmlspecialchars($_POST['password'])];
 
-         if (null !== $this->usermanager->checkPassword($formData)) {
+         if ($this->usermanager->exists($_POST['email'])) {
 
-            session_start();
-            header ('Location: index.php?action=getUser&id=' . $this->usermanager->checkPassword($formData));
+            if ($this->usermanager->isValid($_POST['email'])) {
 
-       } else {
+                 if (null !== $this->usermanager->checkPassword($formData)) {
 
-             throw new Exception('Mauvais login ou mot de passe ! </br>');
+
+                    header ('Location: index.php?action=getUser&id=' . $this->usermanager->checkPassword($formData));
+
+               } else {
+
+                     throw new Exception('Mauvais login ou mot de passe ! </br>');
+                }
+
+            }else {
+
+            throw new Exception('L\'addresse email ' . $_POST['email'].' n\'a pas encore été validée ! </br>');
+
+        }
+        }else {
+
+            throw new Exception('L\'addresse email ' . $_POST['email'].' n\'est pas enregistrée ! </br>');
+
         }
 
     }
@@ -154,81 +169,131 @@ class Frontend
     function signUp()
     {
 
-        // On check que le pseudo soit valide
-        if (preg_match("#[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]{3,60}#i", $_POST['username']) and preg_match("#[^0-9]#", $_POST['username']) ) {
+    // Ma clé privée
+    $secret = "6LeF904UAAAAAFhnZaiclGwCNdOTo9piN9nr7PZL";
 
-            $username = strip_tags($_POST['username']);
+    // Paramètre renvoyé par le recaptcha
+    $response = $_POST['g-recaptcha-response'];
 
-        } else {
+    // On récupère l'IP de l'utilisateur
+    $remoteip = $_SERVER['REMOTE_ADDR'];
 
-            throw new Exception('Pseudo non valide ! </br>');
-        }
+    $api_url = "https://www.google.com/recaptcha/api/siteverify?secret="
+        . $secret
+        . "&response=" . $response
+        . "&remoteip=" . $remoteip ;
 
-        // On check que le mdp fasse au moins 8 caracteres
-        if (preg_match("#.{8,60}#", $_POST['password'])) {
+    $decode = json_decode(file_get_contents($api_url), true);
 
-            $password = strip_tags($_POST['password']);
 
-        } else {
+        if ($decode['success'] == true) {
 
-             throw new Exception('Votre mot de passe doit comporter au moins 8 caracteres ! </br>');
-        }
+            // On check que le pseudo soit valide
+            if (preg_match("#[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]{3,60}#i", $_POST['username']) and preg_match("#[^0-9]#", $_POST['username']) ) {
 
-        // On check que les 2 mdp soient les mêmes
-        if ($_POST['passwordbis'] == $_POST['password'] ) {
-
-            $passwordbis = strip_tags($_POST['passwordbis']);
-
-        } else {
-
-            throw new Exception('Veuillez retapper votre mot de passe ! </br>');
-        }
-
-        // On check que l'adresse mail soit valide
-        if (preg_match("#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#", $_POST['email'])) {
-
-            $email_valid = true;
-
-        } else {
-
-            throw new Exception('L\'adresse ' . $_POST['email'] . ' n\'est pas valide, recommencez !');
-
-        }
-
-        if ($email_valid) {
-
-            $email_valid = false;
-
-            if (!$this->usermanager->exists($_POST['email'])) {
-                $email = strip_tags($_POST['email']);
+                $username = strip_tags($_POST['username']);
 
             } else {
 
-                throw new Exception('L\'adresse ' . $_POST['email'] . ' a deja été enregistrée !');
+                throw new Exception('Pseudo non valide ! </br>');
             }
+
+            // On check que le mdp fasse au moins 8 caracteres
+            if (preg_match("#.{8,60}#", $_POST['password'])) {
+
+                $password = strip_tags($_POST['password']);
+
+            } else {
+
+                 throw new Exception('Votre mot de passe doit comporter au moins 8 caracteres ! </br>');
+            }
+
+            // On check que les 2 mdp soient les mêmes
+            if ($_POST['passwordbis'] == $_POST['password'] ) {
+
+                $passwordbis = strip_tags($_POST['passwordbis']);
+
+            } else {
+
+                throw new Exception('Veuillez retapper votre mot de passe ! </br>');
+            }
+
+            // On check que l'adresse mail soit valide
+            if (preg_match("#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#", $_POST['email'])) {
+
+                $email_valid = true;
+
+            } else {
+
+                throw new Exception('L\'adresse ' . $_POST['email'] . ' n\'est pas valide, recommencez !');
+
+            }
+
+            if ($email_valid) {
+
+                $email_valid = false;
+
+                if (!$this->usermanager->exists($_POST['email'])) {
+                    $email = strip_tags($_POST['email']);
+
+                } else {
+
+                    throw new Exception('L\'adresse ' . $_POST['email'] . ' a deja été enregistrée !');
+                }
+            }
+
+            if (isset($username, $password, $passwordbis, $email )) {
+
+                $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
+                $formData = ['id_role' => '1',
+                            'email' => $email,
+                            'password' => $hashed_password,
+                            'username' => $username,
+                            'firstname' => htmlspecialchars($_POST['firstname']),
+                            'valid' => 'No',
+                            'asleep' => 'Yes',
+                            'lastname' => htmlspecialchars($_POST['lastname'])];
+
+                $user = new User($formData);
+                $this->usermanager->add($user);
+
+                include_once 'vendor/autoload.php';
+
+                // Create the Transport
+                $transport = (new Swift_SmtpTransport('smtp.gmail.com', 587, 'tls'))
+                    ->setUsername('bastienvacherand@gmail.com')
+                    ->setPassword('nouscnous')
+                    ->setStreamOptions(array('ssl' => array(
+                                             'verify_peer' => false,
+                                             'verify_peer_name' => false,
+                                             'allow_self_signed' => true)));
+
+
+                // Create the Mailer using your created Transport
+                $mailer = new Swift_Mailer($transport);
+
+                // Create a message
+                $message = (new Swift_Message())
+
+                    ->setSubject('Blog, validez votre compte')
+                    ->setFrom(['bastienvacherand@gmail.com' => 'Baste'])
+                    ->setTo([htmlspecialchars($_POST['email']), 'coco2053@hotmail.com'])
+                    ->setBody('Cliquez sur le lien pour <a href=\'http://localhost/blog/index.php?action=awakeUser&email='. htmlspecialchars($_POST['email']).'\'>valider votre compte.</a>', 'text/html');
+
+                // Send the message
+                $result = $mailer->send($message);
+
+
+                throw new Exception('Un email a été envoyé à l\'adresse : ' .$email . ' pour valider votre compte !');
+
+            }
+
+        } else {
+
+            // C'est un robot ou le code de vérification est incorrecte
+            throw new Exception('Vas t\'en vilain robot !');
         }
-
-        if (isset($username, $password, $passwordbis, $email )) {
-
-            $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-
-            $formData = ['id_role' => '1',
-                        'email' => $email,
-                        'password' => $hashed_password,
-                        'username' => $username,
-                        'firstname' => htmlspecialchars($_POST['firstname']),
-                        'valid' => 'No',
-                        'lastname' => htmlspecialchars($_POST['lastname'])];
-
-            $user = new User($formData);
-            $this->usermanager->add($user);
-
-            throw new Exception('Votre inscription a bien été prise en compte !');
-
-        }
-
-
-
     }
 
 

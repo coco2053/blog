@@ -37,7 +37,7 @@ abstract class UserManager
     * @return array La liste des user non valides.
    */
 
-    abstract public function getPendingList($id_user);
+    abstract public function getPendingList();
 
   /**
    * Méthode vérifiant si un user est valide.

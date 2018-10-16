@@ -9,6 +9,7 @@ class User
               $username,
               $firstname,
               $lastname,
+              $asleep,
               $valid,
               $signin_date,
               $role_name,
@@ -87,6 +88,11 @@ class User
     public function username()
     {
         return $this->username;
+    }
+
+    public function asleep()
+    {
+        return $this->asleep;
     }
 
     public function valid()
@@ -176,6 +182,14 @@ class User
         if (is_string($username)) {
 
             $this->username = $username;
+        }
+    }
+
+    public function setAsleep($asleep)
+    {
+        if (is_string($asleep)) {
+
+            $this->asleep = $asleep;
         }
     }
 

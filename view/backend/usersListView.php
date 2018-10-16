@@ -4,9 +4,6 @@ $description = 'La liste des utilisateurs:';
 ob_start();
 
 ?>
-<p>
-<a class="btn btn-primary" href='?action=addPostView'>Ecrire un article</a>
-</p>
 
 <div class="row">
   <div class="col-md-12">
@@ -49,7 +46,6 @@ ob_start();
 
 $content = ob_get_clean();
 
-include 'template.php';
-
+include __DIR__ . "/../template.php";
 ?>
 

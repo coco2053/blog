@@ -1,10 +1,9 @@
 <?php
 
-
 include 'controller/Frontend.php';
 include 'controller/Backend.php';
 include  'model/autoload.php';
-
+session_start();
 
 try {
 
@@ -170,18 +169,19 @@ try {
                 throw new Exception('Aucun identifiant de billet envoyé');
             }
 
-        } elseif ($_GET['action'] == 'getPendingUsersView') {
+        } elseif ($_GET['action'] == 'awakeUser') {
 
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
+            if (isset($_GET['email'])) {
 
                 $backend = New Backend();
-                $backend->getPendingUsers($_GET['id']);
+                $backend->awakeUser($_GET['email']);
 
 
             } else {
 
                 throw new Exception('Aucun identifiant de billet envoyé');
             }
+
 
         } elseif ($_GET['action'] == 'validateUser') {
 
@@ -216,7 +216,13 @@ try {
                 $frontend->signIn();
             }
 
-        }
+        } elseif ($_GET['action'] == 'getPendingUsersView') {
+
+                $backend = New Backend();
+                $backend->getPendingUsers();
+
+
+            }
 
     } else {
 

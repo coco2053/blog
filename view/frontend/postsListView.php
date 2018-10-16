@@ -4,9 +4,7 @@ $description = 'Les derniers billets:';
 ob_start();
 
 ?>
-<p>
-<a class="btn btn-primary" href='?action=addPostView'>Ecrire un article</a>
-</p>
+
 <?php
 
 foreach ($posts as $onePost) {
@@ -37,4 +35,4 @@ foreach ($posts as $onePost) {
 
 $content = ob_get_clean();
 
-include 'template.php';
+include __DIR__ . "/../template.php";

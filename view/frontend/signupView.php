@@ -45,9 +45,15 @@ ob_start();
               </tr>
 
               <tr>
+                <td><label><div class="g-recaptcha" data-sitekey="6LeF904UAAAAABO6m7Sl-pxLDJMS-2E6v1qzSdUP"></div></label></td>
+                <td></td>
+              </tr>
+
+              <tr>
                 <td><label></label></td>
                 <td><input type="submit" value="Valider" /> </td>
               </tr>
+
             </tbody>
           </table>
 
@@ -61,5 +67,5 @@ ob_start();
 
 <?php $content = ob_get_clean();
 
-include 'template.php';
+include __DIR__ . "/../template.php";
 ?>

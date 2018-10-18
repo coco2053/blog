@@ -39,6 +39,17 @@ ob_start();
         <?php
           }
         }
+
+         if(!empty($_SESSION['user'])) {
+
+            if(strpos($_SESSION['user'] -> perm_action(), 'getPendingComments') !== false) {
+        ?>
+          <p>
+          <a class="btn btn-primary" href='?action=getPendingComments'>Commentaires en attente de validation</a>
+          </p>
+        <?php
+          }
+        }
         ?>
 
     </div>

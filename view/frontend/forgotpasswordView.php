@@ -19,6 +19,11 @@ ob_start();
 
               <tr>
                 <td><label></label></td>
+                <td><div class="g-recaptcha" data-sitekey="6LeF904UAAAAABO6m7Sl-pxLDJMS-2E6v1qzSdUP"></div></td>
+              </tr>
+
+              <tr>
+                <td><label></label></td>
                 <td><input type="submit" value="Valider" /> </td>
               </tr>
             </tbody>

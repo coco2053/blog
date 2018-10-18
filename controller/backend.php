@@ -1,20 +1,39 @@
 <?php
+/**
+ * Classe représentant le controller Backend, qui gere la partie admin du site.
+ * @author Bastien Vacherand.
+ */
 
 class Backend
 {
+
     protected $postmanager,
               $usermanager,
+              $commentmanager,
               $db;
+
+      /**
+   * Constructeur de la classe qui permet d'instancier la bdd et les managers.
+   * @param void
+   * @return void
+   */
 
     public function __construct()
     {
         $this->db = DBFactory::getMysqlConnexionWithPDO();
         $this->postmanager = new PostManagerPDO($this->db);
         $this->usermanager = new UserManagerPDO($this->db);
+        $this->commentmanager = new CommentManagerPDO($this->db);
 
     }
 
-    function allow($action)
+      /**
+   * Methode qui permet de verifier que l'utilisateur dispose bien des droits nécessaires.
+   * @param $action, le nom de la fonction qui fait appel à cette methode.
+   * @return void
+   */
+
+    public function allow($action)
     {
         // On verifie que l'utilisateur dispose des droits necessaires
         if(empty($_SESSION['user'])) {
@@ -28,7 +47,13 @@ class Backend
         }
     }
 
-    function addPost($formData)
+      /**
+   * Methode qui permet d'ajouter un post.
+   * @param $formdata, array provenant du formulaire.
+   * @return void
+   */
+
+    public function addPost($formData)
     {
 
       $this->allow(__FUNCTION__);
@@ -47,23 +72,58 @@ class Backend
           }
     }
 
-    function writePostView()
+      /**
+   * Methode qui permet d'ajouter un commentaire.
+   * @param $id_post, id du post contenant le commentaire.
+   * @return void
+   */
+
+    public function addComment($id_post)
+    {
+
+      $this->allow(__FUNCTION__);
+      $formData = ['id_post' => $id_post,
+                  'content' => htmlspecialchars($_POST['content']),
+                  'id_user' => $_SESSION['user'] -> id_user()];
+      $comment = new Comment($formData);
+      $this->commentmanager->add($comment);
+      throw new Exception('Votre commentaire est en attente de validation par un administrateur.');
+    }
+
+      /**
+   * Methode qui permet d'afficher la page de redaction d'un post.
+   * @param void
+   * @return void
+   */
+
+    public function writePostView()
     {
         $this->allow(__FUNCTION__);
         include 'view/backend/writePost.php';
     }
 
-    function editPostView($id_post)
+      /**
+   * Methode qui permet de recuperer un post et d'afficher la page de modification du post.
+   * @param $id_post, id du post à modifier.
+   * @return void
+   */
+
+    public function editPostView($id_post)
 
     {
        $this->allow(__FUNCTION__);
        $post = $this->postmanager->get($id_post);
-       $_SESSION['post'] = serialize( $post );
 
        include 'view/backend/editPost.php';
     }
 
-    function editPost($formData)
+      /**
+   * Methode qui permet de mettre à jour le post avec les infos contenues dans le formulaire.
+   * @param $formData, array du formulaire de modification.
+   * @return void
+   */
+
+    public function editPost($formData)
 
     {
        $this->allow(__FUNCTION__);
@@ -74,7 +134,12 @@ class Backend
 
     }
 
-    function deletePost($id_post)
+      /**
+   * Methode qui permet de supprimer un post.
+   * @param $id_post, id du post à supprimer.
+   * @return void
+   */
+    public function deletePost($id_post)
 
     {
        $this->allow(__FUNCTION__);
@@ -85,7 +150,30 @@ class Backend
 
     }
 
-    function getUser($id_user)
+      /**
+   * Methode qui permet de supprimer un commentaire.
+   * @param $id_comment, id du commentaire à supprimer.
+   * @return void
+   */
+
+    public function deleteComment($id_comment)
+
+    {
+       $this->allow(__FUNCTION__);
+
+       $this->commentmanager->delete($id_comment);
+
+       header('location: '. $_SERVER["HTTP_REFERER"]);
+
+    }
+
+      /**
+   * Methode qui permet de recuperer les info d'un utilisateur.
+   * @param $id_user, id de l'utilisateur.
+   * @return void
+   */
+
+    public function getUser($id_user)
 
     {
 
@@ -98,7 +186,13 @@ class Backend
 
     }
 
-    function getUsers($id_user)
+      /**
+   * Methode qui permet de recuperer la liste de tous les utilisateurs.
+   * @param $id_user, id de l'utilisateur.
+   * @return void
+   */
+
+    public function getUsers($id_user)
 
     {
        $this->allow(__FUNCTION__);
@@ -108,38 +202,72 @@ class Backend
 
     }
 
-    function validateUser($id_user)
+      /**
+   * Methode qui permet de valider un compte.
+   * @param $id_user, id de l'utilisateur.
+   * @return void
+   */
+
+    public function validateUser($id_user)
 
     {
        $this->allow(__FUNCTION__);
-       $users = $this->usermanager->validate($id_user);
+       $this->usermanager->validate($id_user);
 
        header('location: '. $_SERVER["HTTP_REFERER"]);
 
     }
 
-    function awakeUser($email)
+      /**
+   * Methode qui permet de valider un commentaire.
+   * @param $id_comment, id du commentaire.
+   * @return void
+   */
+
+    public function validateComment($id_comment)
+
+    {
+       $this->allow(__FUNCTION__);
+       $this->commentmanager->validate($id_comment);
+
+       header('location: '. $_SERVER["HTTP_REFERER"]);
+
+    }
+
+      /**
+   * Methode qui permet d'activer un compte depuis le lien envoyé par mail.
+   * @param $email, adresse mail de l'utilisateur.
+   * @return void
+   */
+    public function awakeUser($email)
 
     {
 
        $this->usermanager->awake($email);
        echo '<script type="text/javascript">alert("message sent")</script>';
-
-       //throw new Exception('Votre inscription a bien été prise en compte ! <br> Elle est desormais en attente de validation par un administrateur du site.');
-
     }
 
-    function signOut()
+      /**
+   * Methode qui permet de déconnecter un utilisateur.
+   * @param void
+   * @return void
+   */
+    public function signOut()
 
     {
-
        $_SESSION = array();
        session_destroy();
        header('location: index.php');
 
     }
 
-    function getPendingUsers()
+      /**
+   * Methode qui permet de recuperer la liste des utilisateurs en attente de validation.
+   * @param void
+   * @return void
+   */
+
+    public function getPendingUsers()
 
     {
        $this->allow(__FUNCTION__);
@@ -150,7 +278,30 @@ class Backend
 
     }
 
-    function deleteUser($id_user)
+    public function getPendingComments()
+
+      /**
+   * Methode qui permet de recuperer la liste des commentaires en attente de validation.
+   * @param void
+   * @return void
+   */
+
+    {
+       $this->allow(__FUNCTION__);
+
+       $comments = $this->commentmanager->getPendingList();
+
+       include 'view/backend/pendingCommentsListView.php';
+
+    }
+
+      /**
+   * Methode qui permet de supprimer un utilisateur.
+   * @param $id_user, id de l'utilisateur à supprimer.
+   * @return void
+   */
+
+    public function deleteUser($id_user)
 
     {
        $this->allow(__FUNCTION__);
@@ -173,6 +324,11 @@ class Backend
         return $this->usermanager;
     }
 
+    public function commentmanager()
+    {
+        return $this->commentmanager;
+    }
+
     public function db()
     {
         return $this->db;
@@ -192,6 +348,13 @@ class Backend
     {
 
         $this->usermanager = $usermanager;
+
+    }
+
+    public function setCommentmanager($commentmanager)
+    {
+
+        $this->commentmanager = $commentmanager;
 
     }
 

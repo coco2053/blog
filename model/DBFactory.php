@@ -3,7 +3,8 @@ class DBFactory
 {
   public static function getMysqlConnexionWithPDO()
   {
-    $db = new PDO('mysql:host=localhost;dbname=blog;charset=utf8', 'root', '');
+    $data = require __DIR__ . '/../config/connect.php';
+    $db = new PDO('mysql:host=' . $data['host'] . ';dbname=' . $data['dbname'] . ';charset=utf8', $data['username'], $data['password']);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING); //On émet une alerte à chaque fois qu'une requête a échoué.
 
     return $db;

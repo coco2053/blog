@@ -4,6 +4,7 @@ class Frontend
 {
     protected $postmanager,
               $usermanager,
+              $commentmanager,
               $db;
 
     public function __construct()
@@ -11,6 +12,8 @@ class Frontend
         $this->db = DBFactory::getMysqlConnexionWithPDO();
         $this->postmanager = new PostManagerPDO($this->db);
         $this->usermanager = new UserManagerPDO($this->db);
+        $this->commentmanager = new CommentManagerPDO($this->db);
+
 
     }
 
@@ -19,6 +22,7 @@ class Frontend
     {
 
         $post = $this->postmanager->get($id_post);
+        $comments = $this->commentmanager->getList($id_post);
 
         include 'view/frontend/postView.php';
     }
@@ -86,45 +90,47 @@ class Frontend
     }
 
     function forgotPassword()
+
     {
-
-        // envoyer un mail à l'utilisateur avec le lien pour reinitialiser le mdp.
-
-        // On check que l'adresse email soit dans la bdd
-        if ($this->usermanager->exists($_POST['email'])) {
-
-            include_once 'vendor/autoload.php';
-
-            // Create the Transport
-            $transport = (new Swift_SmtpTransport('smtp.gmail.com', 587, 'tls'))
-                ->setUsername('bastienvacherand@gmail.com')
-                ->setPassword('nouscnous')
-                ->setStreamOptions(array('ssl' => array(
-                                         'verify_peer' => false,
-                                         'verify_peer_name' => false,
-                                         'allow_self_signed' => true)));
+        include_once 'model/recaptcha.php';
 
 
-            // Create the Mailer using your created Transport
-            $mailer = new Swift_Mailer($transport);
+        if ($decode['success'] == true) {
 
-            // Create a message
-            $message = (new Swift_Message())
+            // envoyer un mail à l'utilisateur avec le lien pour reinitialiser le mdp.
 
-                ->setSubject('Blog, réinitialisez votre mot de passe')
-                ->setFrom(['bastienvacherand@gmail.com' => 'Baste'])
-                ->setTo([htmlspecialchars($_POST['email']), 'coco@kaduc.com'])
-                ->setBody('Cliquez sur le lien pour <a href=\'http://localhost/blog/index.php?action=resetPasswordView&email='. htmlspecialchars($_POST['email']).'\'>réinitialiser votre mot de passe.</a>', 'text/html');
+            // On check que l'adresse email soit dans la bdd
+            if ($this->usermanager->exists($_POST['email'])) {
 
-            // Send the message
-            $result = $mailer->send($message);
+                include_once 'vendor/autoload.php';
+                include_once 'model/transport.php';
 
-            throw new Exception('Un email vous a été envoyé à ' . htmlspecialchars($_POST['email']) . ' comprenant un lien pour réinitialiser votre mot de passe.');
+                // Create the Mailer using your created Transport
+                $mailer = new Swift_Mailer($transport);
+
+                // Create a message
+                $message = (new Swift_Message())
+
+                    ->setSubject('Blog, réinitialisez votre mot de passe')
+                    ->setFrom([$data['email'] => $data['name']])
+                    ->setTo([htmlspecialchars($_POST['email']), $data['email']])
+                    ->setBody('Cliquez sur le lien pour <a href=\''. $data['address'].'?action=resetPasswordView&email='. htmlspecialchars($_POST['email']).'\'>réinitialiser votre mot de passe.</a>', 'text/html');
+
+                // Send the message
+                $result = $mailer->send($message);
+
+                throw new Exception('Un email vous a été envoyé à ' . htmlspecialchars($_POST['email']) . ' comprenant un lien pour réinitialiser votre mot de passe.');
+
+            } else {
+
+                throw new Exception('L\'adresse ' . htmlspecialchars($_POST['email']) . ' n\'est pas enregistrée !');
+            }
 
         } else {
 
-            throw new Exception('L\'adresse ' . htmlspecialchars($_POST['email']) . ' n\'est pas enregistrée !');
+            throw new Exception('Vas t\'en vilain robot !');
         }
+
     }
 
     function signInView()
@@ -169,22 +175,8 @@ class Frontend
     function signUp()
     {
 
-    // Ma clé privée
-    $secret = "6LeF904UAAAAAFhnZaiclGwCNdOTo9piN9nr7PZL";
 
-    // Paramètre renvoyé par le recaptcha
-    $response = $_POST['g-recaptcha-response'];
-
-    // On récupère l'IP de l'utilisateur
-    $remoteip = $_SERVER['REMOTE_ADDR'];
-
-    $api_url = "https://www.google.com/recaptcha/api/siteverify?secret="
-        . $secret
-        . "&response=" . $response
-        . "&remoteip=" . $remoteip ;
-
-    $decode = json_decode(file_get_contents($api_url), true);
-
+        include_once 'model/recaptcha.php';
 
         if ($decode['success'] == true) {
 
@@ -259,16 +251,7 @@ class Frontend
                 $this->usermanager->add($user);
 
                 include_once 'vendor/autoload.php';
-
-                // Create the Transport
-                $transport = (new Swift_SmtpTransport('smtp.gmail.com', 587, 'tls'))
-                    ->setUsername('bastienvacherand@gmail.com')
-                    ->setPassword('nouscnous')
-                    ->setStreamOptions(array('ssl' => array(
-                                             'verify_peer' => false,
-                                             'verify_peer_name' => false,
-                                             'allow_self_signed' => true)));
-
+                include_once 'model/transport.php';
 
                 // Create the Mailer using your created Transport
                 $mailer = new Swift_Mailer($transport);
@@ -277,9 +260,9 @@ class Frontend
                 $message = (new Swift_Message())
 
                     ->setSubject('Blog, validez votre compte')
-                    ->setFrom(['bastienvacherand@gmail.com' => 'Baste'])
-                    ->setTo([htmlspecialchars($_POST['email']), 'coco2053@hotmail.com'])
-                    ->setBody('Cliquez sur le lien pour <a href=\'http://localhost/blog/index.php?action=awakeUser&email='. htmlspecialchars($_POST['email']).'\'>valider votre compte.</a>', 'text/html');
+                    ->setFrom([$data['email'] => $data['name']])
+                    ->setTo([htmlspecialchars($_POST['email']), $data['email']])
+                    ->setBody('Cliquez sur le lien pour <a href=\''.$data['address'].'?action=awakeUser&email='. htmlspecialchars($_POST['email']).'\'>valider votre compte.</a>', 'text/html');
 
                 // Send the message
                 $result = $mailer->send($message);
@@ -310,6 +293,11 @@ class Frontend
         return $this->usermanager;
     }
 
+    public function commentmanager()
+    {
+        return $this->commentmanager;
+    }
+
     public function db()
     {
         return $this->db;
@@ -330,6 +318,14 @@ class Frontend
         $this->usermanager = $usermanager;
 
     }
+
+    public function setCommentmanager($commentmanager)
+    {
+
+        $this->commentmanager = $commentmanager;
+
+    }
+
 
     public function setDb($db)
     {

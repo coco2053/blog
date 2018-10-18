@@ -8,6 +8,17 @@ ob_start();
 <?php
 
 foreach ($posts as $onePost) {
+
+    if (strlen($onePost->content()) <= 300) {
+      $content = $onePost->content();
+
+    } else {
+
+      $start = substr($onePost->content(), 0, 300);
+      $start = substr($start, 0, strrpos($start, ' ')) . '...';
+
+      $content = $start;
+    }
 ?>
 
 <div class="row">
@@ -22,7 +33,7 @@ foreach ($posts as $onePost) {
             <h4>Chapo :</h4>
               <p><?=htmlspecialchars($onePost->chapo())?></p>
             <h4>Contenu :</h4>
-            <p><?=$onePost->content()?></p>
+            <p><?=htmlspecialchars($content)?></p>
             Date de creation : <?=htmlspecialchars($onePost->creation_date())?></br>
             Date de modification : <?=htmlspecialchars($onePost->update_date())?></br>
             Auteur : <?=htmlspecialchars($onePost->username())?></br>

@@ -36,6 +36,7 @@ class PostManagerPDO extends PostManager
 
       // Exécute une requête de type DELETE.
       $this->db->exec('DELETE FROM post WHERE id_post = '.(int) $id_post);
+       $this->db->exec('DELETE FROM comment WHERE id_post = '.(int) $id_post);
 
     }
 
@@ -82,7 +83,7 @@ class PostManagerPDO extends PostManager
                     FROM post
                     INNER JOIN user
                     ON post.id_user = user.id_user
-                    ORDER BY post.creation_date';
+                    ORDER BY post.update_date DESC';
 
 
         $q = $this->db->query($sql);

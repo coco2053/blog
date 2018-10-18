@@ -36,6 +36,18 @@ try {
                 throw new Exception('Aucun identifiant de billet envoyé');
             }
 
+        } elseif ($_GET['action'] == 'deleteComment') {
+
+            if (isset($_GET['id']) && $_GET['id'] > 0) {
+
+                $backend = New Backend();
+                $backend->deleteComment($_GET['id']);
+
+            } else {
+
+                throw new Exception('Aucun identifiant de billet envoyé');
+            }
+
         } elseif ($_GET['action'] == 'editPost') {
 
             if (isset($_GET['id']) && $_GET['id'] > 0) {
@@ -108,6 +120,18 @@ try {
                 throw new Exception('Aucun identifiant de billet envoyé');
             }
 
+       } elseif ($_GET['action'] == 'addComment') {
+
+            if (isset($_GET['id']) && $_GET['id'] > 0) {
+
+                $backend = New Backend();
+                $backend->addComment($_GET['id']);
+
+
+            } else {
+
+                throw new Exception('Aucun identifiant de billet envoyé');
+            }
 
         } elseif ($_GET['action'] == 'postsList') {
 
@@ -156,6 +180,11 @@ try {
         $backend = New Backend();
         $backend->signOut();
 
+        } elseif ($_GET['action'] == 'getPendingComments') {
+
+        $backend = New Backend();
+        $backend->getPendingComments();
+
         } elseif ($_GET['action'] == 'getUsersView') {
 
             if (isset($_GET['id']) && $_GET['id'] > 0) {
@@ -197,6 +226,18 @@ try {
             }
 
 
+        } elseif ($_GET['action'] == 'validateComment') {
+
+            if (isset($_GET['id']) && $_GET['id'] > 0) {
+
+                $backend = New Backend();
+                $backend->validateComment($_GET['id']);
+
+
+            } else {
+
+                throw new Exception('Aucun identifiant de billet envoyé');
+            }
 
         } elseif ($_GET['action'] == 'signUp') {
 

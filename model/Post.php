@@ -11,11 +11,14 @@ class Post
               $update_date,
               $username;
 
-
-    public function __construct(array $formData)
+    public function __construct($formData = [])
     {
 
+    if (!empty($formData)) {
+
         $this->hydrate($formData);
+
+        }
 
     }
 
@@ -120,20 +123,17 @@ class Post
         }
     }
 
-    public function setCreation_date($creation_date)
+    public function setCreation_date(DateTime $creation_date)
     {
-        if (is_string($creation_date)) {
 
-            $this->creation_date = $creation_date;
-        }
+        $this->creation_date = $creation_date->format('d/m/Y à H:i:s');
     }
 
-    public function setUpdate_date($update_date)
+    public function setUpdate_date(DateTime $update_date)
     {
-        if (is_string($update_date)) {
 
-            $this->update_date = $update_date;
-        }
+        $this->update_date = $update_date->format('d/m/Y à H:i:s');
+
     }
 
     public function setUsername($username)

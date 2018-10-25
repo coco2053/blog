@@ -1,5 +1,5 @@
 <?php
-$title = 'Blog';
+$title = 'Les derniers billets :';
 $description = 'Les derniers billets:';
 ob_start();
 
@@ -37,5 +37,4 @@ foreach ($posts as $onePost) {
 
 $content = ob_get_clean();
 
-require('template.php');
-
+include 'template.php';

@@ -28,6 +28,60 @@ class Frontend
     }
 
     /**
+    * Methode qui permet d'afficher la page contact.
+    * @param void
+    * @return void
+    */
+
+    function contactView()
+    {
+
+        include 'view/frontend/contact.php';
+    }
+
+    /**
+    * Methode qui permet d'envoyer le message de l'utilisateur à l'administrateur du site.
+    * @param void
+    * @return void
+    */
+
+    function contact()
+    {
+
+        include_once 'model/recaptcha.php';
+
+        if ($decode['success'] == true) {
+
+
+            // On supprime les retour à la ligne
+            $secure_mail = str_replace(array("\n","\r",PHP_EOL),'',$_POST['email']);
+
+            include_once 'vendor/autoload.php';
+            include_once 'model/transport.php';
+
+            // Create the Mailer using your created Transport
+            $mailer = new Swift_Mailer($transport);
+            $user_name = htmlspecialchars($_POST['firstname']).' '.htmlspecialchars($_POST['lastname']);
+
+
+            // Create a message
+            $message = (new Swift_Message())
+
+                ->setSubject('Blog, nouveau message d\'un vitieur')
+                ->setFrom([$secure_mail => $user_name])
+                ->setTo([$data['email'], $data['email']])
+                ->setBody('Message du visiteur : '.htmlspecialchars($_POST['message']), 'text/html');
+
+            // Send the message
+            $result = $mailer->send($message);
+            $_SESSION['show_message'] = true;
+            $_SESSION['message'] = 'Votre message a bien été envoyé. Nous vous répondrons dans les plus brefs délais.';
+
+            header('location: '. $_SERVER["HTTP_REFERER"]);
+        }
+    }
+
+    /**
     * Methode qui permet de recuperer un post et de l'afficher.
     * @param int, id du post.
     * @return void

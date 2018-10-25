@@ -26,3 +26,5 @@ RewriteRule ^supprimer-commentaire-([0-9]+)$ ?action=deleteComment&id=$1
 RewriteRule ^valider-mot-de-passe ?action=resetPassword
 RewriteRule ^s-inscrire ?action=signUp
 RewriteRule ^redefinition-mot-de-passe-(.+)$ ?action=resetPasswordView&email=$1
+RewriteRule ^contacter ?action=contact
+RewriteRule ^contact ?action=contactView

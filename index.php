@@ -253,10 +253,20 @@ try {
                 $backend = New Backend();
                 $backend->getPendingUsers();
 
+        } elseif ($_GET['action'] == 'contactView') {
+
+                $frontend = New Frontend();
+                $frontend->contactView();
+
         } elseif ($_GET['action'] == 'postsListView') {
 
             $frontend = New Frontend();
             $frontend->getPosts();
+
+        } elseif ($_GET['action'] == 'contact') {
+
+            $frontend = New Frontend();
+            $frontend->contact();
         }
 
     } else {

@@ -36,7 +36,7 @@
                             <a class="nav-link" href="articles">Articles</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Contact</a>
+                            <a class="nav-link" href="contact">Contact</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Cv</a>
@@ -103,31 +103,6 @@
             <!-- Page Heading -->
             <h1 class="my-4"> <?= $title ?> </h1>
             <?= $content ?>
-
-            <!-- Pagination -->
-            <ul class="pagination justify-content-center">
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                        <span class="sr-only">Précedent</span>
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">1</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">2</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">3</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                        <span class="sr-only">Suivant</span>
-                    </a>
-                </li>
-            </ul>
 
         </div>
 

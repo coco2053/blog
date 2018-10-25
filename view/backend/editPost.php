@@ -1,32 +1,40 @@
 <?php
+
 $title = 'Modifier un article';
-$description = 'Blog';
+$description = 'Modifier un article déja publié';
+
 ob_start();
+
 ?>
 
 <div class="row">
-  <div class="col-md-7">
 
-    <form action="index.php?action=editPost&amp;id=<?= $post->id_post() ?>" method="post">
+    <div class="col-md-7">
 
-        <p>
-            Titre :<input type="text" name="title" maxlength="50" value="<?= htmlspecialchars($post->title()) ?>" /> </br>
+        <form action="modifie-article-<?= $post->id_post() ?>" method="post">
 
-            Chapo :<input type="text" name="chapo" maxlength="100" value="<?= htmlspecialchars($post->chapo()) ?>" /> </br>
+            <p>
 
-            Contenu :<textarea name="content" rows="4" cols="40"> <?= htmlspecialchars($post->content()) ?> </textarea></br>
+                Titre :<input type="text" name="title" maxlength="50" value="<?= htmlspecialchars($post->title()) ?>" /> </br>
 
-            <input type="submit" value="Envoyer" name="editPost" /></br>
+                Chapo :<input type="text" name="chapo" maxlength="100" value="<?= htmlspecialchars($post->chapo()) ?>" /> </br>
 
-        </p>
+                Contenu :<textarea name="content" rows="4" cols="40"> <?= htmlspecialchars($post->content()) ?> </textarea></br>
 
-    </form>
+                <input type="submit" value="Envoyer" name="editPost" /></br>
 
-  </div>
+            </p>
+
+        </form>
+
+    </div>
+
 </div>
-<hr>
 
-<?php $content = ob_get_clean();
+<?php
+
+$content = ob_get_clean();
 
 include __DIR__ . "/../template.php";
+
 ?>

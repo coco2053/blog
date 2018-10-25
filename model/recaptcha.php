@@ -1,6 +1,8 @@
 <?php
 
+//Mise en place des parametres de recaptcha
 $data = require __DIR__ . '/../config/recaptcha.php';
+
 // Ma clé privée
 $secret = $data['private_key'];
 

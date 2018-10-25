@@ -1,5 +1,6 @@
 <?php
 
+//Mise en place des parametres de swiftMailer.
 $data = require __DIR__ . '/../config/mailer.php';
 
 // Create the Transport

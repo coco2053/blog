@@ -1,4 +1,10 @@
 <?php
+
+/**
+* Classe représentant un post.
+* @author Bastien Vacherand.
+*/
+
 class Post
 {
 
@@ -7,20 +13,31 @@ class Post
               $title,
               $chapo,
               $content,
+              $image,
               $creation_date,
               $update_date,
               $username;
 
+    /**
+    * Constructeur de la classe qui permet d'hydrater l'objet à l'instanciation.
+    * @param array, du formulaire
+    * @return void
+    */
+
     public function __construct($formData = [])
     {
 
-    if (!empty($formData)) {
+        if (!empty($formData)) {
 
-        $this->hydrate($formData);
-
+            $this->hydrate($formData);
         }
-
     }
+
+    /**
+    * Methode qui permet d'hydrater l'objet.
+    * @param array, du formulaire
+    * @return void
+    */
 
     public function hydrate(array $formData)
     {
@@ -40,47 +57,63 @@ class Post
 
     public function id_post()
     {
+
         return $this->id_post;
     }
 
     public function id_user()
     {
+
         return $this->id_user;
     }
 
     public function title()
     {
+
         return $this->title;
     }
 
     public function chapo()
     {
+
         return $this->chapo;
     }
 
     public function content()
     {
+
         return $this->content;
+    }
+
+    public function image()
+    {
+
+        return $this->image;
     }
 
     public function creation_date()
     {
+
         return $this->creation_date;
     }
 
     public function update_date()
     {
+
         return $this->update_date;
     }
 
     public function username()
     {
+
         return $this->username;
     }
 
     // SETTERS //
+
     public function setId_post($id_post)
     {
+
         $id_post = (int) $id_post;
 
         if ($id_post > 0) {
@@ -91,19 +124,21 @@ class Post
 
     public function setId_user($id_user)
     {
+
         $id_user = (int) $id_user;
 
         if ($id_user > 0) {
 
-          $this->id_user = $id_user;
+            $this->id_user = $id_user;
         }
     }
 
     public function setTitle($title)
     {
+
         if (is_string($title)) {
 
-          $this->title = $title;
+            $this->title = $title;
         }
     }
 
@@ -111,7 +146,7 @@ class Post
     {
         if (is_string($chapo)) {
 
-          $this->chapo = $chapo;
+            $this->chapo = $chapo;
         }
     }
 
@@ -120,6 +155,14 @@ class Post
         if (is_string($content)) {
 
             $this->content = $content;
+        }
+    }
+
+    public function setImage($image)
+    {
+        if (is_string($image)) {
+
+            $this->image = $image;
         }
     }
 

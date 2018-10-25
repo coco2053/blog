@@ -1,16 +1,18 @@
 .inset a img {
-  width: 40px;
-  height: 40px;
-  background-color: transparent !important;
-  z-index: 999;
-  margin-left: 40px;
+
+    width: 40px;
+    height: 40px;
+    background-color: transparent !important;
+    z-index: 999;
+    margin-left: 40px;
 }
 
 .inset img {
-  border-radius: inherit;
-  width: inherit;
-  height: inherit;
-  display: block;
-  position: relative;
-  z-index: 998;
+
+    border-radius: inherit;
+    width: inherit;
+    height: inherit;
+    display: block;
+    position: relative;
+    z-index: 998;
 }

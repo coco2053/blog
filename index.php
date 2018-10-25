@@ -3,6 +3,7 @@
 include 'controller/Frontend.php';
 include 'controller/Backend.php';
 include  'model/autoload.php';
+
 session_start();
 
 try {
@@ -11,18 +12,20 @@ try {
 
         if ($_GET['action'] == 'addPostView') {
 
-                $backend = New Backend();
-                $backend->writePostView();
+            $backend = New Backend();
+            $backend->writePostView();
 
         } elseif ($_GET['action'] == 'addPost') {
 
-               $formData = ['title' => htmlspecialchars($_POST['title']),
-                            'chapo' => htmlspecialchars($_POST['chapo']),
-                            'content' => htmlspecialchars($_POST['content']),
-                            'id_user' => '1'];
+            $backend = New Backend();
 
-                $backend = New Backend();
-                $backend->addPost($formData);
+           $formData = ['title' => htmlspecialchars($_POST['title']),
+                        'chapo' => htmlspecialchars($_POST['chapo']),
+                        'content' => htmlspecialchars($_POST['content']),
+                        'id_user' => $_SESSION['user'] -> id_user(),
+                        'image' => $backend->checkFile($_FILES)];
+
+            $backend->addPost($formData);
 
         } elseif ($_GET['action'] == 'editPostView') {
 
@@ -66,7 +69,6 @@ try {
                 throw new Exception('Aucun identifiant de billet envoyé');
             }
 
-
         } elseif ($_GET['action'] == 'deletePost') {
 
             if (isset($_GET['id']) && $_GET['id'] > 0) {
@@ -74,13 +76,10 @@ try {
                 $backend = New Backend();
                 $backend->deletePost($_GET['id']);
 
-
             } else {
 
                 throw new Exception('Aucun identifiant de billet envoyé');
             }
-
-
 
         } elseif ($_GET['action'] == 'readPost') {
 
@@ -101,7 +100,6 @@ try {
                 $backend = New Backend();
                 $backend->getUser($_GET['id']);
 
-
             } else {
 
                 throw new Exception('Aucun identifiant de billet envoyé');
@@ -120,7 +118,7 @@ try {
                 throw new Exception('Aucun identifiant de billet envoyé');
             }
 
-       } elseif ($_GET['action'] == 'addComment') {
+        } elseif ($_GET['action'] == 'addComment') {
 
             if (isset($_GET['id']) && $_GET['id'] > 0) {
 
@@ -147,7 +145,6 @@ try {
 
         $frontend = New Frontend();
         $frontend->forgotPasswordView();
-
 
         } elseif ($_GET['action'] == 'forgotPassword') {
 
@@ -192,7 +189,6 @@ try {
                 $backend = New Backend();
                 $backend->getUsers($_GET['id']);
 
-
             } else {
 
                 throw new Exception('Aucun identifiant de billet envoyé');
@@ -205,12 +201,10 @@ try {
                 $backend = New Backend();
                 $backend->awakeUser($_GET['email']);
 
-
             } else {
 
                 throw new Exception('Aucun identifiant de billet envoyé');
             }
-
 
         } elseif ($_GET['action'] == 'validateUser') {
 
@@ -219,12 +213,10 @@ try {
                 $backend = New Backend();
                 $backend->validateUser($_GET['id']);
 
-
             } else {
 
                 throw new Exception('Aucun identifiant de billet envoyé');
             }
-
 
         } elseif ($_GET['action'] == 'validateComment') {
 
@@ -232,7 +224,6 @@ try {
 
                 $backend = New Backend();
                 $backend->validateComment($_GET['id']);
-
 
             } else {
 
@@ -262,14 +253,18 @@ try {
                 $backend = New Backend();
                 $backend->getPendingUsers();
 
+        } elseif ($_GET['action'] == 'postsListView') {
 
-            }
+            $frontend = New Frontend();
+            $frontend->getPosts();
+        }
 
     } else {
 
         $frontend = New Frontend();
         $frontend->getPosts();
     }
+
 } catch (Exception $e) {
 
     $errorMessage = $e->getMessage();

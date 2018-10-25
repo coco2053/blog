@@ -7,5 +7,5 @@ return [
     'password'=> 'nouscnous',
     'email'=> 'bastienvacherand@gmail.com',
     'name'=> 'Bastien',
-    'address'=> 'http://localhost/blog/index.php'
+    'address'=> 'http://localhost/blog/'
 ];

@@ -1,5 +1,5 @@
 <?php
-$title = 'Se connecter';
+$title = 'Inscription';
 $description = 'Blog';
 ob_start();
 ?>
@@ -8,13 +8,30 @@ ob_start();
   <div class="col-md-7">
 
 
-              <!-- Formulaire de connexion -->
-          <form id = 'form_ins' method = "post" action = "index.php?action=signUp">
+          <!-- Formulaire d'inscription -->
+          <form id = 'form_ins' method = "post" action = "?action=signUp">
             <table>
                 <tbody>
-                  <tr>
-                <td><label>Email</label></td>
-                <td><input type="email" name="email" required /> </td>
+
+              <tr>
+                <td><label>Adresse email</label></td>
+                <td><input type="email" name="email"  required/> </td>
+
+              </tr>
+
+              <tr>
+                <td><label>Pseudo</label></td>
+                <td><input type="text" name="username" required /> </td>
+              </tr>
+
+              <tr>
+                <td><label>Nom</label></td>
+                <td><input type="text" name="lastname" required /> </td>
+              </tr>
+
+              <tr>
+                <td><label>Prénom</label></td>
+                <td><input type="text" name="firstname" required /> </td>
               </tr>
 
               <tr>
@@ -22,31 +39,33 @@ ob_start();
                 <td><input type="password" name="password" required /> </td>
               </tr>
 
-              <!--
               <tr>
-                <td><label for="remeber_me">Connexion automatique</label></td>
-                <td><input type="checkbox" id="remember_me" name="connexion_auto" value="souvenir"></td>
+                <td><label>Entrez à nouveau votre mot de passe</label></td>
+                <td><input type="password" name="passwordbis" required /> </br></td>
+              </tr>
 
-                </tr>
-                -->
+              <tr>
+                <td><label><div class="g-recaptcha" data-sitekey="6LeF904UAAAAABO6m7Sl-pxLDJMS-2E6v1qzSdUP"></div></label></td>
+                <td></td>
+              </tr>
 
               <tr>
                 <td><label></label></td>
                 <td><input type="submit" value="Valider" /> </td>
               </tr>
+
             </tbody>
           </table>
 
         </form>
 
-        <p><a href='?action=forgotPasswordView'>Mot de passe oublié</a></p>
-        <p>Pas encore inscrit ?</p>
-        <p><a class="btn btn-primary" href='?action=signInView'>S'inscrire</a></p>
+        <p>Déja inscrit ?</p>
+        <p><a class="btn btn-primary" href='?action=signInView'>Se connecter</a></p>
   </div>
 </div>
 <hr>
 
 <?php $content = ob_get_clean();
 
-include 'template.php';
+include __DIR__ . "/../template.php";
 ?>

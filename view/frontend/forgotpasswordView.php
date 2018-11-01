@@ -26,12 +26,12 @@ ob_start();
 
         </form>
         <p>Pas encore inscrit ?</p>
-        <p><a class="btn btn-primary" href='?action=signInView'>S'inscrire</a></p>
+        <p><a class="btn btn-primary" href='?action=signUpView'>S'inscrire</a></p>
   </div>
 </div>
 <hr>
 
 <?php $content = ob_get_clean();
 
-include 'template.php';
+include __DIR__ . "/../template.php";
 ?>

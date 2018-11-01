@@ -22,7 +22,7 @@ abstract class UserManager
    * Méthode retournant une liste de users demandés.
    * @return array La liste des user. Chaque entrée est une instance de User.
    */
-    abstract public function getList();
+    abstract public function getList($id_user);
 
   /**
    * Méthode retournant un user précis.
@@ -37,7 +37,7 @@ abstract class UserManager
     * @return array La liste des user non valides.
    */
 
-    abstract public function getPending();
+    abstract public function getPendingList();
 
   /**
    * Méthode vérifiant si un user est valide.
@@ -49,11 +49,11 @@ abstract class UserManager
 
   /**
    * Méthode permettant de valider un user.
-   * @param $user User le user à modifier
+   * @param $id_user
    * @return void
    */
 
-    abstract public function validate(User $user);
+    abstract public function validate($id_user);
 
   /**
    * Méthode permettant de vérifier si un user existe déja.
@@ -69,4 +69,21 @@ abstract class UserManager
    */
 
     abstract public function exists($info);
+
+  /**
+   * Méthode permettant de mettre à jour la date de connexion.
+   * @param $id_user
+   * @return void
+   */
+
+    abstract public function updateSigninDate($id_user);
+
+  /**
+   * Méthode permettant de mettre à jour le mot de passe.
+   * @param $formData email et mot de passe de l'utilisateur
+   * @return void
+   */
+
+    abstract public function updatePassword($formData);
+
 }

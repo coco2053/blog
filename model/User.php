@@ -9,8 +9,11 @@ class User
               $username,
               $firstname,
               $lastname,
+              $asleep,
               $valid,
               $signin_date,
+              $role_name,
+              $perm_action,
               $signup_date;
 
 
@@ -87,9 +90,24 @@ class User
         return $this->username;
     }
 
+    public function asleep()
+    {
+        return $this->asleep;
+    }
+
     public function valid()
     {
         return $this->valid;
+    }
+
+    public function role_name()
+    {
+        return $this->role_name;
+    }
+
+    public function perm_action()
+    {
+        return $this->perm_action;
     }
 
     // SETTERS //
@@ -167,6 +185,14 @@ class User
         }
     }
 
+    public function setAsleep($asleep)
+    {
+        if (is_string($asleep)) {
+
+            $this->asleep = $asleep;
+        }
+    }
+
     public function setValid($valid)
     {
         if (is_string($valid)) {
@@ -174,4 +200,21 @@ class User
             $this->valid = $valid;
         }
     }
+
+    public function setRole_name($valid)
+    {
+        if (is_string($role_name)) {
+
+            $this->role_name = $role_name;
+        }
+    }
+
+    public function setPerm_action($valid)
+    {
+        if (is_string($perm_action)) {
+
+            $this->perm_action = $perm_action;
+        }
+    }
+
 }

@@ -1,0 +1,30 @@
+Options +FollowSymlinks
+RewriteEngine on
+RewriteRule ^index.html$  index.php [L]
+RewriteRule ^article-([0-9]+)$ ?action=readPost&id=$1
+RewriteRule ^articles ?action=postsListView
+RewriteRule ^inscription ?action=signUpView
+RewriteRule ^mot-de-passe-oublie ?action=forgotPasswordView
+RewriteRule ^redaction-article ?action=addPostView
+RewriteRule ^modifier-article-([0-9]+)$ ?action=editPostView&id=$1
+RewriteRule ^connexion ?action=signInView
+RewriteRule ^connecter ?action=signIn
+RewriteRule ^deconnexion ?action=signOut
+RewriteRule ^profile-([0-9]+)$ ?action=getUser&id=$1
+RewriteRule ^modifie-article-([0-9]+)$ ?action=editPost&id=$1
+RewriteRule ^valider-commentaire-([0-9]+)$ ?action=validateComment&id=$1
+RewriteRule ^valider-compte-([0-9]+)$ ?action=validateUser&id=$1
+RewriteRule ^supprimer-compte-([0-9]+)$ ?action=deleteUser&id=$1
+RewriteRule ^comptes-([0-9]+)$ ?action=getUsersView&id=$1
+RewriteRule ^comptes-a-valider ?action=getPendingUsersView
+RewriteRule ^commentaires-a-valider ?action=getPendingComments
+RewriteRule ^ecrire-article ?action=addPost
+RewriteRule ^redefinir-mot-de-passe ?action=forgotPassword
+RewriteRule ^supprimer-article-([0-9]+)$ ?action=deletePost&id=$1
+RewriteRule ^ajouter-commentaire-([0-9]+)$ ?action=addComment&id=$1
+RewriteRule ^supprimer-commentaire-([0-9]+)$ ?action=deleteComment&id=$1
+RewriteRule ^valider-mot-de-passe ?action=resetPassword
+RewriteRule ^s-inscrire ?action=signUp
+RewriteRule ^redefinition-mot-de-passe-(.+)$ ?action=resetPasswordView&email=$1
+RewriteRule ^contacter ?action=contact
+RewriteRule ^contact ?action=contactView

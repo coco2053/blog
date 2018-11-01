@@ -1,10 +1,9 @@
 <?php
 
 $title = 'Gestion des comptes :';
-$description = 'La liste des utilisateurs:';
+$description = 'La liste des utilisateurs à valider:';
 
 ob_start();
-
 ?>
 
 <div class="row">
@@ -21,15 +20,15 @@ ob_start();
                     <th>Nom</th>
                     <th>Validé ?</th>
                     <th>Date d'inscription</th>
-                    <th>Date de connexion</th>
-                    <th>Suppression</th>
+                    <th>Date de connextion</th>
+                    <th>Valider</th>
                 </tr>
-
             </thead>
 
             <tbody> <!-- Corps du tableau -->
 
             <?php
+
             foreach ($users as $oneUser) {
             ?>
                 <tr>
@@ -41,15 +40,15 @@ ob_start();
                     <td><?=htmlspecialchars($oneUser->signup_date())?></td>
                     <td><?=htmlspecialchars($oneUser->signin_date())?></td>
                     <td><a class="btn btn-danger"
-                           href='supprimer-compte-<?=htmlspecialchars($oneUser->id_user())?>'
-                           onclick="return confirm('Etes-vous sûr ?');">Supprimer</a></td>
+                           href='valider-compte-<?=htmlspecialchars($oneUser->id_user())?>'
+                           onclick="return confirm('Etes-vous sûr ?');">Valider</a></td>
                 </tr>
 
-                <?php
-                }
-                ?>
+              <?php
+              }
+              ?>
 
-            </tbody>
+              </tbody>
 
         </table>
 

@@ -373,6 +373,11 @@ class Backend
 
         $_SESSION = array();
         session_destroy();
+        session_start();
+
+        $_SESSION['show_message'] = true;
+        $_SESSION['message'] = 'Vous avez été deconnecté.';
+
         header('location: articles');
     }
 

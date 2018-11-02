@@ -16,3 +16,47 @@
     position: relative;
     z-index: 998;
 }
+
+.container-fluid {
+
+    text-align: justify;
+    margin: 0;
+    padding: 0;
+}
+
+.content {
+
+    margin-top: 50px;
+    margin-bottom: 150px;
+}
+
+.post-content {
+
+    margin-top: 30px;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.date {
+
+    color: #565856;
+}
+
+.btn {
+
+    margin-top: 20px;
+    margin-right: 10px;
+
+}
+
+.img-vignette {
+
+    margin-top: 10px;
+
+}
+
+.article {
+
+    margin-top: 50px;
+
+}

@@ -169,13 +169,13 @@ class Post
     public function setCreation_date(DateTime $creation_date)
     {
 
-        $this->creation_date = $creation_date->format('d/m/Y à H:i:s');
+        $this->creation_date = $creation_date->format('d.m.Y à H:i');
     }
 
     public function setUpdate_date(DateTime $update_date)
     {
 
-        $this->update_date = $update_date->format('d/m/Y à H:i:s');
+        $this->update_date = $update_date->format('d.m.Y à H:i');
 
     }
 

@@ -7,58 +7,51 @@ ob_start();
 
 ?>
 
-<div class="row">
+<!-- Formulaire de connexion -->
+<form id = 'form_ins' method = "post" action = "connecter">
 
-    <div class="col-md-7">
+    <table>
 
-        <!-- Formulaire de connexion -->
-        <form id = 'form_ins' method = "post" action = "connecter">
+        <tbody>
 
-            <table>
+            <tr>
+                <td><label>Email</label></td>
+                <td><input type="email" name="email" required /> </td>
+            </tr>
 
-                <tbody>
+            <tr>
+                <td><label>Mot de passe</label></td>
+                <td><input type="password" name="password" required /> </td>
+            </tr>
 
-                    <tr>
-                        <td><label>Email</label></td>
-                        <td><input type="email" name="email" required /> </td>
-                    </tr>
+            <!--
+            <tr>
+                <td><label for="remeber_me">Connexion automatique</label></td>
+                <td><input type="checkbox" id="remember_me" name="connexion_auto" value="souvenir"></td>
+            </tr>
+            -->
 
-                    <tr>
-                        <td><label>Mot de passe</label></td>
-                        <td><input type="password" name="password" required /> </td>
-                    </tr>
+            <tr>
+                <td><label><div class="g-recaptcha"
+                                data-sitekey="6LeF904UAAAAABO6m7Sl-pxLDJMS-2E6v1qzSdUP"></div></label></td>
+                <td></td>
+            </tr>
 
-                    <!--
-                    <tr>
-                        <td><label for="remeber_me">Connexion automatique</label></td>
-                        <td><input type="checkbox" id="remember_me" name="connexion_auto" value="souvenir"></td>
-                    </tr>
-                    -->
+            <tr>
+                  <td><label></label></td>
+                  <td><input type="submit" value="Valider" /> </td>
+            </tr>
 
-                    <tr>
-                        <td><label><div class="g-recaptcha"
-                                        data-sitekey="6LeF904UAAAAABO6m7Sl-pxLDJMS-2E6v1qzSdUP"></div></label></td>
-                        <td></td>
-                    </tr>
+        </tbody>
 
-                    <tr>
-                          <td><label></label></td>
-                          <td><input type="submit" value="Valider" /> </td>
-                    </tr>
+    </table>
 
-                </tbody>
+</form>
 
-            </table>
+<p> <a href='mot-de-passe-oublie'>Mot de passe oublié</a> </p>
+<p> Pas encore inscrit ? </p>
+<p> <a class="btn btn-primary" href='inscription'>S'inscrire</a> </p>
 
-        </form>
-
-        <p> <a href='mot-de-passe-oublie'>Mot de passe oublié</a> </p>
-        <p> Pas encore inscrit ? </p>
-        <p> <a class="btn btn-primary" href='inscription'>S'inscrire</a> </p>
-
-    </div>
-
-</div>
 
 <?php
  $content = ob_get_clean();

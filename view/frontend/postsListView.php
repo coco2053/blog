@@ -20,35 +20,36 @@ foreach ($posts as $onePost) {
     }
 ?>
 
-<div class="row">
+<div class="row article">
 
-    <div class="col-md-7">
+    <div class="col-md-6">
 
-        <a href="#">
+        <img class="img-fluid rounded mb-3 mb-md-0 img-vignette"
+             src="public/upload/<?=htmlspecialchars($onePost->image())?>" alt="Image illustrant l'article">
 
-            <img class="img-fluid rounded mb-3 mb-md-0"
-                 src="public/upload/<?=htmlspecialchars($onePost->image())?>" alt="">
-        </a>
+        <a class="btn btn-primary" href='article-<?=htmlspecialchars($onePost->id_post())?>'>Voir l'article</a>
 
     </div>
 
-    <div class="col-md-5">
+    <div class="col-md-6">
 
         <h3> <?=htmlspecialchars($onePost->title())?> </h3>
 
-        <h4> Chapo : </h4>
+        <p> <i> <?=htmlspecialchars($onePost->chapo())?> </i> </p>
 
-        <p> <?=htmlspecialchars($onePost->chapo())?> </p>
+        <p class="post-content"> <?=$content?> </p>
 
-        <h4> Contenu : </h4>
-
-        <p> <?=htmlspecialchars($content)?> </p>
-
-        Date de creation : <?=htmlspecialchars($onePost->creation_date())?></br>
-        Date de modification : <?=htmlspecialchars($onePost->update_date())?></br>
-        Auteur : <?=htmlspecialchars($onePost->username())?></br>
-
-        <a class="btn btn-primary" href='article-<?=htmlspecialchars($onePost->id_post())?>'>Voir l'article</a>
+        <span class="date">publié le <?=htmlspecialchars($onePost->creation_date())?>
+        <?php
+        $creation_date = $onePost->creation_date();
+        $update_date = $onePost->update_date();
+        if($creation_date !== $update_date) {
+            ?>
+            </br>mise à jour le <?=htmlspecialchars($onePost->update_date())?>
+            <?php
+        }
+        ?>
+        par <?=htmlspecialchars($onePost->username())?></span>
 
     </div>
 </div>

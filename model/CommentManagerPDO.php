@@ -87,7 +87,7 @@ class CommentManagerPDO extends CommentManager
                         LEFT JOIN user ON user.id_user = comment.id_user
                         WHERE comment.id_post = :id_post
                         AND comment.valid = \'Yes\'
-                        ORDER BY comment.creation_date');
+                        ORDER BY comment.creation_date DESC');
 
 
             $q->bindValue(':id_post', (int) $id_post, PDO::PARAM_INT);

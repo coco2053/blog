@@ -62,7 +62,7 @@
         </nav>
 
         <!-- Page Content -->
-        <div class="container">
+        <div class="container-fluid">
 
             <!-- Modal -->
             <div class="modal fade" id="centralModalSm" tabindex="-1"
@@ -89,26 +89,33 @@
                     </div>
                 </div>
             </div>
-            <?php
-            if(!empty($_SESSION['user'])) {
-                if(strpos($_SESSION['user'] -> perm_action(), 'writePostView') !== false) {
-                    ?>
-                    <p>
-                        <a class="btn btn-primary" href='redaction-article'>Ecrire un article</a>
-                    </p>
-                    <?php
-                }
-            }
-            ?>
-            <!-- Page Heading -->
-            <h1 class="my-4"> <?= $title ?> </h1>
-            <?= $content ?>
-
+            <div class="content">
+                <div class="row">
+                    <div class="col-md-2"> </div>
+                    <div class="col-md-8 center">
+                        <?php
+                        if(!empty($_SESSION['user'])) {
+                            if(strpos($_SESSION['user'] -> perm_action(), 'writePostView') !== false) {
+                                ?>
+                                <p>
+                                    <a class="btn btn-primary" href='redaction-article'>Ecrire un article</a>
+                                </p>
+                                <?php
+                            }
+                        }
+                        ?>
+                        <!-- Page Heading -->
+                        <h1 class="my-3"> <?= $title ?> </h1>
+                        <?= $content ?>
+                    </div>
+                    <div class="col-md-2"> </div>
+                </div>
+            </div>
         </div>
 
         <!-- Footer -->
         <footer class="py-2 bg-dark fixed-bottom">
-            <div class="container">
+            <div class="container-fluid">
                 <p class="m-0 text-center text-white">Copyright &copy; Tondo Design 2018</p>
 
                 <?php

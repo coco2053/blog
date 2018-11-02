@@ -15,7 +15,7 @@ ob_start();
 
             <p>
 
-                Titre :<input type="text" name="title" maxlength="50" value="<?= htmlspecialchars($post->title()) ?>" /> </br>
+                Titre :<input type="text" name="title" maxlength="100" value="<?= htmlspecialchars($post->title()) ?>" /> </br>
 
                 Chapo :<input type="text" name="chapo" maxlength="100" value="<?= htmlspecialchars($post->chapo()) ?>" /> </br>
 

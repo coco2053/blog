@@ -15,7 +15,7 @@ ob_start();
 
             <p>
 
-                Titre :<input type="text" name="title" maxlength="50" required /> </br>
+                Titre :<input type="text" name="title" maxlength="100" required /> </br>
 
                 Chapo :<input type="text" name="chapo" maxlength="100" required /> </br>
 

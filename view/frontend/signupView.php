@@ -7,73 +7,39 @@ ob_start();
 
 ?>
 
-<div class="row">
+<div class="formulaires">
+    <h1 class="my-3"> <?= $title ?> </h1>
 
-    <div class="col-md-7">
+    <!-- Formulaire d'inscription -->
+    <form id = 'form_ins' method = "post" action = "s-inscrire">
+        <div class="form-group">
+            <label>Adresse email</label>
+            <input type="email" class="form-control" name="email"
+                   placeholder="Entrez votre adresse email" required />
+            <label>Pseudo</label>
+            <input type="text" class="form-control" name="username"
+                   placeholder="Entrez votre pseudo" required />
+            <label>Nom</label>
+            <input type="text" class="form-control" name="lastname"
+                   placeholder="Entrez votre nom" required />
+            <label>Prénom</label>
+            <input type="text" class="form-control" name="firstname"
+                   placeholder="Entrez votre prénom" required />
+            <label>Mot de passe</label>
+            <input type="password" class="form-control" name="password"
+                   placeholder="Entrez votre mot de passe" required />
+            <label>Entrez à nouveau votre mot de passe</label>
+            <input type="password" class="form-control" name="passwordbis"
+                   placeholder="Retappez votre mot de passe" required /></br>
+            <div class="g-recaptcha"
+                  data-sitekey="6LeF904UAAAAABO6m7Sl-pxLDJMS-2E6v1qzSdUP"></div>
+            <button type="submit" class="btn btn-primary">Valider</button>
+        </div>
+    </form>
 
-
-        <!-- Formulaire d'inscription -->
-        <form id = 'form_ins' method = "post" action = "s-inscrire">
-
-          <table>
-
-              <tbody>
-
-                  <tr>
-                      <td><label>Adresse email</label></td>
-                      <td><input type="email" name="email"  required/> </td>
-
-                  </tr>
-
-                  <tr>
-                      <td><label>Pseudo</label></td>
-                      <td><input type="text" name="username" required /> </td>
-                  </tr>
-
-                  <tr>
-                      <td><label>Nom</label></td>
-                      <td><input type="text" name="lastname" required /> </td>
-                  </tr>
-
-                  <tr>
-                      <td><label>Prénom</label></td>
-                      <td><input type="text" name="firstname" required /> </td>
-                  </tr>
-
-                  <tr>
-                      <td><label>Mot de passe</label></td>
-                      <td><input type="password" name="password" required /> </td>
-                  </tr>
-
-                  <tr>
-                      <td><label>Entrez à nouveau votre mot de passe</label></td>
-                      <td><input type="password" name="passwordbis" required /> </br></td>
-                  </tr>
-
-                  <tr>
-                      <td><label><div class="g-recaptcha"
-                                      data-sitekey="6LeF904UAAAAABO6m7Sl-pxLDJMS-2E6v1qzSdUP"></div></label></td>
-                      <td></td>
-                  </tr>
-
-                  <tr>
-                      <td><label></label></td>
-                      <td><input type="submit" value="Valider" /> </td>
-                  </tr>
-
-              </tbody>
-
-        </table>
-
-      </form>
-
-      <p> Déja inscrit ? </p>
-      <p> <a class="btn btn-primary" href='connexion'>Se connecter</a> </p>
-
-    </div>
-
+    <p> Déja inscrit ? </p>
+    <p> <a class="btn btn-primary" href='connexion'>Se connecter</a> </p>
 </div>
-
 <?php
 $content = ob_get_clean();
 

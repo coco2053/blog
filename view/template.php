@@ -7,8 +7,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title><?= $title ?></title>
-
         <link href="public/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
         <link href="public/css/1-col-portfolio.css" rel="stylesheet">
         <link href="public/css/style.css" rel="stylesheet">
         <script src='https://www.google.com/recaptcha/api.js'></script>
@@ -19,7 +19,7 @@
         <!-- Navigation -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
             <div class="container">
-                <a class="navbar-brand" href="#">Bastien Vacherand</a>
+                <a class="navbar-brand" href="accueil">Bastien Vacherand</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
                         aria-label="Toggle navigation">
@@ -28,7 +28,7 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="#">Accueil
+                            <a class="nav-link" href="accueil">Accueil
                             <span class="sr-only">(current)</span>
                             </a>
                         </li>
@@ -39,7 +39,7 @@
                             <a class="nav-link" href="contact">Contact</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Cv</a>
+                            <a class="nav-link" href="cv">Cv</a>
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
@@ -105,7 +105,7 @@
                         }
                         ?>
                         <!-- Page Heading -->
-                        <h1 class="my-3"> <?= $title ?> </h1>
+
                         <?= $content ?>
                     </div>
                     <div class="col-md-2"> </div>
@@ -116,19 +116,26 @@
         <!-- Footer -->
         <footer class="py-2 bg-dark fixed-bottom">
             <div class="container-fluid">
-                <p class="m-0 text-center text-white">Copyright &copy; Tondo Design 2018</p>
 
                 <?php
                 if(!isset($_SESSION['user'])) {
                     ?>
-                    <p> <a class="btn text-center btn-primary" href='connexion'>Se connecter </a>
+                    <p class="m-0 text-center text-white"><a class="text-white" href='connexion'>Se connecter</a> </p>
                     <?php
                 } else {
                     ?>
-                    <p> <a class="btn text-center btn-primary" href='deconnexion'>Se déconnecter</a>
+                    <p class="m-0 text-center text-white"> <a class="text-white" href='deconnexion'>Se déconnecter</a> </p>
                     <?php
                 }
                 ?>
+                <div class="social text-center">
+                    <a class="btn btn-primary" href="https://www.linkedin.com/in/bastien-vacherand-596249159/" target="_blank"><i class="fa fa-linkedin fa-2x"></i></a>
+                    <a class="btn btn-primary" href="https://plus.google.com/u/0/115491882322013390764?tab=wX" target="_blank"><i class="fa fa-google-plus fa-2x"></i></a>
+                    <a class="btn btn-primary" href="https://github.com/coco2053" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+                    <a class="btn btn-primary" href="https://www.facebook.com/bastien.vacherand" target="_blank"><i class="fa fa-facebook fa-2x"></i></a>
+                </div> </br>
+
+                <p class="m-0 text-center text-white">Copyright &copy; Tondo Design 2018</p>
 
             </div>
           <!-- /.container -->

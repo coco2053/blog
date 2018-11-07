@@ -5,50 +5,40 @@ $description = 'La liste des commentaires à valider:';
 ob_start();
 
 ?>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Pseudo</th>
+            <th scope="col">Commentaire</th>
+            <th scope="col">Date</th>
+            <th scope="col">Valider</th>
+        </tr>
+        </thead>
+        <tbody>
 
-<div class="row">
+        <?php
 
-    <div class="col-md-12">
+        foreach ($comments as $oneComment) {
 
-        <table>
-
-            <thead> <!-- En-tête du tableau -->
-                 <tr>
-                     <th>Pseudo</th>
-                     <th>Commentaire</th>
-                     <th>Date</th>
-                     <th>Valider</th>
-                 </tr>
-            </thead>
-
-            <tbody> <!-- Corps du tableau -->
+            ?>
+            <tr>
+                <th scope="row"><?=htmlspecialchars($oneComment->username())?></th>
+                <td><?=htmlspecialchars($oneComment->content())?></td>
+                <td><?=htmlspecialchars($oneComment->creation_date())?></td>
+                <td><a class="btn btn-success"
+                       href='valider-commentaire-<?=htmlspecialchars($oneComment->id_comment())?>'
+                       onclick="return confirm('Etes-vous sûr ?');">Valider</a></td>
+            </tr>
 
             <?php
+            }
+            ?>
 
-            foreach ($comments as $oneComment) {
+        </tbody>
 
-                ?>
-                <tr>
-                    <td><?=htmlspecialchars($oneComment->username())?></td>
-                    <td><?=htmlspecialchars($oneComment->content())?></td>
-                    <td><?=htmlspecialchars($oneComment->creation_date())?></td>
-                    <td><a class="btn btn-danger"
-                           href='valider-commentaire-<?=htmlspecialchars($oneComment->id_comment())?>'
-                           onclick="return confirm('Etes-vous sûr ?');">Valider</a></td>
-                </tr>
-
-                <?php
-                }
-                ?>
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-  </div>
-
+    </table>
+</div>
 <?php
 
 $content = ob_get_clean();

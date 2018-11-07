@@ -7,33 +7,19 @@ ob_start();
 
 ?>
 
-<div class="row">
-
-    <div class="col-md-7">
-
-        <form action="ecrire-article" method="post" enctype="multipart/form-data">
-
-            <p>
-
-                Titre :<input type="text" name="title" maxlength="100" required /> </br>
-
-                Chapo :<input type="text" name="chapo" maxlength="100" required /> </br>
-
-                Contenu : <textarea name="content" rows="4" cols="40" required > </textarea></br>
-
-                Image : <label for="my_file">Fichier (format jpeg | max. 1 Mo) :</label>
-
-                <input type="file" name="my_file" id="my_file"/><br />
-
-                <input type="submit" value="Envoyer" name="addPost" id="i_submit" /></br>
-
-            </p>
-
-        </form>
-
+<form action="ecrire-article" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Titre</label>
+        <input type="text" class="form-control" name="title" maxlength="100" placeholder="Entrez le titre" />
+        <label>Chapo</label>
+        <input type="text" class="form-control" name="chapo" maxlength="100" placeholder="Entrez le chapo" />
+        <label>Contenu</label>
+        <textarea name="content" class="form-control" placeholder="Entrez le contenu" rows="4" cols="40">  </textarea>
+        <labelfor="my_file">Image : Fichier (format jpeg | max. 1 Mo)</labelfor>
+        <input type="file" name="my_file" id="my_file"/><br />
+        <button type="submit" class="btn btn-primary" name="addPost" id="i_submit">Valider</button>
     </div>
-
-</div>
+</form>
 
 <script type="text/javascript" script src="public/vendor/jquery/jquery.min.js"></script>
 <script type="text/javascript">

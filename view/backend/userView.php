@@ -7,32 +7,32 @@ ob_start();
 
 ?>
 
-<div class="row">
-
-    <div class="col-md-12">
-
-        <p>
-            <?=htmlspecialchars($user->firstname())?> <?=htmlspecialchars($user->lastname())?>
-        </p>
-
-        Date d'inscription : <?=$user->signup_date()?></br>
-        Derniere connexion : <?=htmlspecialchars($user->signin_date())?></br>
-
-        <?php
-
-        if(!empty($_SESSION['user'])) {
-
-            if(strpos($_SESSION['user'] -> perm_action(), 'getUsers') !== false) {
-        ?>
-          <p>
-              <a class="btn btn-primary" href='comptes-<?=htmlspecialchars($user->id_user())?>'>Gestion des comptes</a>
-          </p>
-        <?php
-            }
-        }
-        ?>
-
+<div class="formulaires">
+    <div class="profile-img">
+        <img src="public/img/profile-grey.png">
+        <span class="profile-name">
+              <?=htmlspecialchars($user->firstname())?> <?=htmlspecialchars($user->lastname())?>
+        </span>
     </div>
+    </br>
+
+    Date d'inscription : <span class="date"><?=$user->signup_date()?></span></br>
+    Derniere connexion : <span class="date"><?=htmlspecialchars($user->signin_date())?></span></br>
+    Statut : <?=htmlspecialchars($user->role_name())?></br>
+
+    <?php
+
+    if(!empty($_SESSION['user'])) {
+
+        if(strpos($_SESSION['user'] -> perm_action(), 'getUsers') !== false) {
+    ?>
+      <p>
+          <a class="btn btn-primary" href='comptes-<?=htmlspecialchars($user->id_user())?>'>Gestion des comptes</a>
+      </p>
+    <?php
+        }
+    }
+    ?>
 
     <?php
 
@@ -40,11 +40,10 @@ ob_start();
 
         if(strpos($_SESSION['user'] -> perm_action(), 'getPendingUsersView') !== false) {
 
-        ?>
-        <p>
-            <a class="btn btn-primary" href='comptes-a-valider'>Comptes en attente de validation</a>
-        </p>
-
+            ?>
+            <p>
+                <a class="btn btn-primary" href='comptes-a-valider'>Comptes en attente de validation</a>
+            </p>
         <?php
         }
     }
@@ -52,17 +51,16 @@ ob_start();
     if(!empty($_SESSION['user'])) {
 
         if(strpos($_SESSION['user'] -> perm_action(), 'getPendingComments') !== false) {
-        ?>
-        <p>
-            <a class="btn btn-primary" href='commentaires-a-valider'>Commentaires en attente de validation</a>
-        </p>
+            ?>
+            <p>
+                <a class="btn btn-primary" href='commentaires-a-valider'>Commentaires en attente de validation</a>
+            </p>
         <?php
         }
     }
     ?>
 
 </div>
-
 <?php
 
 $content = ob_get_clean();

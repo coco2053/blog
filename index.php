@@ -253,6 +253,16 @@ try {
                 $backend = New Backend();
                 $backend->getPendingUsers();
 
+        } elseif ($_GET['action'] == 'cvView') {
+
+                $frontend = New Frontend();
+                $frontend->cvView();
+
+        } elseif ($_GET['action'] == 'homeView') {
+
+                $frontend = New Frontend();
+                $frontend->homeView();
+
         } elseif ($_GET['action'] == 'contactView') {
 
                 $frontend = New Frontend();
@@ -272,7 +282,7 @@ try {
     } else {
 
         $frontend = New Frontend();
-        $frontend->getPosts();
+        $frontend->homeView();
     }
 
 } catch (Exception $e) {

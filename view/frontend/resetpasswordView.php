@@ -5,42 +5,24 @@ $title = 'Réinitialiser votre mot de passe';
 ob_start();
 ?>
 
-<div class="row">
+<div class="formulaires">
+    <h1 class="my-3"> <?= $title ?> </h1>
 
-    <div class="col-md-7">
-
-        <!-- Formulaire de connexion -->
-        <form id = 'form_ins' method = "post" action = "valider-mot-de-passe">
-
-            <table>
-
-                <tbody>
-
-                    <tr>
-                        <td><label>Nouveau mot de passe</label></td>
-                        <td><input type="password" name="password" required /> </td>
-                    </tr>
-
-                    <tr>
-                        <td><label>Entrez à nouveau votre mot de passe</label></td>
-                        <td><input type="password" name="passwordbis" required /> </br></td>
-                        <input type="hidden" id="email" name="email" value="<?php echo $_GET['email']?>" />
-                    </tr>
-
-                    <tr>
-                        <td><label></label></td>
-                      <td><input type="submit" value="Valider" /> </td>
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </form>
-
-    </div>
-
+    <!-- Formulaire de redefinition du mot de passe -->
+    <form id = 'form_pass-change' method = "post" action = "valider-mot-de-passe">
+        <div class="form-group">
+            <label>Nouveau mot de passe</label>
+            <input type="password" class="form-control" name="password"
+                   placeholder="Entrez votre nouveau mot de passe" required />
+            <label>Entrez à nouveau votre mot de passe</label>
+            <input type="password" class="form-control" name="passwordbis"
+                   placeholder="Retappez votre mot de passe" required />
+            <input type="hidden" id="email" name="email" value="<?php echo $_GET['email']?>" />
+            <button type="submit" class="btn btn-primary">Valider</button>
+        </div>
+    </form>
 </div>
+
 
 <?php
 $content = ob_get_clean();

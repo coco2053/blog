@@ -163,7 +163,7 @@ class Comment
     public function setCreation_date(DateTime $creation_date)
     {
 
-        $this->creation_date = $creation_date->format('d/m/Y à H:i:s');
+        $this->creation_date = $creation_date->format('d.m.Y');
     }
 
 }

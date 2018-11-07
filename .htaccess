@@ -28,3 +28,5 @@ RewriteRule ^s-inscrire ?action=signUp
 RewriteRule ^redefinition-mot-de-passe-(.+)$ ?action=resetPasswordView&email=$1
 RewriteRule ^contacter ?action=contact
 RewriteRule ^contact ?action=contactView
+RewriteRule ^cv ?action=cvView
+RewriteRule ^accueil ?action=homeView

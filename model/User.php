@@ -201,13 +201,13 @@ class User
     public function setSignin_date(DateTime $signin_date)
     {
 
-        $this->signin_date = $signin_date->format('d/m/Y à H:i:s');
+        $this->signin_date = $signin_date->format('d.m.Y');
     }
 
     public function setSignup_date(DateTime $signup_date)
     {
 
-        $this->signup_date = $signup_date->format('d/m/Y à H:i:s');
+        $this->signup_date = $signup_date->format('d.m.Y');
 
     }
 

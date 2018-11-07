@@ -7,7 +7,7 @@ ob_start();
 
 ?>
 
-
+<h1 class="my-3"> <?= $title ?> </h1>
 <img class="img-fluid rounded mb-3 mb-md-0"
      src="public/upload/<?=htmlspecialchars($post->image())?>" alt="">
 
@@ -15,17 +15,18 @@ ob_start();
 
 <p class="post-content"> <?=$post->content()?> </p>
 
-<span class="date">publié le <?=htmlspecialchars($post->creation_date())?>
+publié le <span class="date"><?=htmlspecialchars($post->creation_date())?>
 <?php
 $creation_date = $post->creation_date();
 $update_date = $post->update_date();
+
 if($creation_date !== $update_date) {
     ?>
-    • mise à jour le <?=htmlspecialchars($post->update_date())?>
+    </span>• mise à jour le <span class="date"><?=htmlspecialchars($post->update_date())?></span>
     <?php
-}
+    }
 ?>
-par <?=htmlspecialchars($post->username())?></span></br>
+par <span class="username"> <?=htmlspecialchars($post->username())?></span></br>
 
 <?php
 
@@ -43,45 +44,21 @@ if(isset($_SESSION['user'])) {
 
     <?php
 
-}
-
-if(strpos($_SESSION['user'] -> perm_action(), 'addComment') !== false) {
-?>
-    <div class="article">
-        <form id = 'form_com' method = "post"
-                              action = "ajouter-commentaire-<?=htmlspecialchars($post->id_post())?>">
-            <table>
-
-                <tbody>
-
-                    <tr>
-                        <td><label>Ajouter un commentaire : </label></td>
-                        <td><input type="text" name="content" required /> </td>
-                    </tr>
-
-                    <tr>
-                        <td><label></label></td>
-                        <td><input type="submit" value="Valider" /> </td>
-                    </tr>
-                </tbody>
-
-            </table>
-
-        </form>
-
-    </div>
-
-
-        <?php
-        }
     }
+?>
+
+<h4>Commentaires</h4>
+
+<?php
+
 
 if(isset($comments)) {
 
     foreach ($comments as $oneComment) {
         ?>
-
-                <h3> <?=htmlspecialchars($oneComment->username())?> a dit :</h3>
+            <div class="comment">
+                <span class="username"> <?=htmlspecialchars($oneComment->username())?></span>
+                <span class="date"> <?=htmlspecialchars($oneComment->creation_date())?></span>
 
                 <p> <?=htmlspecialchars($oneComment->content())?> </p>
 
@@ -94,16 +71,34 @@ if(isset($comments)) {
             ?>
 
             <p>
-                <a class="btn btn-danger"
-                   href='supprimer-commentaire-<?=htmlspecialchars($oneComment->id_comment())?>'
-                   onclick="return confirm('Etes-vous sûr ?');">Supprimer le commentaire</a>
+                <a href='supprimer-commentaire-<?=htmlspecialchars($oneComment->id_comment())?>'
+                   onclick="return confirm('Etes-vous sûr ?');">Supprimer</a>
             </p>
+            </div>
             <?php
+            }
         }
     }
 }
-}
+if(strpos($_SESSION['user'] -> perm_action(), 'addComment') !== false) {
 ?>
+    <div class="article">
+        <form id = 'form_com' method = "post"
+                              action = "ajouter-commentaire-<?=htmlspecialchars($post->id_post())?>">
+        <div class="form-group">
+            <label>Ajouter un commentaire </label>
+            <input type="text" class="form-control" name="content"
+                   placeholder="Entrez votre commentaire" required /> </td>
+            <button type="submit" class="btn btn-primary">Valider</button>
+        </div>
+
+        </form>
+    </div>
+
+        <?php
+        }
+    }
+    ?>
 
 <a href="articles">Retour à la liste des billets</a>
 

@@ -33,6 +33,30 @@ class Frontend
     * @return void
     */
 
+    function homeView()
+    {
+
+        include 'view/frontend/home.php';
+    }
+
+    /**
+    * Methode qui permet d'afficher la page cv.
+    * @param void
+    * @return void
+    */
+
+    function cvView()
+    {
+
+        include 'view/frontend/cv.php';
+    }
+
+    /**
+    * Methode qui permet d'afficher la page contact.
+    * @param void
+    * @return void
+    */
+
     function contactView()
     {
 

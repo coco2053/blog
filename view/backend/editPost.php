@@ -7,29 +7,20 @@ ob_start();
 
 ?>
 
-<div class="row">
-
-    <div class="col-md-7">
-
-        <form action="modifie-article-<?= $post->id_post() ?>" method="post">
-
-            <p>
-
-                Titre :<input type="text" name="title" maxlength="100" value="<?= htmlspecialchars($post->title()) ?>" /> </br>
-
-                Chapo :<input type="text" name="chapo" maxlength="100" value="<?= htmlspecialchars($post->chapo()) ?>" /> </br>
-
-                Contenu :<textarea name="content" rows="4" cols="40"> <?= htmlspecialchars($post->content()) ?> </textarea></br>
-
-                <input type="submit" value="Envoyer" name="editPost" /></br>
-
-            </p>
-
-        </form>
-
+<form action="modifie-article-<?= $post->id_post() ?>" method="post">
+    <div class="form-group">
+        <label>Titre</label>
+        <input type="text" class="form-control" name="title" maxlength="100"
+               value="<?= htmlspecialchars($post->title()) ?>" />
+        <label>Chapo</label>
+        <input type="text" class="form-control" name="chapo" maxlength="100"
+               value="<?= htmlspecialchars($post->chapo()) ?>" />
+        <label>Contenu</label>
+        <textarea name="content" class="form-control" rows="4" cols="40">
+                  <?= htmlspecialchars($post->content()) ?> </textarea>
+       <button type="submit" class="btn btn-primary">Valider</button>
     </div>
-
-</div>
+</form>
 
 <?php
 

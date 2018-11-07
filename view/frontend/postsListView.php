@@ -5,6 +5,9 @@ $description = 'Liste des derniers articles publiés :';
 
 ob_start();
 
+?>
+<h1 class="my-3"> <?= $title ?> </h1>
+<?php
 foreach ($posts as $onePost) {
 
     if (strlen($onePost->content()) <= 300) {
@@ -39,17 +42,17 @@ foreach ($posts as $onePost) {
 
         <p class="post-content"> <?=$content?> </p>
 
-        <span class="date">publié le <?=htmlspecialchars($onePost->creation_date())?>
+        publié le <span class="date"><?=htmlspecialchars($onePost->creation_date())?></span>
         <?php
         $creation_date = $onePost->creation_date();
         $update_date = $onePost->update_date();
         if($creation_date !== $update_date) {
             ?>
-            </br>mise à jour le <?=htmlspecialchars($onePost->update_date())?>
+            </br>mise à jour le <span class="date"><?=htmlspecialchars($onePost->update_date())?></span>
             <?php
         }
         ?>
-        par <?=htmlspecialchars($onePost->username())?></span>
+        par <span class="username"><?=htmlspecialchars($onePost->username())?></span>
 
     </div>
 </div>

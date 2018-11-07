@@ -1,3 +1,10 @@
+/*!
+ * CSS rules for my personal blog site
+ * Written by Bastien Vacherand
+ */
+
+/* profile */
+
 .inset a img {
 
     width: 40px;
@@ -9,6 +16,11 @@
 
 .inset img {
 
+    width: 40px;
+    height: 40px;
+    background-color: transparent !important;
+    z-index: 999;
+    margin-left: 40px;
     border-radius: inherit;
     width: inherit;
     height: inherit;
@@ -17,18 +29,29 @@
     z-index: 998;
 }
 
+.profile-img img {
+
+    width: 80px;
+    height: 80px;
+}
+
+.profile-name {
+
+    font-size: 20px;
+    font-weight: bold;
+}
+
 .container-fluid {
 
     text-align: justify;
-    margin: 0;
-    padding: 0;
 }
 
 .content {
 
-    margin-top: 50px;
-    margin-bottom: 150px;
+    margin-top: 30px;
+    margin-bottom: 200px;
 }
+
 
 .post-content {
 
@@ -42,6 +65,13 @@
     color: #565856;
 }
 
+.username {
+
+    font-weight: bold;
+    font-size: 20px;
+    color: #007bff;
+}
+
 .btn {
 
     margin-top: 20px;
@@ -52,7 +82,6 @@
 .img-vignette {
 
     margin-top: 10px;
-
 }
 
 .article {
@@ -60,3 +89,57 @@
     margin-top: 50px;
 
 }
+
+h4 {
+
+    margin: 50px;
+    text-align: center;
+}
+
+.comment {
+
+    border-color: #cacaca;
+    border-style: dotted;
+    padding: 20px;
+    margin: 20px;
+}
+
+.center {
+
+    margin: auto;
+}
+
+form {
+
+    margin-bottom: 50px;
+}
+
+input {
+    max-width: 300px;
+}
+
+.formulaires {
+
+    margin-right: 20%;
+    margin-left: 25%;
+}
+
+/* home page text */
+
+.home {
+
+    font-size: 20px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+/*
+#rc-imageselect,.g-recaptcha {
+    transform:scale(0.77);
+    -webkit-transform:scale(0.77);
+    transform-origin:0 0;
+    -webkit-transform-origin:0 0;
+}
+*/

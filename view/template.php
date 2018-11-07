@@ -6,7 +6,7 @@
 
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title><?= $title ?></title>
+        <title><?= htmlspecialchars($title) ?></title>
         <link href="public/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
         <link href="public/css/1-col-portfolio.css" rel="stylesheet">
@@ -132,7 +132,7 @@
                     <a class="btn btn-primary" href="https://www.linkedin.com/in/bastien-vacherand-596249159/" target="_blank"><i class="fa fa-linkedin fa-2x"></i></a>
                     <a class="btn btn-primary" href="https://plus.google.com/u/0/115491882322013390764?tab=wX" target="_blank"><i class="fa fa-google-plus fa-2x"></i></a>
                     <a class="btn btn-primary" href="https://github.com/coco2053" target="_blank"><i class="fa fa-github fa-2x"></i></a>
-                    <a class="btn btn-primary" href="https://www.facebook.com/bastien.vacherand" target="_blank"><i class="fa fa-facebook fa-2x"></i></a>
+                    <a class="btn btn-primary" href="https://www.facebook.com/Developpeur-PHP-Symfony-1961333797493877" target="_blank"><i class="fa fa-facebook fa-2x"></i></a>
                 </div> </br>
 
                 <p class="m-0 text-center text-white">Copyright &copy; Tondo Design 2018</p>

@@ -13,7 +13,7 @@ ob_start();
 
 <p> <i> <?=htmlspecialchars($post->chapo())?> </i> </p>
 
-<p class="post-content"> <?=$post->content()?> </p>
+<p class="post-content"> <?htmlspecialchars(=$post->content())?> </p>
 
 publié le <span class="date"><?=htmlspecialchars($post->creation_date())?>
 <?php

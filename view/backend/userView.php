@@ -16,7 +16,7 @@ ob_start();
     </div>
     </br>
 
-    Date d'inscription : <span class="date"><?=$user->signup_date()?></span></br>
+    Date d'inscription : <span class="date"><?=htmlspecialchars($user->signup_date())?></span></br>
     Derniere connexion : <span class="date"><?=htmlspecialchars($user->signin_date())?></span></br>
     Statut : <?=htmlspecialchars($user->role_name())?></br>
 

@@ -8,7 +8,7 @@ ob_start();
 ?>
 
 <div class="formulaires">
-    <h1 class="my-3"> <?= htmlspecialchars($title) ?> </h1>
+    <h1 class="my-3"> <?= nl2br(htmlspecialchars($title)) ?> </h1>
     <!-- Formulaire de connexion -->
     <form id = 'form_ins' method = "post" action = "connecter">
         <div class="form-group">

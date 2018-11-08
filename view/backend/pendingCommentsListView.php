@@ -23,11 +23,11 @@ ob_start();
 
             ?>
             <tr>
-                <th scope="row"><?=htmlspecialchars($oneComment->username())?></th>
-                <td><?=htmlspecialchars($oneComment->content())?></td>
-                <td><?=htmlspecialchars($oneComment->creation_date())?></td>
+                <th scope="row"><?=nl2br(htmlspecialchars($oneComment->username()))?></th>
+                <td><?=nl2br(htmlspecialchars($oneComment->content()))?></td>
+                <td><?=nl2br(htmlspecialchars($oneComment->creation_date()))?></td>
                 <td><a class="btn btn-success"
-                       href='valider-commentaire-<?=htmlspecialchars($oneComment->id_comment())?>'
+                       href='valider-commentaire-<?=nl2br(htmlspecialchars($oneComment->id_comment()))?>'
                        onclick="return confirm('Etes-vous sûr ?');">Valider</a></td>
             </tr>
 

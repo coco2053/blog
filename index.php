@@ -19,10 +19,10 @@ try {
 
             $backend = New Backend();
 
-           $formData = ['title' => htmlspecialchars($_POST['title']),
-                        'chapo' => htmlspecialchars($_POST['chapo']),
-                        'content' => htmlspecialchars($_POST['content']),
-                        'id_user' => $_SESSION['user'] -> id_user(),
+           $formData = ['title' => nl2br(htmlspecialchars($_POST['title'])),
+                        'chapo' => nl2br(htmlspecialchars($_POST['chapo'])),
+                        'content' => nl2br(htmlspecialchars($_POST['content'])),
+                        'id_user' => nl2br(htmlspecialchars($_SESSION['user'] -> id_user())),
                         'image' => $backend->checkFile($_FILES)];
 
             $backend->addPost($formData);
@@ -55,10 +55,10 @@ try {
 
             if (isset($_GET['id']) && $_GET['id'] > 0) {
 
-                $formData = ['id_post' => htmlspecialchars($_GET['id']),
-                            'title' => htmlspecialchars($_POST['title']),
-                            'chapo' => htmlspecialchars($_POST['chapo']),
-                            'content' => htmlspecialchars($_POST['content']),
+                $formData = ['id_post' => nl2br(htmlspecialchars($_GET['id'])),
+                            'title' => nl2br(htmlspecialchars($_POST['title'])),
+                            'chapo' => nl2br(htmlspecialchars($_POST['chapo'])),
+                            'content' => nl2br(htmlspecialchars($_POST['content'])),
                             'id_user' => '1'];
 
                 $backend = New Backend();

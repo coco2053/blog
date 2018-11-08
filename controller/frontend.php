@@ -10,7 +10,7 @@ class Frontend
     protected $postmanager,
               $usermanager,
               $commentmanager,
-              $db;
+              $database;
 
     /**
     * Constructeur de la classe qui permet d'instancier la bdd et les managers.
@@ -21,10 +21,10 @@ class Frontend
     public function __construct()
     {
 
-        $this->db = DBFactory::getMysqlConnexionWithPDO();
-        $this->postmanager = new PostManagerPDO($this->db);
-        $this->usermanager = new UserManagerPDO($this->db);
-        $this->commentmanager = new CommentManagerPDO($this->db);
+        $this->database = DBFactory::getMysqlConnexionWithPDO();
+        $this->postmanager = new PostManagerPDO($this->database);
+        $this->usermanager = new UserManagerPDO($this->database);
+        $this->commentmanager = new CommentManagerPDO($this->database);
     }
 
     /**
@@ -85,19 +85,19 @@ class Frontend
 
             // Create the Mailer using your created Transport
             $mailer = new Swift_Mailer($transport);
-            $user_name = htmlspecialchars($_POST['firstname']).' '.htmlspecialchars($_POST['lastname']);
+            $user_name = nl2br(htmlspecialchars($_POST['firstname'])).' '.nl2br(htmlspecialchars($_POST['lastname']));
 
 
             // Create a message
             $message = (new Swift_Message())
 
                 ->setSubject('Blog, nouveau message d\'un vitieur')
-                ->setFrom([$secure_mail => $user_name])
-                ->setTo([$data['email'], $data['email']])
-                ->setBody('Message du visiteur : '.htmlspecialchars($_POST['message']), 'text/html');
+                ->setFrom([nl2br(htmlspecialchars($secure_mail)) => nl2br(htmlspecialchars($user_name))])
+                ->setTo([nl2br(htmlspecialchars($data['email'])), nl2br(htmlspecialchars($data['email']))])
+                ->setBody('Message du visiteur : '.nl2br(htmlspecialchars($_POST['message']))), 'text/html');
 
             // Send the message
-            $result = $mailer->send($message);
+            $mailer->send($message);
             $_SESSION['show_message'] = true;
             $_SESSION['message'] = 'Votre message a bien été envoyé. Nous vous répondrons dans les plus brefs délais.';
 
@@ -207,7 +207,7 @@ class Frontend
 
             $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-            $formData = ['email' => htmlspecialchars($_POST['email']),
+            $formData = ['email' => nl2br(htmlspecialchars($_POST['email'])),
                         'password' => $hashed_password];
 
             $this->usermanager->updatePassword($formData);
@@ -246,14 +246,14 @@ class Frontend
                 $message = (new Swift_Message())
 
                     ->setSubject('Blog, réinitialisez votre mot de passe')
-                    ->setFrom([$data['email'] => $data['name']])
-                    ->setTo([htmlspecialchars($secure_mail), $data['email']])
-                    ->setBody('Cliquez sur le lien pour <a href=\''. $data['address'].'redefinition-mot-de-passe-'. htmlspecialchars($secure_mail).'\'>réinitialiser votre mot de passe.</a>', 'text/html');
+                    ->setFrom([nl2br(htmlspecialchars($data['email'])) => nl2br(htmlspecialchars($data['name']))])
+                    ->setTo([nl2br(htmlspecialchars($secure_mail))), nl2br(htmlspecialchars($data['email']))])
+                    ->setBody('Cliquez sur le lien pour <a href=\''. nl2br(htmlspecialchars($data['address'])).'redefinition-mot-de-passe-'. nl2br(htmlspecialchars($secure_mail))).'\'>réinitialiser votre mot de passe.</a>', 'text/html');
 
                 // Send the message
-                $result = $mailer->send($message);
+                $mailer->send($message);
                 $_SESSION['show_message'] = true;
-                $_SESSION['message'] = 'Un email vous a été envoyé à ' . htmlspecialchars($secure_mail) . ' comprenant
+                $_SESSION['message'] = 'Un email vous a été envoyé à ' . nl2br(htmlspecialchars($secure_mail)) . ' comprenant
                                         un lien pour réinitialiser votre mot de passe.';
 
                 header('location: connexion');
@@ -261,7 +261,7 @@ class Frontend
             } else {
 
                 $_SESSION['show_message'] = true;
-                $_SESSION['message'] = 'L\'adresse ' . htmlspecialchars($secure_mail) . ' n\'est pas enregistrée !';
+                $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($secure_mail)) . ' n\'est pas enregistrée !';
                 header('location: '. $_SERVER["HTTP_REFERER"]);
             }
 
@@ -299,8 +299,8 @@ class Frontend
 
         if ($decode['success'] == true) {
 
-            $formData = ['email' => htmlspecialchars($_POST['email']),
-                         'password' => htmlspecialchars($_POST['password'])];
+            $formData = ['email' => nl2br(htmlspecialchars($_POST['email'])),
+                         'password' => nl2br(htmlspecialchars($_POST['password'])))];
 
             if ($this->usermanager->exists($_POST['email'])) {
 
@@ -320,14 +320,14 @@ class Frontend
                 } else {
 
                     $_SESSION['show_message'] = true;
-                    $_SESSION['message'] = 'L\'addresse email ' . $_POST['email'].' n\'a pas encore été validée !';
+                    $_SESSION['message'] = 'L\'addresse email ' . nl2br(htmlspecialchars($_POST['email'])).' n\'a pas encore été validée !';
                     header('location: '. $_SERVER["HTTP_REFERER"]);
                 }
 
             } else {
 
                 $_SESSION['show_message'] = true;
-                $_SESSION['message'] = 'L\'addresse email ' . $_POST['email'].' n\'est pas enregistrée !';
+                $_SESSION['message'] = 'L\'addresse email ' . nl2br(htmlspecialchars($_POST['email'])).' n\'est pas enregistrée !';
                 header('location: '. $_SERVER["HTTP_REFERER"]);
             }
 
@@ -398,7 +398,7 @@ class Frontend
             } else {
 
                 $_SESSION['show_message'] = true;
-                $_SESSION['message'] = 'L\'adresse ' . $_POST['email'] . ' n\'est pas valide, recommencez !';
+                $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($_POST['email'])) . ' n\'est pas valide, recommencez !';
                 header('location: '. $_SERVER["HTTP_REFERER"]);
             }
 
@@ -413,7 +413,7 @@ class Frontend
                 } else {
 
                     $_SESSION['show_message'] = true;
-                    $_SESSION['message'] = 'L\'adresse ' . $_POST['email'] . ' a deja été enregistrée !';
+                    $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($_POST['email'])) . ' a deja été enregistrée !';
                     header('location: '. $_SERVER["HTTP_REFERER"]);
                 }
             }
@@ -426,10 +426,10 @@ class Frontend
                             'email' => $email,
                             'password' => $hashed_password,
                             'username' => $username,
-                            'firstname' => htmlspecialchars($_POST['firstname']),
+                            'firstname' => nl2br(htmlspecialchars($_POST['firstname'])),
                             'valid' => 'No',
                             'asleep' => 'Yes',
-                            'lastname' => htmlspecialchars($_POST['lastname'])];
+                            'lastname' => nl2br(htmlspecialchars($_POST['lastname']))];
 
                 $user = new User($formData);
                 $this->usermanager->add($user);
@@ -444,19 +444,19 @@ class Frontend
                 $message = (new Swift_Message())
 
                     ->setSubject('Blog, validez votre compte')
-                    ->setFrom([$data['email'] => $data['name']])
-                    ->setTo([htmlspecialchars($_POST['email']), $data['email']])
-                    ->setBody('Cliquez sur le lien pour <a href=\''.$data['address']
-                              .'?action=awakeUser&email='. htmlspecialchars($_POST['email'])
+                    ->setFrom([nl2br(htmlspecialchars($data['email'])) => nl2br(htmlspecialchars($data['name']))])
+                    ->setTo([nl2br(htmlspecialchars($_POST['email'])), nl2br(htmlspecialchars($data['email']))])
+                    ->setBody('Cliquez sur le lien pour <a href=\''.nl2br(htmlspecialchars($data['address']))
+                              .'?action=awakeUser&email='. nl2br(htmlspecialchars($_POST['email']))
                               .'\'>valider votre compte.</a>', 'text/html');
 
                 // Send the message
-                $result = $mailer->send($message);
+                $mailer->send($message);
 
-                 $_SESSION['show_message'] = true;
-                 $_SESSION['message'] = 'Un email a été envoyé à l\'adresse : '
-                                        .$email . ' pour valider votre compte !';
-                 header('location: connexion');
+                $_SESSION['show_message'] = true;
+                $_SESSION['message'] = 'Un email a été envoyé à l\'adresse : '
+                                        .nl2br(htmlspecialchars($email)) . ' pour valider votre compte !';
+                header('location: connexion');
             }
 
         } else {
@@ -487,10 +487,10 @@ class Frontend
         return $this->commentmanager;
     }
 
-    public function db()
+    public function database()
     {
 
-        return $this->db;
+        return $this->database;
     }
 
     // SETTERS //
@@ -513,9 +513,9 @@ class Frontend
         $this->commentmanager = $commentmanager;
     }
 
-    public function setDb($db)
+    public function setDatabase($database)
     {
 
-        $this->db = $db;
+        $this->database = $database;
     }
 }

@@ -11,7 +11,7 @@ class Backend
     protected $postmanager,
               $usermanager,
               $commentmanager,
-              $db;
+              $database;
 
     /**
     * Constructeur de la classe qui permet d'instancier la bdd et les managers.
@@ -21,10 +21,10 @@ class Backend
 
     public function __construct()
     {
-        $this->db = DBFactory::getMysqlConnexionWithPDO();
-        $this->postmanager = new PostManagerPDO($this->db);
-        $this->usermanager = new UserManagerPDO($this->db);
-        $this->commentmanager = new CommentManagerPDO($this->db);
+        $this->database = DBFactory::getMysqlConnexionWithPDO();
+        $this->postmanager = new PostManagerPDO($this->database);
+        $this->usermanager = new UserManagerPDO($this->database);
+        $this->commentmanager = new CommentManagerPDO($this->database);
 
     }
 
@@ -67,7 +67,6 @@ class Backend
 
             if ($_FILES['my_file']['error'] > 0) {
                 echo "Erreur lors du transfert";
-                exit;
             }
 
             $maxsize = 1048576;
@@ -77,18 +76,15 @@ class Backend
 
             if ( !in_array($extension_upload, $valid_extensions) ) {
                 echo "Extension incorrecte";
-                exit;
             }
 
             if ($_FILES['my_file']['size'] > $maxsize){
                 echo "Le fichier est trop gros";
-                exit;
             }
 
             $file_name1 = time();
             $file_name2 = "{$file_name1}.{$extension_upload}";
 
-            $result = move_uploaded_file($_FILES['my_file']['tmp_name'], "$uploads_dir/$file_name2");
             $width = 700;
             $height = 350;
 
@@ -109,6 +105,7 @@ class Backend
             return $file_name2;
 
         } else {
+
             $file_name2 ='no-image.jpg';
             return $file_name2;
         }
@@ -163,7 +160,7 @@ class Backend
         }
 
         $formData = ['id_post' => $id_post,
-                    'content' => htmlspecialchars($_POST['content']),
+                    'content' => nl2br(htmlspecialchars(htmlspecialchars($_POST['content'])),
                     'valid' => $valid,
                     'id_user' => $_SESSION['user'] -> id_user()];
 
@@ -318,13 +315,13 @@ class Backend
         $message = (new Swift_Message())
 
             ->setSubject('Blog, votre compte a été validé !')
-            ->setFrom([$data['email'] => $data['name']])
-            ->setTo([$user->email(), $user->email()])
+            ->setFrom([nl2br(htmlspecialchars($data['email'])) => nl2br(htmlspecialchars($data['name']))])
+            ->setTo([nl2br(htmlspecialchars($user->email())), nl2br(htmlspecialchars($user->email()))])
             ->setBody('Votre compte vient d\'etre validé ! Clickez sur le lien pour
-                      <a href=\''.$data['address'].'connexion\'>vous connecter.</a>', 'text/html');
+                      <a href=\''.nl2br(htmlspecialchars($data['address'])).'connexion\'>vous connecter.</a>', 'text/html');
 
         // Send the message
-        $result = $mailer->send($message);
+        $mailer->send($message);
         $_SESSION['show_message'] = true;
         $_SESSION['message'] = 'Compte validé ! Email envoyé à l\'utilisateur.';
         header('location: '. $_SERVER["HTTP_REFERER"]);
@@ -451,10 +448,10 @@ class Backend
         return $this->commentmanager;
     }
 
-    public function db()
+    public function database()
     {
 
-        return $this->db;
+        return $this->database;
     }
 
     // SETTERS //
@@ -477,9 +474,9 @@ class Backend
         $this->commentmanager = $commentmanager;
     }
 
-    public function setDb($db)
+    public function setDatabase($database)
     {
 
-        $this->db = $db;
+        $this->database = $database;
     }
 }

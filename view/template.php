@@ -6,7 +6,7 @@
 
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title><?= htmlspecialchars($title) ?></title>
+        <title><?= nl2br(htmlspecialchars($title)) ?></title>
         <link href="public/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
         <link href="public/css/1-col-portfolio.css" rel="stylesheet">
@@ -48,7 +48,7 @@
                                 <?php
                                 if(!empty($_SESSION['user'])) {
                                     ?>
-                                    <a href='profile-<?=htmlspecialchars($_SESSION['user']->id_user())?>'>
+                                    <a href='profile-<?=nl2br(htmlspecialchars($_SESSION['user']->id_user()))?>'>
                                         <img src="public/img/profile.png">
                                     </a>
                                     <?php
@@ -79,7 +79,7 @@
                         <div class="modal-body">
                         <?php
                         if(isset($_SESSION['message'])) {
-                            echo $_SESSION['message'];
+                            echo nl2br(htmlspecialchars($_SESSION['message']));
                         }
                         ?>
                         </div>

@@ -18,13 +18,13 @@ class DBFactory
     {
 
         $data = require __DIR__ . '/../config/connect.php';
-        $db = new PDO('mysql:host=' . $data['host'] . ';dbname=' . $data['dbname'].
+        $database = new PDO('mysql:host=' . $data['host'] . ';dbname=' . $data['dbname'].
                       ';charset=utf8', $data['username'], $data['password']);
 
         //On émet une alerte à chaque fois qu'une requête a échoué.
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+        $database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
-        return $db;
+        return $database;
     }
 
     /**

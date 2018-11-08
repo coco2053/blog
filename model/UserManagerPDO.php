@@ -9,7 +9,7 @@
 class UserManagerPDO extends UserManager
 {
 
-    protected $db; // Instance de PDO
+    protected $database; // Instance de PDO
 
     /**
     * Constructeur de la classe qui permet d'instancier la Bdd.
@@ -17,10 +17,10 @@ class UserManagerPDO extends UserManager
     * @return void
     */
 
-    public function __construct(PDO $db)
+    public function __construct(PDO $database)
     {
 
-        $this->db = $db;
+        $this->database = $database;
     }
 
     /**
@@ -33,27 +33,27 @@ class UserManagerPDO extends UserManager
     {
 
         // Préparation de la requête d'insertion.
-        $q = $this->db->prepare('INSERT INTO user(email, password, username, lastname,
+        $req = $this->database->prepare('INSERT INTO user(email, password, username, lastname,
                                              firstname, asleep, valid, signup_date, signin_date, id_role)
 
                                  VALUES (:email, :password, :username, :lastname, :firstname,
                                          :asleep, :valid,  NOW(), NOW(), :id_role)');
 
         // Assignation des valeurs du user.
-        $q->bindValue(':email', $user->email());
-        $q->bindValue(':password', $user->password());
-        $q->bindValue(':username', $user->username());
-        $q->bindValue(':lastname', $user->lastname());
-        $q->bindValue(':firstname', $user->firstname());
-        $q->bindValue(':asleep', $user->asleep());
-        $q->bindValue(':valid', $user->valid());
-        $q->bindValue(':id_role', $user->id_role());
+        $req->bindValue(':email', $user->email());
+        $req->bindValue(':password', $user->password());
+        $req->bindValue(':username', $user->username());
+        $req->bindValue(':lastname', $user->lastname());
+        $req->bindValue(':firstname', $user->firstname());
+        $req->bindValue(':asleep', $user->asleep());
+        $req->bindValue(':valid', $user->valid());
+        $req->bindValue(':id_role', $user->id_role());
 
         // Exécution de la requête.
-        $q->execute();
+        $req->execute();
 
         // Hydratation du user passé en paramètre avec assignation de son identifiant.
-        $user->hydrate(['id_user' => $this->db->lastInsertId()]);
+        $user->hydrate(['id_user' => $this->database->lastInsertId()]);
     }
 
     /**
@@ -66,7 +66,7 @@ class UserManagerPDO extends UserManager
     {
 
         // Exécute une requête de type DELETE.
-        $this->db->exec('DELETE
+        $this->database->exec('DELETE
                          FROM user
                          WHERE id_user = '.(int) $id_user);
     }
@@ -79,7 +79,7 @@ class UserManagerPDO extends UserManager
     public function getList($id_user)
     {
 
-        $q = $this->db->prepare('SELECT
+        $req = $this->database->prepare('SELECT
                                 user.id_user,
                                 user.email,
                                 user.username,
@@ -93,11 +93,11 @@ class UserManagerPDO extends UserManager
                                 WHERE user.id_user != :id_user
                                 ORDER BY user.signup_date');
 
-        $q->bindValue(':id_user', (int) $id_user, PDO::PARAM_INT);
+        $req->bindValue(':id_user', (int) $id_user, PDO::PARAM_INT);
 
-        $q->execute();
-        $q->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'User');
-        $users = $q->fetchAll();
+        $req->execute();
+        $req->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'User');
+        $users = $req->fetchAll();
 
         /* On parcourt notre liste de news pour pouvoir placer des instances
         de DateTime en guise de dates d'ajout et de modification. */
@@ -108,7 +108,7 @@ class UserManagerPDO extends UserManager
             $user->setSignup_date(new DateTime($user->signup_date()));
         }
 
-        $q->closeCursor();
+        $req->closeCursor();
 
         return $users;
     }
@@ -121,7 +121,7 @@ class UserManagerPDO extends UserManager
     public function getPendingList()
     {
 
-        $q = $this->db->prepare('SELECT
+        $req = $this->database->prepare('SELECT
                                         user.id_user,
                                         user.email,
                                         user.username,
@@ -135,9 +135,9 @@ class UserManagerPDO extends UserManager
                                         WHERE user.valid = \'No\'
                                         ORDER BY user.signup_date');
 
-        $q->execute();
-        $q->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'User');
-        $users = $q->fetchAll();
+        $req->execute();
+        $req->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'User');
+        $users = $req->fetchAll();
 
         /* On parcourt notre liste de news pour pouvoir placer des instances
         de DateTime en guise de dates d'ajout et de modification. */
@@ -148,7 +148,7 @@ class UserManagerPDO extends UserManager
             $user->setSignup_date(new DateTime($user->signup_date()));
         }
 
-        $q->closeCursor();
+        $req->closeCursor();
 
         return $users;
     }
@@ -162,7 +162,7 @@ class UserManagerPDO extends UserManager
     public function get($id_user)
     {
 
-        $q = $this->db->prepare('SELECT
+        $req = $this->database->prepare('SELECT
                                 user.id_user, user.email, user.username, user.lastname,
                                 user.firstname, user.valid, role.name AS role_name, permission.action_list AS perm_action,
                                 user.signin_date AS signin_date,
@@ -173,13 +173,13 @@ class UserManagerPDO extends UserManager
                                 LEFT JOIN permission ON role.id_permission = permission.id_permission
                                 WHERE id_user = :id_user');
 
-        $q->bindValue(':id_user', (int) $id_user, PDO::PARAM_INT);
+        $req->bindValue(':id_user', (int) $id_user, PDO::PARAM_INT);
 
-        $q->execute();
+        $req->execute();
 
-        $q->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'User');
+        $req->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'User');
 
-        $user = $q->fetch();
+        $user = $req->fetch();
 
         $user->setSignin_date(new DateTime($user->signin_date()));
         $user->setSignup_date(new DateTime($user->signup_date()));
@@ -197,14 +197,14 @@ class UserManagerPDO extends UserManager
     {
 
         // Exécution d'une requête COUNT() avec une clause WHERE, et retourne un boolean.
-        $q = $this->db->prepare('SELECT email, valid
+        $req = $this->database->prepare('SELECT email, valid
                                  FROM user
                                  WHERE email = :email
                                  AND valid = \'Yes\' ');
 
-        $q->execute([':email' => $email]);
+        $req->execute([':email' => $email]);
 
-        return (bool) $q->fetchColumn();
+        return (bool) $req->fetchColumn();
     }
 
     /**
@@ -217,19 +217,19 @@ class UserManagerPDO extends UserManager
     {
 
         // Prépare une requête de type UPDATE.
-        $q = $this->db->prepare('UPDATE user
+        $req = $this->database->prepare('UPDATE user
                                   SET
                                   valid = :valid
                                   WHERE
                                   id_user = :id_user');
 
         // Assignation des valeurs à la requête.
-        $q->bindValue(':valid', 'Yes', PDO::PARAM_STR);
-        $q->bindValue(':id_user', $id_user, PDO::PARAM_INT);
+        $req->bindValue(':valid', 'Yes', PDO::PARAM_STR);
+        $req->bindValue(':id_user', $id_user, PDO::PARAM_INT);
 
 
         // Exécution de la requête.
-        $q->execute();
+        $req->execute();
     }
 
     /**
@@ -242,18 +242,18 @@ class UserManagerPDO extends UserManager
     {
 
         // Prépare une requête de type UPDATE.
-        $q = $this->db->prepare('UPDATE user
+        $req = $this->database->prepare('UPDATE user
                                   SET
                                   asleep = \'Yes\'
                                   WHERE
                                   email = :email');
 
         // Assignation des valeurs à la requête.
-        $q->bindValue(':email', $email, PDO::PARAM_STR);
+        $req->bindValue(':email', $email, PDO::PARAM_STR);
 
 
         // Exécution de la requête.
-        $q->execute();
+        $req->execute();
     }
 
     /**
@@ -265,13 +265,13 @@ class UserManagerPDO extends UserManager
     public function checkPassword($formData)
     {
 
-        $q = $this->db->prepare('SELECT email, password, id_user
+        $req = $this->database->prepare('SELECT email, password, id_user
                                  FROM user
                                  WHERE email = :email');
 
-        $q->execute([':email' => $formData['email']]);
+        $req->execute([':email' => $formData['email']]);
 
-        $result = $q->fetch();
+        $result = $req->fetch();
         $id = $result['id_user'];
 
         // Comparaison du pass envoyé via le formulaire avec celui de la base
@@ -294,17 +294,17 @@ class UserManagerPDO extends UserManager
     public function updateSigninDate($id_user)
     {
 
-        $q = $this->db->prepare('UPDATE user
+        $req = $this->database->prepare('UPDATE user
                                  SET
                                  signin_date = NOW()
                                  WHERE
                                  id_user = :id_user');
 
         // Assignation des valeurs à la requête.
-        $q->bindValue(':id_user', $id_user, PDO::PARAM_INT);
+        $req->bindValue(':id_user', $id_user, PDO::PARAM_INT);
 
          // Exécution de la requête.
-        $q->execute();
+        $req->execute();
     }
 
     /**
@@ -316,18 +316,18 @@ class UserManagerPDO extends UserManager
     public function updatePassword($formData)
     {
 
-        $q = $this->db->prepare('UPDATE user
+        $req = $this->database->prepare('UPDATE user
                                  SET
                                  password = :password
                                  WHERE
                                  email = :email');
 
         // Assignation des valeurs à la requête.
-        $q->bindValue(':password', $formData['password'], PDO::PARAM_STR);
-        $q->bindValue(':email', $formData['email'], PDO::PARAM_STR);
+        $req->bindValue(':password', $formData['password'], PDO::PARAM_STR);
+        $req->bindValue(':email', $formData['email'], PDO::PARAM_STR);
 
          // Exécution de la requête.
-        $q->execute();
+        $req->execute();
     }
 
     /**
@@ -340,9 +340,9 @@ class UserManagerPDO extends UserManager
     {
 
         // Exécution d'une requête COUNT() avec une clause WHERE, et retourne un boolean.
-        $q = $this->db->prepare('SELECT COUNT(*) FROM user WHERE email = :email');
-        $q->execute([':email' => $info]);
+        $req = $this->database->prepare('SELECT COUNT(*) FROM user WHERE email = :email');
+        $req->execute([':email' => $info]);
 
-        return (bool) $q->fetchColumn();
+        return (bool) $req->fetchColumn();
     }
 }

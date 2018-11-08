@@ -24,15 +24,15 @@ ob_start();
         foreach ($users as $oneUser) {
         ?>
             <tr>
-                <th scope="row"><?=htmlspecialchars($oneUser->username())?></th>
-                <td><?=htmlspecialchars($oneUser->email())?></td>
-                <td><?=htmlspecialchars($oneUser->firstname())?></td>
-                <td><?=htmlspecialchars($oneUser->lastname())?></td>
-                <td><?=htmlspecialchars($oneUser->Valid())?></td>
-                <td><?=htmlspecialchars($oneUser->signup_date())?></td>
-                <td><?=htmlspecialchars($oneUser->signin_date())?></td>
+                <th scope="row"><?=nl2br(htmlspecialchars($oneUser->username()))?></th>
+                <td><?=nl2br(htmlspecialchars($oneUser->email()))?></td>
+                <td><?=nl2br(htmlspecialchars($oneUser->firstname()))?></td>
+                <td><?=nl2br(htmlspecialchars($oneUser->lastname()))?></td>
+                <td><?=nl2br(htmlspecialchars($oneUser->Valid()))?></td>
+                <td><?=nl2br(htmlspecialchars($oneUser->signup_date()))?></td>
+                <td><?=nl2br(htmlspecialchars($oneUser->signin_date()))?></td>
                 <td><a class="btn btn-success"
-                       href='valider-compte-<?=htmlspecialchars($oneUser->id_user())?>'
+                       href='valider-compte-<?=nl2br(htmlspecialchars($oneUser->id_user()))?>'
                        onclick="return confirm('Etes-vous sûr ?');">Valider</a></td>
             </tr>
 

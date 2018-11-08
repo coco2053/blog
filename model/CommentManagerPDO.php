@@ -7,7 +7,7 @@
 
 class CommentManagerPDO extends CommentManager
 {
-    protected $db; // Instance de PDO
+    protected $database; // Instance de PDO
 
     /**
     * Constructeur de la classe qui permet d'instancier la Bdd.
@@ -15,10 +15,10 @@ class CommentManagerPDO extends CommentManager
     * @return void
     */
 
-    public function __construct(PDO $db)
+    public function __construct(PDO $database)
     {
 
-        $this->db = $db;
+        $this->database = $database;
     }
 
     /**
@@ -31,20 +31,20 @@ class CommentManagerPDO extends CommentManager
     {
 
         // Préparation de la requête d'insertion.
-        $q = $this->db->prepare('INSERT INTO comment(content, creation_date, valid, id_user, id_post)
+        $req = $this->database->prepare('INSERT INTO comment(content, creation_date, valid, id_user, id_post)
                                   VALUES (:content, NOW(), :valid, :id_user, :id_post)');
 
         // Assignation des valeurs du comment.
-        $q->bindValue(':content', $comment->content());
-        $q->bindValue(':valid', $comment->valid());
-        $q->bindValue(':id_user', $comment->id_user());
-        $q->bindValue(':id_post', $comment->id_post());
+        $req->bindValue(':content', $comment->content());
+        $req->bindValue(':valid', $comment->valid());
+        $req->bindValue(':id_user', $comment->id_user());
+        $req->bindValue(':id_post', $comment->id_post());
 
         // Exécution de la requête.
-        $q->execute();
+        $req->execute();
 
         // Hydratation du comment passé en paramètre avec assignation de son identifiant.
-        $comment->hydrate(['id_comment' => $this->db->lastInsertId()]);
+        $comment->hydrate(['id_comment' => $this->database->lastInsertId()]);
 
     }
 
@@ -58,7 +58,7 @@ class CommentManagerPDO extends CommentManager
     {
 
       // Exécute une requête de type DELETE.
-      $this->db->exec('DELETE FROM comment WHERE id_comment = '.(int) $id_comment);
+      $this->database->exec('DELETE FROM comment WHERE id_comment = '.(int) $id_comment);
 
     }
 
@@ -72,12 +72,12 @@ class CommentManagerPDO extends CommentManager
     {
 
         // On verifie qu'il y a des commentaires correspondants à ce post.
-        $q = $this->db->prepare('SELECT COUNT(*) FROM comment WHERE id_post = :id_post');
-        $q->execute([':id_post' => $id_post]);
+        $req = $this->database->prepare('SELECT COUNT(*) FROM comment WHERE id_post = :id_post');
+        $req->execute([':id_post' => $id_post]);
 
-        if((bool) $q->fetchColumn()) {
+        if((bool) $req->fetchColumn()) {
 
-            $q = $this->db->prepare('SELECT
+            $req = $this->database->prepare('SELECT
                         comment.id_comment,
                         comment.content,
                         comment.id_post,
@@ -90,12 +90,12 @@ class CommentManagerPDO extends CommentManager
                         ORDER BY comment.creation_date DESC');
 
 
-            $q->bindValue(':id_post', (int) $id_post, PDO::PARAM_INT);
+            $req->bindValue(':id_post', (int) $id_post, PDO::PARAM_INT);
 
-            $q->execute();
+            $req->execute();
 
-            $q->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Comment');
-            $comments = $q->fetchAll();
+            $req->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Comment');
+            $comments = $req->fetchAll();
 
             // On parcourt notre liste de news pour pouvoir placer des instances de DateTime en guise de dates d'ajout.
             foreach ($comments as $comment) {
@@ -104,7 +104,7 @@ class CommentManagerPDO extends CommentManager
 
             }
 
-            $q->closeCursor();
+            $req->closeCursor();
 
             return $comments;
         }
@@ -120,7 +120,7 @@ class CommentManagerPDO extends CommentManager
    public function getPendingList()
     {
 
-        $q = $this->db->prepare('SELECT
+        $req = $this->database->prepare('SELECT
                                         comment.id_comment,
                                         comment.content,
                                         comment.creation_date,
@@ -131,9 +131,9 @@ class CommentManagerPDO extends CommentManager
                                         WHERE comment.valid = \'No\'
                                         ORDER BY comment.creation_date');
 
-        $q->execute();
-        $q->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Comment');
-        $comments = $q->fetchAll();
+        $req->execute();
+        $req->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Comment');
+        $comments = $req->fetchAll();
 
         /* On parcourt notre liste de news pour pouvoir placer des instances de DateTime en guise
         de dates d'ajout et de modification. */
@@ -142,7 +142,7 @@ class CommentManagerPDO extends CommentManager
             $comment->setCreation_date(new DateTime($comment->Creation_date()));
         }
 
-        $q->closeCursor();
+        $req->closeCursor();
 
         return $comments;
     }
@@ -157,18 +157,18 @@ class CommentManagerPDO extends CommentManager
     {
 
         // Prépare une requête de type UPDATE.
-        $q = $this->db->prepare('UPDATE comment
+        $req = $this->database->prepare('UPDATE comment
                                   SET
                                   valid = :valid
                                   WHERE
                                   id_comment = :id_comment');
 
         // Assignation des valeurs à la requête.
-        $q->bindValue(':valid', 'Yes', PDO::PARAM_STR);
-        $q->bindValue(':id_comment', $id_comment, PDO::PARAM_INT);
+        $req->bindValue(':valid', 'Yes', PDO::PARAM_STR);
+        $req->bindValue(':id_comment', $id_comment, PDO::PARAM_INT);
 
         // Exécution de la requête.
-        $q->execute();
+        $req->execute();
     }
 
 }

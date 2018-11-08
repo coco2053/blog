@@ -1,6 +1,6 @@
 <?php
 
-$title = htmlspecialchars($post->title());
+$title = nl2br(htmlspecialchars($post->title()));
 $description = 'Lire un article';
 
 ob_start();
@@ -9,24 +9,24 @@ ob_start();
 
 <h1 class="my-3"> <?= $title ?> </h1>
 <img class="img-fluid rounded mb-3 mb-md-0"
-     src="public/upload/<?=htmlspecialchars($post->image())?>" alt="">
+     src="public/upload/<?=nl2br(htmlspecialchars($post->image()))?>" alt="">
 
-<p> <i> <?=htmlspecialchars($post->chapo())?> </i> </p>
+<p> <i> <?=nl2br(htmlspecialchars($post->chapo()))?> </i> </p>
 
-<p class="post-content"> <?htmlspecialchars(=$post->content())?> </p>
+<p class="post-content"> <?nl2br(htmlspecialchars(=$post->content()))?> </p>
 
-publié le <span class="date"><?=htmlspecialchars($post->creation_date())?>
+publié le <span class="date"><?=nl2br(htmlspecialchars($post->creation_date()))?>
 <?php
 $creation_date = $post->creation_date();
 $update_date = $post->update_date();
 
 if($creation_date !== $update_date) {
     ?>
-    </span>• mise à jour le <span class="date"><?=htmlspecialchars($post->update_date())?></span>
+    </span>• mise à jour le <span class="date"><?=nl2br(htmlspecialchars($post->update_date()))?></span>
     <?php
     }
 ?>
-par <span class="username"> <?=htmlspecialchars($post->username())?></span></br>
+par <span class="username"> <?=nl2br(htmlspecialchars($post->username()))?></span></br>
 
 <?php
 
@@ -36,10 +36,10 @@ if(isset($_SESSION['user'])) {
     ?>
 
         <a class="btn btn-primary"
-           href='modifier-article-<?=htmlspecialchars($post->id_post())?>'>Modifier l'article</a>
+           href='modifier-article-<?=nl2br(htmlspecialchars($post->id_post()))?>'>Modifier l'article</a>
 
         <a class="btn btn-danger"
-           href='supprimer-article-<?=htmlspecialchars($post->id_post())?>'
+           href='supprimer-article-<?=nl2br(htmlspecialchars($post->id_post()))?>'
            onclick="return confirm('Etes-vous sûr ?');">Supprimer l'article</a></br>
 
     <?php
@@ -57,10 +57,10 @@ if(isset($comments)) {
     foreach ($comments as $oneComment) {
         ?>
             <div class="comment">
-                <span class="username"> <?=htmlspecialchars($oneComment->username())?></span>
-                <span class="date"> <?=htmlspecialchars($oneComment->creation_date())?></span>
+                <span class="username"> <?=nl2br(htmlspecialchars($oneComment->username()))?></span>
+                <span class="date"> <?=nl2br(htmlspecialchars($oneComment->creation_date()))?></span>
 
-                <p> <?=htmlspecialchars($oneComment->content())?> </p>
+                <p> <?=nl2br(htmlspecialchars($oneComment->content()))?> </p>
 
 
     <?php
@@ -71,7 +71,7 @@ if(isset($comments)) {
             ?>
 
             <p>
-                <a href='supprimer-commentaire-<?=htmlspecialchars($oneComment->id_comment())?>'
+                <a href='supprimer-commentaire-<?=nl2br(htmlspecialchars($oneComment->id_comment()))?>'
                    onclick="return confirm('Etes-vous sûr ?');">Supprimer</a>
             </p>
             </div>
@@ -84,7 +84,7 @@ if(strpos($_SESSION['user'] -> perm_action(), 'addComment') !== false) {
 ?>
     <div class="article">
         <form id = 'form_com' method = "post"
-                              action = "ajouter-commentaire-<?=htmlspecialchars($post->id_post())?>">
+                              action = "ajouter-commentaire-<?=nl2br(htmlspecialchars($post->id_post()))?>">
         <div class="form-group">
             <label>Ajouter un commentaire </label>
             <input type="text" class="form-control" name="content"

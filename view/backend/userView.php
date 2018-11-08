@@ -1,6 +1,6 @@
 <?php
 
-$title = 'Bienvenue ' .htmlspecialchars($user->username());
+$title = 'Bienvenue ' .nl2br(htmlspecialchars($user->username()));
 $description = 'Page de profile';
 
 ob_start();
@@ -11,14 +11,14 @@ ob_start();
     <div class="profile-img">
         <img src="public/img/profile-grey.png">
         <span class="profile-name">
-              <?=htmlspecialchars($user->firstname())?> <?=htmlspecialchars($user->lastname())?>
+              <?=nl2br(htmlspecialchars($user->firstname()))?> <?=nl2br(htmlspecialchars($user->lastname()))?>
         </span>
     </div>
     </br>
 
-    Date d'inscription : <span class="date"><?=htmlspecialchars($user->signup_date())?></span></br>
-    Derniere connexion : <span class="date"><?=htmlspecialchars($user->signin_date())?></span></br>
-    Statut : <?=htmlspecialchars($user->role_name())?></br>
+    Date d'inscription : <span class="date"><?=nl2br(htmlspecialchars($user->signup_date()))?></span></br>
+    Derniere connexion : <span class="date"><?=nl2br(htmlspecialchars($user->signin_date()))?></span></br>
+    Statut : <?=nl2br(htmlspecialchars($user->role_name()))?></br>
 
     <?php
 
@@ -27,7 +27,7 @@ ob_start();
         if(strpos($_SESSION['user'] -> perm_action(), 'getUsers') !== false) {
     ?>
       <p>
-          <a class="btn btn-primary" href='comptes-<?=htmlspecialchars($user->id_user())?>'>Gestion des comptes</a>
+          <a class="btn btn-primary" href='comptes-<?=nl2br(htmlspecialchars($user->id_user()))?>'>Gestion des comptes</a>
       </p>
     <?php
         }

@@ -143,7 +143,7 @@ class User
     public function setId_user($id_user)
     {
 
-        $id_usert = (int) $id_user;
+        $id_user = (int) $id_user;
 
         if ($id_user > 0) {
 
@@ -238,7 +238,7 @@ class User
         }
     }
 
-    public function setRole_name($valid)
+    public function setRole_name($role_name)
     {
 
         if (is_string($role_name)) {
@@ -247,7 +247,7 @@ class User
         }
     }
 
-    public function setPerm_action($valid)
+    public function setPerm_action($perm_action)
     {
 
         if (is_string($perm_action)) {

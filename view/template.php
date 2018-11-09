@@ -114,7 +114,7 @@
         </div>
 
         <!-- Footer -->
-        <footer class="py-2 bg-dark fixed-bottom">
+        <footer class="py-2 bg-dark ">
             <div class="container-fluid">
 
                 <?php

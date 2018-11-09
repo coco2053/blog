@@ -6,20 +6,29 @@ $description = 'Rediger un nouvel article';
 ob_start();
 
 ?>
-
-<form action="ecrire-article" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label>Titre</label>
-        <input type="text" class="form-control" name="title" maxlength="100" placeholder="Entrez le titre" />
-        <label>Chapo</label>
-        <input type="text" class="form-control" name="chapo" maxlength="100" placeholder="Entrez le chapo" />
-        <label>Contenu</label>
-        <textarea name="content" class="form-control" placeholder="Entrez le contenu" rows="4" cols="40">  </textarea>
-        <labelfor="my_file">Image : Fichier (format jpeg | max. 1 Mo)</labelfor>
-        <input type="file" name="my_file" id="my_file"/><br />
-        <button type="submit" class="btn btn-primary" name="addPost" id="i_submit">Valider</button>
+<div class="formstyle">
+    <div class="row">
+        <div class="col-md-2"> </div>
+        <div class="col-md-8 center">
+            <h1 class="my-3"> <?= nl2br(htmlspecialchars($title)) ?> </h1>
+            <form action="ecrire-article" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>Titre</label>
+                    <input type="text" class="form-control" name="title" maxlength="100" placeholder="Entrez le titre" />
+                    <label>Chapo</label>
+                    <input type="text" class="form-control" name="chapo" maxlength="100" placeholder="Entrez le chapo" />
+                    <label>Contenu</label>
+                    <textarea name="content" class="form-control" placeholder="Entrez le contenu" rows="4" cols="40">  </textarea>
+                    <labelfor="my_file">Image : Fichier (format jpeg | max. 1 Mo)</labelfor>
+                    <input type="file" name="my_file" id="my_file"/><br />
+                    <button type="submit" class="btn btn-primary" name="addPost" id="i_submit">Valider</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-2"> </div>
     </div>
-</form>
+</div>
+
 
 <script type="text/javascript" script src="public/vendor/jquery/jquery.min.js"></script>
 <script type="text/javascript">

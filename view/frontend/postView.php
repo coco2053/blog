@@ -7,13 +7,13 @@ ob_start();
 
 ?>
 
-<h1 class="my-3"> <?= $title ?> </h1>
+<h1 class="my-3"> <?= nl2br(htmlspecialchars($title)) ?> </h1>
 <img class="img-fluid rounded mb-3 mb-md-0"
      src="public/upload/<?=nl2br(htmlspecialchars($post->image()))?>" alt="">
 
 <p> <i> <?=nl2br(htmlspecialchars($post->chapo()))?> </i> </p>
 
-<p class="post-content"> <?nl2br(htmlspecialchars(=$post->content()))?> </p>
+<p class="post-content"> <?=nl2br(htmlspecialchars($post->content()))?> </p>
 
 publié le <span class="date"><?=nl2br(htmlspecialchars($post->creation_date()))?>
 <?php

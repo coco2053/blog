@@ -1,6 +1,6 @@
 <?php
 
-$title = 'Gestion des comptes :';
+$title = 'Comptes en attente de validation :';
 $description = 'La liste des utilisateurs à valider:';
 
 ob_start();

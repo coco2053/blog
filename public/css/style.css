@@ -2,7 +2,21 @@
  * CSS rules for my personal blog site
  * Written by Bastien Vacherand
  */
+html, body {
 
+    height: 100%;
+}
+
+body {
+
+    display: flex;
+    flex-direction: column;
+}
+
+footer {
+
+    margin-top: auto;
+}
 /* profile */
 
 .inset a img {
@@ -49,7 +63,7 @@
 .content {
 
     margin-top: 30px;
-    margin-bottom: 200px;
+    margin-bottom: 30px;
 }
 
 
@@ -118,12 +132,6 @@ input {
     max-width: 300px;
 }
 
-/*.formulaires {
-
-    margin-right: 20%;
-    margin-left: 25%;
-}
-*/
 /* home page text */
 
 .home {

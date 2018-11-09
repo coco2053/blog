@@ -94,7 +94,7 @@ class Frontend
                 ->setSubject('Blog, nouveau message d\'un vitieur')
                 ->setFrom([nl2br(htmlspecialchars($secure_mail)) => nl2br(htmlspecialchars($user_name))])
                 ->setTo([nl2br(htmlspecialchars($data['email'])), nl2br(htmlspecialchars($data['email']))])
-                ->setBody('Message du visiteur : '.nl2br(htmlspecialchars($_POST['message']))), 'text/html');
+                ->setBody('Message du visiteur : '.nl2br(htmlspecialchars($_POST['message'])), 'text/html');
 
             // Send the message
             $mailer->send($message);
@@ -247,21 +247,23 @@ class Frontend
 
                     ->setSubject('Blog, réinitialisez votre mot de passe')
                     ->setFrom([nl2br(htmlspecialchars($data['email'])) => nl2br(htmlspecialchars($data['name']))])
-                    ->setTo([nl2br(htmlspecialchars($secure_mail))), nl2br(htmlspecialchars($data['email']))])
-                    ->setBody('Cliquez sur le lien pour <a href=\''. nl2br(htmlspecialchars($data['address'])).'redefinition-mot-de-passe-'. nl2br(htmlspecialchars($secure_mail))).'\'>réinitialiser votre mot de passe.</a>', 'text/html');
+                    ->setTo([nl2br(htmlspecialchars($secure_mail)), nl2br(htmlspecialchars($data['email']))])
+                    ->setBody('Cliquez sur le lien pour <a href=\''. nl2br(htmlspecialchars($data['address'])).'redefinition-mot-de-passe-'. nl2br(htmlspecialchars($secure_mail)).'\'>réinitialiser votre mot de passe.</a>', 'text/html');
 
                 // Send the message
                 $mailer->send($message);
                 $_SESSION['show_message'] = true;
-                $_SESSION['message'] = 'Un email vous a été envoyé à ' . nl2br(htmlspecialchars($secure_mail)) . ' comprenant
-                                        un lien pour réinitialiser votre mot de passe.';
+                $_SESSION['message'] = 'Un email vous a été envoyé à ' . nl2br(htmlspecialchars($secure_mail)) .
+                                       ' comprenant un lien pour réinitialiser votre mot de passe. Si vous ne voyez
+                                        pas l\'email, regardez dans vos courriers indésirables.';
 
                 header('location: connexion');
 
             } else {
 
                 $_SESSION['show_message'] = true;
-                $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($secure_mail)) . ' n\'est pas enregistrée !';
+                $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($secure_mail)) .
+                                       ' n\'est pas enregistrée !';
                 header('location: '. $_SERVER["HTTP_REFERER"]);
             }
 
@@ -300,7 +302,7 @@ class Frontend
         if ($decode['success'] == true) {
 
             $formData = ['email' => nl2br(htmlspecialchars($_POST['email'])),
-                         'password' => nl2br(htmlspecialchars($_POST['password'])))];
+                         'password' => nl2br(htmlspecialchars($_POST['password']))];
 
             if ($this->usermanager->exists($_POST['email'])) {
 
@@ -320,14 +322,16 @@ class Frontend
                 } else {
 
                     $_SESSION['show_message'] = true;
-                    $_SESSION['message'] = 'L\'addresse email ' . nl2br(htmlspecialchars($_POST['email'])).' n\'a pas encore été validée !';
+                    $_SESSION['message'] = 'L\'addresse email ' . nl2br(htmlspecialchars($_POST['email'])).
+                                            ' n\'a pas encore été validée !';
                     header('location: '. $_SERVER["HTTP_REFERER"]);
                 }
 
             } else {
 
                 $_SESSION['show_message'] = true;
-                $_SESSION['message'] = 'L\'addresse email ' . nl2br(htmlspecialchars($_POST['email'])).' n\'est pas enregistrée !';
+                $_SESSION['message'] = 'L\'addresse email ' . nl2br(htmlspecialchars($_POST['email'])).
+                                       ' n\'est pas enregistrée !';
                 header('location: '. $_SERVER["HTTP_REFERER"]);
             }
 
@@ -398,7 +402,8 @@ class Frontend
             } else {
 
                 $_SESSION['show_message'] = true;
-                $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($_POST['email'])) . ' n\'est pas valide, recommencez !';
+                $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($_POST['email'])) .
+                                       ' n\'est pas valide, recommencez !';
                 header('location: '. $_SERVER["HTTP_REFERER"]);
             }
 
@@ -413,7 +418,8 @@ class Frontend
                 } else {
 
                     $_SESSION['show_message'] = true;
-                    $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($_POST['email'])) . ' a deja été enregistrée !';
+                    $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($_POST['email'])) .
+                                           ' a deja été enregistrée !';
                     header('location: '. $_SERVER["HTTP_REFERER"]);
                 }
             }

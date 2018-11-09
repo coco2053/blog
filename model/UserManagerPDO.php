@@ -272,12 +272,12 @@ class UserManagerPDO extends UserManager
         $req->execute([':email' => $formData['email']]);
 
         $result = $req->fetch();
-        $id = $result['id_user'];
+        $id_user = $result['id_user'];
 
         // Comparaison du pass envoyé via le formulaire avec celui de la base
         if (password_verify($formData['password'], $result['password'])) {
 
-            return $id;
+            return $id_user;
 
         } else {
 

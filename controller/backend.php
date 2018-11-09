@@ -160,9 +160,9 @@ class Backend
         }
 
         $formData = ['id_post' => $id_post,
-                    'content' => nl2br(htmlspecialchars(htmlspecialchars($_POST['content'])),
+                    'content' => nl2br(htmlspecialchars($_POST['content'])),
                     'valid' => $valid,
-                    'id_user' => $_SESSION['user'] -> id_user()];
+                    'id_user' => nl2br(htmlspecialchars($_SESSION['user'] -> id_user()))];
 
         $comment = new Comment($formData);
         $this->commentmanager->add($comment);
@@ -323,7 +323,7 @@ class Backend
         // Send the message
         $mailer->send($message);
         $_SESSION['show_message'] = true;
-        $_SESSION['message'] = 'Compte validé ! Email envoyé à l\'utilisateur.';
+        $_SESSION['message'] = 'Compte validé ! Email envoyé à l\'utilisateur. Si vous ne voyez pas l\'email, regardez dans vos courriers indésirables.';
         header('location: '. $_SERVER["HTTP_REFERER"]);
     }
 

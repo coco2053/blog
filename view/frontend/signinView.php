@@ -7,7 +7,6 @@ ob_start();
 
 ?>
 
-<!--<div class="formulaires">-->
 <div class="formstyle">
     <div class="row">
         <div class="col-md-3"> </div>

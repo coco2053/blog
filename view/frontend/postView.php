@@ -45,6 +45,7 @@ if(isset($_SESSION['user'])) {
     <?php
 
     }
+}
 ?>
 
 <h4>Commentaires</h4>
@@ -56,48 +57,55 @@ if(isset($comments)) {
 
     foreach ($comments as $oneComment) {
         ?>
-            <div class="comment">
-                <span class="username"> <?=nl2br(htmlspecialchars($oneComment->username()))?></span>
-                <span class="date"> <?=nl2br(htmlspecialchars($oneComment->creation_date()))?></span>
+        <div class="comment">
+            <span class="username"> <?=nl2br(htmlspecialchars($oneComment->username()))?></span>
+            <span class="date"> <?=nl2br(htmlspecialchars($oneComment->creation_date()))?></span>
 
-                <p> <?=nl2br(htmlspecialchars($oneComment->content()))?> </p>
+            <p> <?=nl2br(htmlspecialchars($oneComment->content()))?> </p>
 
-
-    <?php
-
-    if(isset($_SESSION['user'])) {
-
-        if(strpos($_SESSION['user'] -> perm_action(), 'deleteComment') !== false) {
-            ?>
-
-            <p>
-                <a href='supprimer-commentaire-<?=nl2br(htmlspecialchars($oneComment->id_comment()))?>'
-                   onclick="return confirm('Etes-vous sûr ?');">Supprimer</a>
-            </p>
-            </div>
-            <?php
-            }
-        }
-    }
-}
-if(strpos($_SESSION['user'] -> perm_action(), 'addComment') !== false) {
-?>
-    <div class="article">
-        <form id = 'form_com' method = "post"
-                              action = "ajouter-commentaire-<?=nl2br(htmlspecialchars($post->id_post()))?>">
-        <div class="form-group">
-            <label>Ajouter un commentaire </label>
-            <input type="text" class="form-control" name="content"
-                   placeholder="Entrez votre commentaire" required /> </td>
-            <button type="submit" class="btn btn-primary">Valider</button>
-        </div>
-
-        </form>
-    </div>
 
         <?php
+
+        if(isset($_SESSION['user'])) {
+
+            if(strpos($_SESSION['user'] -> perm_action(), 'deleteComment') !== false) {
+                ?>
+
+                <p>
+                    <a href='supprimer-commentaire-<?=nl2br(htmlspecialchars($oneComment->id_comment()))?>'
+                       onclick="return confirm('Etes-vous sûr ?');">Supprimer</a>
+                </p>
+
+                <?php
+                }
+
         }
+      ?>
+      </div>
+      <?php
     }
+}
+if(isset($_SESSION['user'])) {
+
+    if(strpos($_SESSION['user'] -> perm_action(), 'addComment') !== false) {
+    ?>
+        <div class="article">
+            <form id = 'form_com' method = "post"
+                                  action = "ajouter-commentaire-<?=nl2br(htmlspecialchars($post->id_post()))?>">
+            <div class="form-group">
+                <label>Ajouter un commentaire </label>
+                <input type="text" class="form-control" name="content"
+                       placeholder="Entrez votre commentaire" required /> </td>
+                <button type="submit" class="btn btn-primary">Valider</button>
+            </div>
+
+            </form>
+        </div>
+
+            <?php
+    }
+}
+
     ?>
 
 <a href="articles">Retour à la liste des billets</a>

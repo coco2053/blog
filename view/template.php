@@ -46,9 +46,9 @@
                         <li>
                             <div class="inset">
                                 <?php
-                                if(!empty($_SESSION['user'])) {
+                                if (!empty($_SESSION['user'])) {
                                     ?>
-                                    <a href='profile-<?=nl2br(htmlspecialchars($_SESSION['user']->id_user()))?>'>
+                                    <a href='profile-<?=nl2br(htmlspecialchars($_SESSION['user']->idUser()))?>'>
                                         <img src="public/img/profile.png">
                                     </a>
                                     <?php
@@ -78,7 +78,7 @@
                         </div>
                         <div class="modal-body">
                         <?php
-                        if(isset($_SESSION['message'])) {
+                        if (isset($_SESSION['message'])) {
                             echo nl2br(htmlspecialchars($_SESSION['message']));
                         }
                         ?>
@@ -94,8 +94,8 @@
                     <div class="col-md-2"> </div>
                     <div class="col-md-8 center">
                         <?php
-                        if(!empty($_SESSION['user'])) {
-                            if(strpos($_SESSION['user'] -> perm_action(), 'writePostView') !== false) {
+                        if (!empty($_SESSION['user'])) {
+                            if (strpos($_SESSION['user'] -> permAction(), 'writePostView') !== false) {
                                 ?>
                                 <p>
                                     <a class="btn btn-primary" href='redaction-article'>Ecrire un article</a>
@@ -118,7 +118,7 @@
             <div class="container-fluid">
 
                 <?php
-                if(!isset($_SESSION['user'])) {
+                if (!isset($_SESSION['user'])) {
                     ?>
                     <p class="m-0 text-center text-white"><a class="text-white" href='connexion'>Se connecter</a> </p>
                     <?php
@@ -145,8 +145,8 @@
         <script src="public/vendor/jquery/jquery.min.js"></script>
         <script src="public/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <?php
-        if(isset($_SESSION['show_message'])) {
-            if($_SESSION['show_message']) {
+        if (isset($_SESSION['show_message'])) {
+            if ($_SESSION['show_message']) {
                 $_SESSION['show_message'] = false;
                 ?>
                 <script type="text/javascript">

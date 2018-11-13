@@ -22,23 +22,23 @@ ob_start();
         <tbody>
         <?php
         foreach ($users as $oneUser) {
-        ?>
+            ?>
             <tr>
                 <th scope="row"><?=nl2br(htmlspecialchars($oneUser->username()))?></th>
                 <td><?=nl2br(htmlspecialchars($oneUser->email()))?></td>
                 <td><?=nl2br(htmlspecialchars($oneUser->firstname()))?></td>
                 <td><?=nl2br(htmlspecialchars($oneUser->lastname()))?></td>
                 <td><?=nl2br(htmlspecialchars($oneUser->Valid()))?></td>
-                <td><?=nl2br(htmlspecialchars($oneUser->signup_date()))?></td>
-                <td><?=nl2br(htmlspecialchars($oneUser->signin_date()))?></td>
+                <td><?=nl2br(htmlspecialchars($oneUser->signupDate()))?></td>
+                <td><?=nl2br(htmlspecialchars($oneUser->signinDate()))?></td>
                 <td><a class="btn btn-success"
-                       href='valider-compte-<?=nl2br(htmlspecialchars($oneUser->id_user()))?>'
+                       href='valider-compte-<?=nl2br(htmlspecialchars($oneUser->idUser()))?>'
                        onclick="return confirm('Etes-vous sûr ?');">Valider</a></td>
             </tr>
 
-              <?php
-              }
-              ?>
+            <?php
+        }
+        ?>
 
         </tbody>
 

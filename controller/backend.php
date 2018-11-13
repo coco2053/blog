@@ -5,14 +5,24 @@
 * @author Bastien Vacherand.
 */
 
+
+namespace Bastien\blog\controller;
+
+use \Bastien\blog\model\PostManagerPDO;
+use \Bastien\blog\model\UserManagerPDO;
+use \Bastien\blog\model\CommentManagerPDO;
+use \Bastien\blog\model\DBFactory;
+use \Bastien\blog\model\Comment;
+use \Bastien\blog\model\Post;
+use \Bastien\blog\model\User;
+
 class Backend
 {
 
-    protected $postmanager,
-              $usermanager,
-              $commentmanager,
-              $database;
-
+    protected $postmanager;
+    protected $usermanager;
+    protected $commentmanager;
+    protected $database;
     /**
     * Constructeur de la classe qui permet d'instancier la bdd et les managers.
     * @param void
@@ -25,7 +35,6 @@ class Backend
         $this->postmanager = new PostManagerPDO($this->database);
         $this->usermanager = new UserManagerPDO($this->database);
         $this->commentmanager = new CommentManagerPDO($this->database);
-
     }
 
     /**
@@ -36,19 +45,16 @@ class Backend
 
     public function allow($action)
     {
+
         // On verifie que l'utilisateur dispose des droits necessaires
-        if(empty($_SESSION['user'])) {
-
-          $_SESSION['show_message'] = true;
-          $_SESSION['message'] = 'Vous ne disposez pas des droits requis pour acceder à cette page !';
-          header('location: '. $_SERVER["HTTP_REFERER"]);
-
-        } else if(strpos($_SESSION['user'] -> perm_action(), $action) === false) {
-
-          $_SESSION['show_message'] = true;
-          $_SESSION['message'] = 'Vous ne disposez pas des droits requis pour acceder à cette page !';
-          header('location: '. $_SERVER["HTTP_REFERER"]);
-
+        if (empty($_SESSION['user'])) {
+            $_SESSION['show_message'] = true;
+            $_SESSION['message'] = 'Vous ne disposez pas des droits requis pour acceder à cette page !';
+            header('location: '. $_SERVER["HTTP_REFERER"]);
+        } else if (strpos($_SESSION['user'] -> permAction(), $action) === false) {
+            $_SESSION['show_message'] = true;
+            $_SESSION['message'] = 'Vous ne disposez pas des droits requis pour acceder à cette page !';
+            header('location: '. $_SERVER["HTTP_REFERER"]);
         }
     }
 
@@ -63,8 +69,6 @@ class Backend
     {
 
         if ($_FILES['my_file']['size'] > 100) {
-
-
             if ($_FILES['my_file']['error'] > 0) {
                 echo "Erreur lors du transfert";
             }
@@ -72,13 +76,13 @@ class Backend
             $maxsize = 1048576;
             $uploads_dir = 'public/upload';
             $valid_extensions = array( 'jpg' , 'jpeg' );
-            $extension_upload = strtolower(  substr(  strrchr($_FILES['my_file']['name'], '.')  ,1)  );
+            $extension_upload = strtolower(substr(strrchr($_FILES['my_file']['name'], '.'), 1));
 
-            if ( !in_array($extension_upload, $valid_extensions) ) {
+            if (!in_array($extension_upload, $valid_extensions)) {
                 echo "Extension incorrecte";
             }
 
-            if ($_FILES['my_file']['size'] > $maxsize){
+            if ($_FILES['my_file']['size'] > $maxsize) {
                 echo "Le fichier est trop gros";
             }
 
@@ -91,21 +95,19 @@ class Backend
             $image = imagecreatefromjpeg("$uploads_dir/$file_name2");
             $size = getimagesize("$uploads_dir/$file_name2");
 
-            $output = imagecreatetruecolor($width,$height);
+            $output = imagecreatetruecolor($width, $height);
 
-            $ratio = min($size[0]/$width,$size[1]/$height);
+            $ratio = min($size[0]/$width, $size[1]/$height);
 
             $deltax = $size[0]-($ratio * $width);
             $deltay = $size[1]-($ratio * $height);
 
-            imagecopyresampled($output,$image,0,0,$deltax/2,$deltay/2,$width,$height,$size[0]-$deltax,$size[1]-$deltay);
+            imagecopyresampled($output, $image, 0, 0, $deltax/2, $deltay/2, $width, $height, $size[0]-$deltax, $size[1]-$deltay);
 
             imagejpeg($output, "$uploads_dir/$file_name2", 100);
 
             return $file_name2;
-
         } else {
-
             $file_name2 ='no-image.jpg';
             return $file_name2;
         }
@@ -120,24 +122,20 @@ class Backend
     public function addPost($formData)
     {
 
-      $this->allow(__FUNCTION__);
+        $this->allow(__FUNCTION__);
 
-      if (!$this->postmanager->exists($formData['title'])) {
+        if (!$this->postmanager->exists($formData['title'])) {
+            $post = new Bastien\Blog\Model\Post($formData);
+            $this->postmanager->add($post);
+            $post = $this->postmanager->get($post->idPost());
+            $_SESSION['show_message'] = true;
+            $_SESSION['message'] = 'Votre article est publié !';
 
-          $post = new Post($formData);
-          $this->postmanager->add($post);
-          $post = $this->postmanager->get($post->id_post());
-          $_SESSION['show_message'] = true;
-          $_SESSION['message'] = 'Votre article est publié !';
-
-          header('location: article-'.$post->id_post());
-
-      } else {
-
-          $_SESSION['show_message'] = true;
-          $_SESSION['message'] = 'Votre article est publié !';
-
-      }
+            header('location: article-'.$post->idPost());
+        } else {
+            $_SESSION['show_message'] = true;
+            $_SESSION['message'] = 'Votre article est publié !';
+        }
     }
 
     /**
@@ -146,34 +144,31 @@ class Backend
     * @return void
     */
 
-    public function addComment($id_post)
+    public function addComment($idPost)
     {
 
         $this->allow(__FUNCTION__);
 
-        if(strpos($_SESSION['user'] -> perm_action(), 'validateComment') === false) {
+        if (strpos($_SESSION['user'] -> permAction(), 'validateComment') === false) {
             $valid = 'No';
-
         } else {
-
-          $valid = 'Yes';
+            $valid = 'Yes';
         }
 
         $formData = ['id_post' => $id_post,
                     'content' => nl2br(htmlspecialchars($_POST['content'])),
                     'valid' => $valid,
-                    'id_user' => nl2br(htmlspecialchars($_SESSION['user'] -> id_user()))];
+                    'id_user' => nl2br(htmlspecialchars($_SESSION['user'] -> idUser()))];
 
-        $comment = new Comment($formData);
+        $comment = new Bastien\Blog\Model\Comment($formData);
         $this->commentmanager->add($comment);
 
-        if($valid == 'No') {
+        if ($valid == 'No') {
             $_SESSION['show_message'] = true;
             $_SESSION['message'] = 'Votre commentaire est en attente de validation par un administrateur.';
         }
 
-        header('location: article-'.$id_post);
-
+        header('location: article-'.$idPost);
     }
 
     /**
@@ -194,11 +189,11 @@ class Backend
     * @return void
     */
 
-    public function editPostView($id_post)
+    public function editPostView($idPost)
     {
 
         $this->allow(__FUNCTION__);
-        $post = $this->postmanager->get($id_post);
+        $post = $this->postmanager->get($idPost);
 
         include 'view/backend/editPost.php';
     }
@@ -213,13 +208,12 @@ class Backend
     {
 
         $this->allow(__FUNCTION__);
-        $post = new Post($formData);
+        $post = new Bastien\Blog\Model\Post($formData);
         $this->postmanager->update($post);
-        $post = $this->postmanager->get($post->id_post());
+        $post = $this->postmanager->get($post->idPost());
         $_SESSION['show_message'] = true;
         $_SESSION['message'] = 'Article modifié !';
-        header('location: article-'.$post->id_post());
-
+        header('location: article-'.$post->idPost());
     }
 
     /**
@@ -228,12 +222,12 @@ class Backend
     * @return void
     */
 
-    public function deletePost($id_post)
+    public function deletePost($idPost)
     {
 
         $this->allow(__FUNCTION__);
 
-        $this->postmanager->delete($id_post);
+        $this->postmanager->delete($idPost);
         $_SESSION['show_message'] = true;
         $_SESSION['message'] = 'Article supprimé !';
 
@@ -246,12 +240,12 @@ class Backend
     * @return void
     */
 
-    public function deleteComment($id_comment)
+    public function deleteComment($idComment)
     {
 
         $this->allow(__FUNCTION__);
 
-        $this->commentmanager->delete($id_comment);
+        $this->commentmanager->delete($idComment);
 
         $_SESSION['show_message'] = true;
         $_SESSION['message'] = 'Commentaire supprimé !';
@@ -265,15 +259,15 @@ class Backend
     * @return void
     */
 
-    public function getUser($id_user)
+    public function getUser($idUser)
     {
 
-        $user = $this->usermanager->get($id_user);
+        $user = $this->usermanager->get($idUser);
         $_SESSION['user'] = $user;
         $this->allow(__FUNCTION__);
         include 'view/backend/userView.php';
 
-        $this->usermanager->updateSigninDate($id_user);
+        $this->usermanager->updateSigninDate($idUser);
     }
 
     /**
@@ -282,11 +276,11 @@ class Backend
     * @return void
     */
 
-    public function getUsers($id_user)
+    public function getUsers($idUser)
     {
 
         $this->allow(__FUNCTION__);
-        $users = $this->usermanager->getList($id_user);
+        $users = $this->usermanager->getList($idUser);
 
         include 'view/backend/usersListView.php';
     }
@@ -297,22 +291,22 @@ class Backend
     * @return void
     */
 
-    public function validateUser($id_user)
+    public function validateUser($idUser)
     {
 
         $this->allow(__FUNCTION__);
 
-        $this->usermanager->validate($id_user);
-        $user = $this->usermanager->get($id_user);
+        $this->usermanager->validate($idUser);
+        $user = $this->usermanager->get($idUser);
 
         include_once 'vendor/autoload.php';
         include_once 'model/transport.php';
 
         // Create the Mailer using your created Transport
-        $mailer = new Swift_Mailer($transport);
+        $mailer = new \Swift_Mailer($transport);
 
         // Create a message
-        $message = (new Swift_Message())
+        $message = (new \Swift_Message())
 
             ->setSubject('Blog, votre compte a été validé !')
             ->setFrom([nl2br(htmlspecialchars($data['email'])) => nl2br(htmlspecialchars($data['name']))])
@@ -333,12 +327,12 @@ class Backend
     * @return void
     */
 
-    public function validateComment($id_comment)
+    public function validateComment($idComment)
     {
 
         $this->allow(__FUNCTION__);
 
-        $this->commentmanager->validate($id_comment);
+        $this->commentmanager->validate($idComment);
         $_SESSION['show_message'] = true;
         $_SESSION['message'] = 'Commentaire validé !';
         header('location: '. $_SERVER["HTTP_REFERER"]);
@@ -421,7 +415,7 @@ class Backend
 
         $this->allow(__FUNCTION__);
 
-        $this->usermanager->delete($id_user);
+        $this->usermanager->delete($idUser);
         $_SESSION['show_message'] = true;
         $_SESSION['message'] = 'Compte supprimé !';
 

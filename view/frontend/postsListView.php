@@ -9,19 +9,15 @@ ob_start();
 <h1 class="my-3"> <?= $title ?> </h1>
 <?php
 foreach ($posts as $onePost) {
-
     if (strlen($onePost->content()) <= 300) {
-
         $content = $onePost->content();
-
     } else {
-
         $start = substr($onePost->content(), 0, 300);
         $start = substr($start, 0, strrpos($start, ' ')) . '...';
 
         $content = $start;
     }
-?>
+    ?>
 
 <div class="row article">
 
@@ -30,7 +26,7 @@ foreach ($posts as $onePost) {
         <img class="img-fluid rounded mb-3 mb-md-0 img-vignette"
              src="public/upload/<?=nl2br(htmlspecialchars($onePost->image()))?>" alt="Image illustrant l'article">
 
-        <a class="btn btn-primary" href='article-<?=nl2br(htmlspecialchars($onePost->id_post()))?>'>Voir l'article</a>
+        <a class="btn btn-primary" href='article-<?=nl2br(htmlspecialchars($onePost->idPost()))?>'>Voir l'article</a>
 
     </div>
 
@@ -42,13 +38,13 @@ foreach ($posts as $onePost) {
 
         <p class="post-content"> <?=$content?> </p>
 
-        publié le <span class="date"><?=nl2br(htmlspecialchars($onePost->creation_date()))?></span>
+        publié le <span class="date"><?=nl2br(htmlspecialchars($onePost->creationDate()))?></span>
         <?php
-        $creation_date = $onePost->creation_date();
-        $update_date = $onePost->update_date();
-        if($creation_date !== $update_date) {
+        $creation_date = $onePost->creationDate();
+        $update_date = $onePost->updateDate();
+        if ($creation_date !== $update_date) {
             ?>
-            </br>mise à jour le <span class="date"><?=nl2br(htmlspecialchars($onePost->update_date()))?></span>
+            </br>mise à jour le <span class="date"><?=nl2br(htmlspecialchars($onePost->updateDate()))?></span>
             <?php
         }
         ?>
@@ -57,7 +53,7 @@ foreach ($posts as $onePost) {
     </div>
 </div>
 
-<?php
+    <?php
 }
 
 $content = ob_get_clean();

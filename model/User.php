@@ -5,22 +5,24 @@
 * @author Bastien Vacherand.
 */
 
+namespace Bastien\blog\model;
+
 class User
 {
 
-    protected $id_user,
-              $id_role,
-              $email,
-              $password,
-              $username,
-              $firstname,
-              $lastname,
-              $asleep,
-              $valid,
-              $signin_date,
-              $role_name,
-              $perm_action,
-              $signup_date;
+    protected $idUser;
+    protected $idRole;
+    protected $email;
+    protected $password;
+    protected $username;
+    protected $firstname;
+    protected $lastname;
+    protected $asleep;
+    protected $valid;
+    protected $signinDate;
+    protected $roleName;
+    protected $permAction;
+    protected $signupDate;
 
     /**
     * Constructeur de la classe qui permet d'hydrater l'objet à l'instanciation.
@@ -33,7 +35,6 @@ class User
     {
 
         if (!empty($formData)) {
-
             $this->hydrate($formData);
         }
     }
@@ -48,11 +49,9 @@ class User
     {
 
         foreach ($formData as $key => $value) {
-
             $method = 'set'.ucfirst($key);
 
             if (method_exists($this, $method)) {
-
                 $this->$method($value);
             }
         }
@@ -60,16 +59,16 @@ class User
 
     // GETTERS //
 
-    public function id_user()
+    public function idUser()
     {
 
-        return $this->id_user;
+        return $this->idUser;
     }
 
-    public function id_role()
+    public function idRole()
     {
 
-        return $this->id_role;
+        return $this->idRole;
     }
 
     public function email()
@@ -96,16 +95,16 @@ class User
         return $this->lastname;
     }
 
-    public function signin_date()
+    public function signinDate()
     {
 
-        return $this->signin_date;
+        return $this->signinDate;
     }
 
-    public function signup_date()
+    public function signupDate()
     {
 
-        return $this->signup_date;
+        return $this->signupDate;
     }
 
     public function username()
@@ -126,39 +125,37 @@ class User
         return $this->valid;
     }
 
-    public function role_name()
+    public function roleName()
     {
 
-        return $this->role_name;
+        return $this->roleName;
     }
 
-    public function perm_action()
+    public function permAction()
     {
 
-        return $this->perm_action;
+        return $this->permAction;
     }
 
     // SETTERS //
 
-    public function setId_user($id_user)
+    public function setIdUser($idUser)
     {
 
-        $id_user = (int) $id_user;
+        $idUser = (int) $idUser;
 
-        if ($id_user > 0) {
-
-            $this->id_user = $id_user;
+        if ($idUser > 0) {
+            $this->idUser = $idUser;
         }
     }
 
-    public function setId_role($id_role)
+    public function setIdRole($idRole)
     {
 
-        $id_role = (int) $id_role;
+        $idRole = (int) $idRole;
 
-        if ($id_role > 0) {
-
-            $this->id_role = $id_role;
+        if ($idRole > 0) {
+            $this->idRole = $idRole;
         }
     }
 
@@ -166,7 +163,6 @@ class User
     {
 
         if (is_string($email)) {
-
             $this->email = $email;
         }
     }
@@ -175,7 +171,6 @@ class User
     {
 
         if (is_string($password)) {
-
             $this->password = $password;
         }
     }
@@ -184,7 +179,6 @@ class User
     {
 
         if (is_string($firstname)) {
-
             $this->firstname = $firstname;
         }
     }
@@ -193,29 +187,26 @@ class User
     {
 
         if (is_string($lastname)) {
-
             $this->lastname = $lastname;
         }
     }
 
-    public function setSignin_date(DateTime $signin_date)
+    public function setSigninDate(\DateTime $signinDate)
     {
 
-        $this->signin_date = $signin_date->format('d.m.Y');
+        $this->signinDate = $signinDate->format('d.m.Y');
     }
 
-    public function setSignup_date(DateTime $signup_date)
+    public function setSignupDate(\DateTime $signupDate)
     {
 
-        $this->signup_date = $signup_date->format('d.m.Y');
-
+        $this->signupDate = $signupDate->format('d.m.Y');
     }
 
     public function setUsername($username)
     {
 
         if (is_string($username)) {
-
             $this->username = $username;
         }
     }
@@ -224,7 +215,6 @@ class User
     {
 
         if (is_string($asleep)) {
-
             $this->asleep = $asleep;
         }
     }
@@ -233,26 +223,23 @@ class User
     {
 
         if (is_string($valid)) {
-
             $this->valid = $valid;
         }
     }
 
-    public function setRole_name($role_name)
+    public function setRoleName($roleName)
     {
 
-        if (is_string($role_name)) {
-
-            $this->role_name = $role_name;
+        if (is_string($roleName)) {
+            $this->roleName = $roleName;
         }
     }
 
-    public function setPerm_action($perm_action)
+    public function setPermAction($permAction)
     {
 
-        if (is_string($perm_action)) {
-
-            $this->perm_action = $perm_action;
+        if (is_string($permAction)) {
+            $this->permAction = $permAction;
         }
     }
 }

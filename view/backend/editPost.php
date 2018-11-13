@@ -21,7 +21,7 @@ ob_start();
                            value="<?= nl2br(htmlspecialchars($post->chapo())) ?>" />
                     <label>Contenu</label>
                     <textarea name="content" class="form-control" rows="4" cols="40">
-                              <?= nl2br(htmlspecialchars($post->content())) ?> </textarea>
+                            <?= nl2br(htmlspecialchars($post->content())) ?> </textarea>
                    <button type="submit" class="btn btn-primary">Valider</button>
                 </div>
             </form>

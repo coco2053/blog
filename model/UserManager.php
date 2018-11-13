@@ -5,6 +5,8 @@
 * @author Bastien Vacherand.
 */
 
+namespace Bastien\blog\model;
+
 abstract class UserManager
 {
 
@@ -22,14 +24,14 @@ abstract class UserManager
     * @return void
     */
 
-    abstract public function delete($id_user);
+    abstract public function delete($idUser);
 
     /**
     * Méthode retournant une liste des users demandés.
     * @return array La liste des user. Chaque entrée est une instance de User.
     */
 
-    abstract public function getList($id_user);
+    abstract public function getList($idUser);
 
     /**
     * Méthode retournant un user précis.
@@ -37,7 +39,7 @@ abstract class UserManager
     * @return User Le user demandé
     */
 
-    abstract public function get($id_user);
+    abstract public function get($idUser);
 
     /**
     * Méthode retournant une liste de user non valides.
@@ -52,7 +54,7 @@ abstract class UserManager
     * @return bool
     */
 
-    abstract public function isValid($id_user);
+    abstract public function isValid($idUser);
 
     /**
     * Méthode permettant de valider un user.
@@ -60,7 +62,7 @@ abstract class UserManager
     * @return void
     */
 
-    abstract public function validate($id_user);
+    abstract public function validate($idUser);
 
     /**
     * Méthode permettant d'activer un compte nouvelement crée.
@@ -92,7 +94,7 @@ abstract class UserManager
     * @return void
     */
 
-    abstract public function updateSigninDate($id_user);
+    abstract public function updateSigninDate($idUser);
 
     /**
     * Méthode permettant de mettre à jour le mot de passe.

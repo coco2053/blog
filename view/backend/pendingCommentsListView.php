@@ -20,20 +20,19 @@ ob_start();
         <?php
 
         foreach ($comments as $oneComment) {
-
             ?>
             <tr>
                 <th scope="row"><?=nl2br(htmlspecialchars($oneComment->username()))?></th>
                 <td><?=nl2br(htmlspecialchars($oneComment->content()))?></td>
-                <td><?=nl2br(htmlspecialchars($oneComment->creation_date()))?></td>
+                <td><?=nl2br(htmlspecialchars($oneComment->creationDate()))?></td>
                 <td><a class="btn btn-success"
-                       href='valider-commentaire-<?=nl2br(htmlspecialchars($oneComment->id_comment()))?>'
+                       href='valider-commentaire-<?=nl2br(htmlspecialchars($oneComment->idComment()))?>'
                        onclick="return confirm('Etes-vous sûr ?');">Valider</a></td>
             </tr>
 
             <?php
-            }
-            ?>
+        }
+        ?>
 
         </tbody>
 

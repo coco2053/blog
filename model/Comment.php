@@ -5,16 +5,18 @@
 * @author Bastien Vacherand.
 */
 
+namespace Bastien\blog\model;
+
 class Comment
 {
 
-    protected $id_comment,
-              $content,
-              $creation_date,
-              $username,
-              $valid,
-              $id_post,
-              $id_user;
+    protected $idComment;
+    protected $content;
+    protected $creationDate;
+    protected $username;
+    protected $valid;
+    protected $idPost;
+    protected $idUser;
 
     /**
     * Constructeur de la classe qui permet d'hydrater l'objet à l'instanciation.
@@ -25,10 +27,8 @@ class Comment
     public function __construct($formData = [])
     {
 
-    if (!empty($formData)) {
-
-        $this->hydrate($formData);
-
+        if (!empty($formData)) {
+            $this->hydrate($formData);
         }
     }
 
@@ -42,11 +42,8 @@ class Comment
     {
 
         foreach ($formData as $key => $value) {
-
             $method = 'set'.ucfirst($key);
-
             if (method_exists($this, $method)) {
-
                 $this->$method($value);
             }
         }
@@ -54,10 +51,10 @@ class Comment
 
     // GETTERS //
 
-    public function id_comment()
+    public function idComment()
     {
 
-        return $this->id_comment;
+        return $this->idComment;
     }
 
     public function content()
@@ -78,56 +75,53 @@ class Comment
         return $this->valid;
     }
 
-    public function creation_date()
+    public function creationDate()
     {
 
-        return $this->creation_date;
+        return $this->creationDate;
     }
 
-    public function id_user()
+    public function idUser()
     {
 
-        return $this->id_user;
+        return $this->idUser;
     }
 
-    public function id_post()
+    public function idPost()
     {
 
-        return $this->id_post;
+        return $this->idPost;
     }
 
     // SETTERS //
 
-    public function setId_comment($id_comment)
+    public function setIdComment($idComment)
     {
 
-        $id_comment = (int) $id_comment;
+        $idComment = (int) $idComment;
 
-        if ($id_comment > 0) {
-
-            $this->id_comment = $id_comment;
+        if ($idComment > 0) {
+            $this->idComment = $idComment;
         }
     }
 
-    public function setId_user($id_user)
+    public function setIdUser($idUser)
     {
 
-        $id_user = (int) $id_user;
+        $idUser = (int) $idUser;
 
-        if ($id_user > 0) {
-
-          $this->id_user = $id_user;
+        if ($idUser > 0) {
+            $this->idUser = $idUser;
         }
     }
 
-    public function setId_post($id_post)
+    public function setIdPost($idPost)
     {
 
-        $id_post = (int) $id_post;
+        $idPost = (int) $idPost;
 
-        if ($id_post > 0) {
-
-          $this->id_post = $id_post;
+        if ($idPost > 0) {
+            $this->idPost = $idPost;
         }
     }
 
@@ -136,7 +130,6 @@ class Comment
     {
 
         if (is_string($content)) {
-
             $this->content = $content;
         }
     }
@@ -145,7 +138,6 @@ class Comment
     {
 
         if (is_string($username)) {
-
             $this->username = $username;
         }
     }
@@ -155,15 +147,13 @@ class Comment
     {
 
         if (is_string($valid)) {
-
             $this->valid = $valid;
         }
     }
 
-    public function setCreation_date(DateTime $creation_date)
+    public function setCreationDate(\DateTime $creationDate)
     {
 
-        $this->creation_date = $creation_date->format('d.m.Y');
+        $this->creationDate = $creationDate->format('d.m.Y');
     }
-
 }

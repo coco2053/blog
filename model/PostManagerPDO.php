@@ -5,6 +5,8 @@
 * @author Bastien Vacherand.
 */
 
+namespace Bastien\blog\model;
+
 class PostManagerPDO extends PostManager
 {
     protected $database; // Instance de PDO
@@ -15,7 +17,7 @@ class PostManagerPDO extends PostManager
     * @return void
     */
 
-    public function __construct(PDO $database)
+    public function __construct(\PDO $database)
     {
 
         $this->database = $database;
@@ -31,21 +33,21 @@ class PostManagerPDO extends PostManager
     {
 
         // Préparation de la requête d'insertion.
-        $req = $this->database->prepare('INSERT INTO post(title, chapo, content, image, creation_date, update_date, id_user)
-                                  VALUES (:title, :chapo, :content, :image, NOW(), NOW(), :id_user)');
+        $req = $this->database->prepare('INSERT INTO post(title, chapo, content, image, creationDate, updateDate, idUser)
+                                  VALUES (:title, :chapo, :content, :image, NOW(), NOW(), :idUser)');
 
         // Assignation des valeurs du post.
         $req->bindValue(':title', $post->title());
         $req->bindValue(':chapo', $post->chapo());
         $req->bindValue(':content', $post->content());
         $req->bindValue(':image', $post->image());
-        $req->bindValue(':id_user', $post->id_user());
+        $req->bindValue(':idUser', $post->idUser());
 
         // Exécution de la requête.
         $req->execute();
 
         // Hydratation du post passé en paramètre avec assignation de son identifiant.
-        $post->hydrate(['id_post' => $this->database->lastInsertId()]);
+        $post->hydrate(['idPost' => $this->database->lastInsertId()]);
     }
 
     /**
@@ -54,30 +56,29 @@ class PostManagerPDO extends PostManager
     * @return void
     */
 
-    public function delete($id_post)
+    public function delete($idPost)
     {
 
-       $req = $this->database->prepare('SELECT
-                        post.id_post, post.image
+        $req = $this->database->prepare('SELECT
+                        post.idPost, post.image
                         FROM post
-                        WHERE id_post = :id_post');
+                        WHERE idPost = :idPost');
 
-        $req->bindValue(':id_post', (int) $id_post, PDO::PARAM_INT);
+        $req->bindValue(':idPost', (int) $idPost, \PDO::PARAM_INT);
 
         $req->execute();
 
-        $req->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Post');
+        $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\\Bastien\\blog\\model\\Post');
 
         $post = $req->fetch();
 
         if ($post->image() != 'no-image.jpeg') {
-
             unlink('public/upload/'.$post->image());
         }
 
         // Exécute une requête de type DELETE.
-        $this->database->exec('DELETE FROM post WHERE id_post = '.(int) $id_post);
-        $this->database->exec('DELETE FROM comment WHERE id_post = '.(int) $id_post);
+        $this->database->exec('DELETE FROM post WHERE idPost = '.(int) $idPost);
+        $this->database->exec('DELETE FROM comment WHERE idPost = '.(int) $idPost);
     }
 
     /**
@@ -95,17 +96,17 @@ class PostManagerPDO extends PostManager
                                   title = :title,
                                   chapo = :chapo,
                                   content = :content,
-                                  update_date = NOW(),
-                                  id_user = :id_user
+                                  updateDate = NOW(),
+                                  idUser = :idUser
                                   WHERE
-                                  id_post = :id_post');
+                                  idPost = :idPost');
 
         // Assignation des valeurs à la requête.
-        $req->bindValue(':title', $post->title(), PDO::PARAM_STR);
-        $req->bindValue(':chapo', $post->chapo(), PDO::PARAM_STR);
-        $req->bindValue(':content', $post->content(), PDO::PARAM_STR);
-        $req->bindValue(':id_user', $post->id_user(), PDO::PARAM_INT);
-        $req->bindValue(':id_post', $post->id_post(), PDO::PARAM_INT);
+        $req->bindValue(':title', $post->title(), \PDO::PARAM_STR);
+        $req->bindValue(':chapo', $post->chapo(), \PDO::PARAM_STR);
+        $req->bindValue(':content', $post->content(), \PDO::PARAM_STR);
+        $req->bindValue(':idUser', $post->idUser(), \PDO::PARAM_INT);
+        $req->bindValue(':idPost', $post->idPost(), \PDO::PARAM_INT);
 
         // Exécution de la requête.
         $req->execute();
@@ -120,29 +121,28 @@ class PostManagerPDO extends PostManager
     {
 
         $sql = 'SELECT
-                    post.id_post,
+                    post.idPost,
                     post.title,
                     post.chapo,
                     post.content,
                     post.image,
-                    post.creation_date AS creation_date,
-                    post.update_date AS update_date,
+                    post.creationDate AS creationDate,
+                    post.updateDate AS updateDate,
                     user.username
                     FROM post
                     INNER JOIN user
-                    ON post.id_user = user.id_user
-                    ORDER BY post.update_date DESC';
+                    ON post.idUser = user.idUser
+                    ORDER BY post.updateDate DESC';
 
 
         $req = $this->database->query($sql);
-        $req->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Post');
+        $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\\Bastien\\blog\\model\\Post');
         $posts = $req->fetchAll();
 
         // On parcourt notre liste de news pour pouvoir placer des instances de DateTime en guise de dates d'ajout et de modification.
         foreach ($posts as $post) {
-
-            $post->setCreation_date(new DateTime($post->creation_date()));
-            $post->setUpdate_date(new DateTime($post->update_date()));
+            $post->setCreationDate(new \DateTime($post->creationDate()));
+            $post->setUpdateDate(new \DateTime($post->updateDate()));
         }
 
         $req->closeCursor();
@@ -156,29 +156,29 @@ class PostManagerPDO extends PostManager
     * @return object Post Le post demandé
     */
 
-    public function get($id_post)
+    public function get($idPost)
     {
 
         $req = $this->database->prepare('SELECT
-                                post.id_post, post.title, post.chapo, post.content, post.image,
-                                post.creation_date AS creation_date,
-                                post.update_date AS update_date,
+                                post.idPost, post.title, post.chapo, post.content, post.image,
+                                post.creationDate AS creationDate,
+                                post.updateDate AS updateDate,
                                 user.username
                                 FROM post
                                 INNER JOIN user
-                                ON post.id_user = user.id_user
-                                WHERE id_post = :id_post');
+                                ON post.idUser = user.idUser
+                                WHERE idPost = :idPost');
 
-        $req->bindValue(':id_post', (int) $id_post, PDO::PARAM_INT);
+        $req->bindValue(':idPost', (int) $idPost, \PDO::PARAM_INT);
 
         $req->execute();
 
-        $req->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Post');
+        $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\\Bastien\\blog\\model\\Post');
 
         $post = $req->fetch();
 
-        $post->setCreation_date(new DateTime($post->creation_date()));
-        $post->setUpdate_date(new DateTime($post->update_date()));
+        $post->setCreationDate(new \DateTime($post->creationDate()));
+        $post->setUpdateDate(new \DateTime($post->updateDate()));
 
         return $post;
     }

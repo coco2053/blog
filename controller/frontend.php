@@ -5,12 +5,23 @@
 * @author Bastien Vacherand.
 */
 
+namespace Bastien\blog\controller;
+
+use \Bastien\blog\model\PostManagerPDO;
+use \Bastien\blog\model\UserManagerPDO;
+use \Bastien\blog\model\CommentManagerPDO;
+use \Bastien\blog\model\DBFactory;
+use \Bastien\blog\model\Comment;
+use \Bastien\blog\model\Post;
+use \Bastien\blog\model\User;
+
 class Frontend
 {
-    protected $postmanager,
-              $usermanager,
-              $commentmanager,
-              $database;
+
+    protected $postmanager;
+    protected $usermanager;
+    protected $commentmanager;
+    protected $database;
 
     /**
     * Constructeur de la classe qui permet d'instancier la bdd et les managers.
@@ -33,7 +44,7 @@ class Frontend
     * @return void
     */
 
-    function homeView()
+    public function homeView()
     {
 
         include 'view/frontend/home.php';
@@ -45,7 +56,7 @@ class Frontend
     * @return void
     */
 
-    function cvView()
+    public function cvView()
     {
 
         include 'view/frontend/cv.php';
@@ -57,7 +68,7 @@ class Frontend
     * @return void
     */
 
-    function contactView()
+    public function contactView()
     {
 
         include 'view/frontend/contact.php';
@@ -69,27 +80,25 @@ class Frontend
     * @return void
     */
 
-    function contact()
+    public function contact()
     {
 
         include_once 'model/recaptcha.php';
 
         if ($decode['success'] == true) {
-
-
             // On supprime les retour à la ligne
-            $secure_mail = str_replace(array("\n","\r",PHP_EOL),'',$_POST['email']);
+            $secure_mail = str_replace(array("\n","\r", PHP_EOL), '', $_POST['email']);
 
             include_once 'vendor/autoload.php';
             include_once 'model/transport.php';
 
             // Create the Mailer using your created Transport
-            $mailer = new Swift_Mailer($transport);
+            $mailer = new \Swift_Mailer($transport);
             $user_name = nl2br(htmlspecialchars($_POST['firstname'])).' '.nl2br(htmlspecialchars($_POST['lastname']));
 
 
             // Create a message
-            $message = (new Swift_Message())
+            $message = (new \Swift_Message())
 
                 ->setSubject('Blog, nouveau message d\'un vitieur')
                 ->setFrom([nl2br(htmlspecialchars($secure_mail)) => nl2br(htmlspecialchars($user_name))])
@@ -111,11 +120,11 @@ class Frontend
     * @return void
     */
 
-    function getPost($id_post)
+    public function getPost($idPost)
     {
 
-        $post = $this->postmanager->get($id_post);
-        $comments = $this->commentmanager->getList($id_post);
+        $post = $this->postmanager->get($idPost);
+        $comments = $this->commentmanager->getList($idPost);
 
         include 'view/frontend/postView.php';
     }
@@ -126,7 +135,7 @@ class Frontend
     * @return void
     */
 
-    function getPosts()
+    public function getPosts()
     {
 
         $posts = $this->postmanager->getList();
@@ -139,7 +148,7 @@ class Frontend
     * @return void
     */
 
-    function signUpView()
+    public function signUpView()
     {
 
         include 'view/frontend/signupView.php';
@@ -151,10 +160,10 @@ class Frontend
     * @return void
     */
 
-    function forgotPasswordView()
+    public function forgotPasswordView()
     {
 
-    include 'view/frontend/forgotpasswordView.php';
+        include 'view/frontend/forgotpasswordView.php';
     }
 
     /**
@@ -163,11 +172,10 @@ class Frontend
     * @return void
     */
 
-    function resetPasswordView()
+    public function resetPasswordView()
     {
 
-    include 'view/frontend/resetpasswordView.php';
-
+        include 'view/frontend/resetpasswordView.php';
     }
 
     /**
@@ -176,35 +184,28 @@ class Frontend
     * @return void
     */
 
-    function resetPassword()
+    public function resetPassword()
     {
 
         // On check que le mdp fasse au moins 8 caracteres
         if (preg_match("#.{8,60}#", $_POST['password'])) {
-
             $password = strip_tags($_POST['password']);
-
         } else {
-
             $_SESSION['show_message'] = true;
             $_SESSION['message'] = 'Votre mot de passe doit comporter au moins 8 caracteres !';
             header('location: '. $_SERVER["HTTP_REFERER"]);
         }
 
         // On check que les 2 mdp soient les mêmes
-        if ($_POST['passwordbis'] == $_POST['password'] ) {
-
+        if ($_POST['passwordbis'] == $_POST['password']) {
             $passwordbis = strip_tags($_POST['passwordbis']);
-
         } else {
-
             $_SESSION['show_message'] = true;
             $_SESSION['message'] = 'Veuillez retapper votre mot de passe !';
             header('location: '. $_SERVER["HTTP_REFERER"]);
         }
 
         if (isset($password, $passwordbis)) {
-
             $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
             $formData = ['email' => nl2br(htmlspecialchars($_POST['email'])),
@@ -223,27 +224,25 @@ class Frontend
     * @return void
     */
 
-    function forgotPassword()
+    public function forgotPassword()
     {
 
         include_once 'model/recaptcha.php';
 
         if ($decode['success'] == true) {
-
             // On check que l'adresse email soit dans la bdd
             if ($this->usermanager->exists($_POST['email'])) {
-
                 // On supprime les retour à la ligne
-                $secure_mail = str_replace(array("\n","\r",PHP_EOL),'',$_POST['email']);
+                $secure_mail = str_replace(array("\n", "\r", PHP_EOL), '', $_POST['email']);
 
                 include_once 'vendor/autoload.php';
                 include_once 'model/transport.php';
 
                 // Create the Mailer using your created Transport
-                $mailer = new Swift_Mailer($transport);
+                $mailer = new \Swift_Mailer($transport);
 
                 // Create a message
-                $message = (new Swift_Message())
+                $message = (new \Swift_Message())
 
                     ->setSubject('Blog, réinitialisez votre mot de passe')
                     ->setFrom([nl2br(htmlspecialchars($data['email'])) => nl2br(htmlspecialchars($data['name']))])
@@ -258,18 +257,13 @@ class Frontend
                                         pas l\'email, regardez dans vos courriers indésirables.';
 
                 header('location: connexion');
-
             } else {
-
                 $_SESSION['show_message'] = true;
                 $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($secure_mail)) .
                                        ' n\'est pas enregistrée !';
                 header('location: '. $_SERVER["HTTP_REFERER"]);
             }
-
         } else {
-
-
             $_SESSION['show_message'] = true;
             $_SESSION['message'] = 'Vous n\'êtes pas humain !';
             header('location: '. $_SERVER["HTTP_REFERER"]);
@@ -282,7 +276,7 @@ class Frontend
     * @return void
     */
 
-    function signInView()
+    public function signInView()
     {
 
         include 'view/frontend/signinView.php';
@@ -294,49 +288,37 @@ class Frontend
     * @return void
     */
 
-    function signIn()
+    public function signIn()
     {
 
         include_once 'model/recaptcha.php';
 
         if ($decode['success'] == true) {
-
             $formData = ['email' => nl2br(htmlspecialchars($_POST['email'])),
                          'password' => nl2br(htmlspecialchars($_POST['password']))];
 
             if ($this->usermanager->exists($_POST['email'])) {
-
                 if ($this->usermanager->isValid($_POST['email'])) {
-
                     if (null !== $this->usermanager->checkPassword($formData)) {
-
-                        header ('Location: profile-' . $this->usermanager->checkPassword($formData));
-
+                        header('Location: profile-' . $this->usermanager->checkPassword($formData));
                     } else {
-
                         $_SESSION['show_message'] = true;
                         $_SESSION['message'] = 'Mauvais login ou mot de passe !';
                         header('location: '. $_SERVER["HTTP_REFERER"]);
                     }
-
                 } else {
-
                     $_SESSION['show_message'] = true;
                     $_SESSION['message'] = 'L\'addresse email ' . nl2br(htmlspecialchars($_POST['email'])).
                                             ' n\'a pas encore été validée !';
                     header('location: '. $_SERVER["HTTP_REFERER"]);
                 }
-
             } else {
-
                 $_SESSION['show_message'] = true;
                 $_SESSION['message'] = 'L\'addresse email ' . nl2br(htmlspecialchars($_POST['email'])).
                                        ' n\'est pas enregistrée !';
                 header('location: '. $_SERVER["HTTP_REFERER"]);
             }
-
         } else {
-
             $_SESSION['show_message'] = true;
             $_SESSION['message'] = 'Vous n\'êtes pas humain !';
             header('location: connexion');
@@ -349,21 +331,16 @@ class Frontend
     * @return void
     */
 
-    function signUp()
+    public function signUp()
     {
 
         include_once 'model/recaptcha.php';
 
         if ($decode['success'] == true) {
-
             // On check que le pseudo soit valide
-            if (preg_match("#[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]{3,60}#i",
-               $_POST['username']) and preg_match("#[^0-9]#", $_POST['username']) ) {
-
+            if (preg_match("#[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]{3,60}#i", $_POST['username']) and preg_match("#[^0-9]#", $_POST['username'])) {
                 $username = strip_tags($_POST['username']);
-
             } else {
-
                  $_SESSION['show_message'] = true;
                  $_SESSION['message'] = 'Pseudo non valide !';
                  header('location: '. $_SERVER["HTTP_REFERER"]);
@@ -371,36 +348,26 @@ class Frontend
 
             // On check que le mdp fasse au moins 8 caracteres
             if (preg_match("#.{8,60}#", $_POST['password'])) {
-
                 $password = strip_tags($_POST['password']);
-
             } else {
-
                  $_SESSION['show_message'] = true;
                  $_SESSION['message'] = 'Votre mot de passe doit comporter au moins 8 caracteres !';
                  header('location: '. $_SERVER["HTTP_REFERER"]);
             }
 
             // On check que les 2 mdp soient les mêmes
-            if ($_POST['passwordbis'] == $_POST['password'] ) {
-
+            if ($_POST['passwordbis'] == $_POST['password']) {
                 $passwordbis = strip_tags($_POST['passwordbis']);
-
             } else {
-
                  $_SESSION['show_message'] = true;
                  $_SESSION['message'] = 'Veuillez retapper votre mot de passe !';
                  header('location: '. $_SERVER["HTTP_REFERER"]);
-                                 //throw new Exception('Veuillez retapper votre mot de passe ! </br>');
             }
 
             // On check que l'adresse mail soit valide
             if (preg_match("#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#", $_POST['email'])) {
-
                 $email_valid = true;
-
             } else {
-
                 $_SESSION['show_message'] = true;
                 $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($_POST['email'])) .
                                        ' n\'est pas valide, recommencez !';
@@ -408,15 +375,11 @@ class Frontend
             }
 
             if ($email_valid) {
-
                 $email_valid = false;
 
                 if (!$this->usermanager->exists($_POST['email'])) {
-
                     $email = strip_tags($_POST['email']);
-
                 } else {
-
                     $_SESSION['show_message'] = true;
                     $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($_POST['email'])) .
                                            ' a deja été enregistrée !';
@@ -424,8 +387,7 @@ class Frontend
                 }
             }
 
-            if (isset($username, $password, $passwordbis, $email )) {
-
+            if (isset($username, $password, $passwordbis, $email)) {
                 $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
                 $formData = ['id_role' => '1',
@@ -437,17 +399,17 @@ class Frontend
                             'asleep' => 'Yes',
                             'lastname' => nl2br(htmlspecialchars($_POST['lastname']))];
 
-                $user = new User($formData);
+                $user = new Bastien\Blog\Model\User($formData);
                 $this->usermanager->add($user);
 
                 include_once 'vendor/autoload.php';
                 include_once 'model/transport.php';
 
                 // Create the Mailer using your created Transport
-                $mailer = new Swift_Mailer($transport);
+                $mailer = new \Swift_Mailer($transport);
 
                 // Create a message
-                $message = (new Swift_Message())
+                $message = (new \Swift_Message())
 
                     ->setSubject('Blog, validez votre compte')
                     ->setFrom([nl2br(htmlspecialchars($data['email'])) => nl2br(htmlspecialchars($data['name']))])
@@ -464,9 +426,7 @@ class Frontend
                                         .nl2br(htmlspecialchars($email)) . ' pour valider votre compte !';
                 header('location: connexion');
             }
-
         } else {
-
             $_SESSION['show_message'] = true;
             $_SESSION['message'] = 'Vous n\'êtes pas humain !';
             header('location: connexion');

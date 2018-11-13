@@ -5,6 +5,8 @@
 * @author Bastien Vacherand.
 */
 
+namespace Bastien\blog\model;
+
 abstract class PostManager
 {
 
@@ -22,7 +24,7 @@ abstract class PostManager
     * @return void
     */
 
-    abstract public function delete($id_post);
+    abstract public function delete($idPost);
 
     /**
     * Méthode permettant de modifier un post.
@@ -45,7 +47,7 @@ abstract class PostManager
     * @return object Post Le post demandé
     */
 
-    abstract public function get($id_post);
+    abstract public function get($idPost);
 
     /**
     * Méthode permettant de vérifier si un post existe déja.
@@ -54,5 +56,4 @@ abstract class PostManager
     */
 
     abstract public function exists($info);
-
 }

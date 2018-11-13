@@ -5,6 +5,8 @@
 * @author Bastien Vacherand.
 */
 
+namespace Bastien\blog\model;
+
 abstract class CommentManager
 {
     /**
@@ -21,21 +23,21 @@ abstract class CommentManager
     * @return void
     */
 
-    abstract public function delete($id_comment);
+    abstract public function delete($idComment);
 
     /**
     * Méthode retournant une liste de comments demandés.
     * @return array La liste des comment. Chaque entrée est une instance de Comment.
     */
 
-    abstract public function getList($id_post);
+    abstract public function getList($idPost);
 
     /**
     * Méthode retournant les commentaires en attente de validation.
     * @return array La liste des comment non valides.
     */
 
-     abstract public function getPendingList();
+    abstract public function getPendingList();
 
     /**
     * Méthode permettant de valider un comment.
@@ -43,6 +45,5 @@ abstract class CommentManager
     * @return void.
     */
 
-     abstract public function validate($id_comment);
-
+    abstract public function validate($idComment);
 }

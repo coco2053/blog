@@ -1,5 +1,5 @@
 <?php
-return [
+$data = [
     'smpt'    => 'smtp.gmail.com',
     'port'  => '587',
     'mode'=> 'tls',

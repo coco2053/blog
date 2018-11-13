@@ -5,18 +5,20 @@
 * @author Bastien Vacherand.
 */
 
+namespace Bastien\blog\model;
+
 class Post
 {
 
-    protected $id_post,
-              $id_user,
-              $title,
-              $chapo,
-              $content,
-              $image,
-              $creation_date,
-              $update_date,
-              $username;
+    protected $idPost;
+    protected $idUser;
+    protected $title;
+    protected $chapo;
+    protected $content;
+    protected $image;
+    protected $creationDate;
+    protected $updateDate;
+    protected $username;
 
     /**
     * Constructeur de la classe qui permet d'hydrater l'objet à l'instanciation.
@@ -28,7 +30,6 @@ class Post
     {
 
         if (!empty($formData)) {
-
             $this->hydrate($formData);
         }
     }
@@ -43,11 +44,8 @@ class Post
     {
 
         foreach ($formData as $key => $value) {
-
             $method = 'set'.ucfirst($key);
-
             if (method_exists($this, $method)) {
-
                 $this->$method($value);
             }
         }
@@ -55,16 +53,16 @@ class Post
 
     // GETTERS //
 
-    public function id_post()
+    public function idPost()
     {
 
-        return $this->id_post;
+        return $this->idPost;
     }
 
-    public function id_user()
+    public function idUser()
     {
 
-        return $this->id_user;
+        return $this->idUser;
     }
 
     public function title()
@@ -91,16 +89,16 @@ class Post
         return $this->image;
     }
 
-    public function creation_date()
+    public function creationDate()
     {
 
-        return $this->creation_date;
+        return $this->creationDate;
     }
 
-    public function update_date()
+    public function updateDate()
     {
 
-        return $this->update_date;
+        return $this->updateDate;
     }
 
     public function username()
@@ -111,25 +109,23 @@ class Post
 
     // SETTERS //
 
-    public function setId_post($id_post)
+    public function setIdPost($idPost)
     {
 
-        $id_post = (int) $id_post;
+        $idPost = (int) $idPost;
 
-        if ($id_post > 0) {
-
-            $this->id_post = $id_post;
+        if ($idPost > 0) {
+            $this->idPost = $idPost;
         }
     }
 
-    public function setId_user($id_user)
+    public function setIdUser($idUser)
     {
 
-        $id_user = (int) $id_user;
+        $idUser = (int) $idUser;
 
-        if ($id_user > 0) {
-
-            $this->id_user = $id_user;
+        if ($idUser > 0) {
+            $this->idUser = $idUser;
         }
     }
 
@@ -137,7 +133,6 @@ class Post
     {
 
         if (is_string($title)) {
-
             $this->title = $title;
         }
     }
@@ -145,7 +140,6 @@ class Post
     public function setChapo($chapo)
     {
         if (is_string($chapo)) {
-
             $this->chapo = $chapo;
         }
     }
@@ -153,7 +147,6 @@ class Post
     public function setContent($content)
     {
         if (is_string($content)) {
-
             $this->content = $content;
         }
     }
@@ -161,30 +154,26 @@ class Post
     public function setImage($image)
     {
         if (is_string($image)) {
-
             $this->image = $image;
         }
     }
 
-    public function setCreation_date(DateTime $creation_date)
+    public function setCreationDate(\DateTime $creationDate)
     {
 
-        $this->creation_date = $creation_date->format('d.m.Y à H:i');
+        $this->creationDate = $creationDate->format('d.m.Y à H:i');
     }
 
-    public function setUpdate_date(DateTime $update_date)
+    public function setUpdateDate(\DateTime $updateDate)
     {
 
-        $this->update_date = $update_date->format('d.m.Y à H:i');
-
+        $this->updateDate = $updateDate->format('d.m.Y à H:i');
     }
 
     public function setUsername($username)
     {
         if (is_string($username)) {
-
             $this->username = $username;
         }
     }
-
 }

@@ -230,11 +230,10 @@ class Frontend
         include_once 'model/recaptcha.php';
 
         if ($decode['success'] == true) {
+            // On supprime les retour à la ligne
+            $secure_mail = str_replace(array("\n", "\r", PHP_EOL), '', $_POST['email']);
             // On check que l'adresse email soit dans la bdd
-            if ($this->usermanager->exists($_POST['email'])) {
-                // On supprime les retour à la ligne
-                $secure_mail = str_replace(array("\n", "\r", PHP_EOL), '', $_POST['email']);
-
+            if ($this->usermanager->exists($secure_mail)) {
                 include_once 'vendor/autoload.php';
                 include_once 'model/transport.php';
 
@@ -257,17 +256,15 @@ class Frontend
                                         pas l\'email, regardez dans vos courriers indésirables.';
 
                 header('location: connexion');
-            } else {
-                $_SESSION['show_message'] = true;
-                $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($secure_mail)) .
-                                       ' n\'est pas enregistrée !';
-                header('location: '. $_SERVER["HTTP_REFERER"]);
             }
-        } else {
             $_SESSION['show_message'] = true;
-            $_SESSION['message'] = 'Vous n\'êtes pas humain !';
+            $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($secure_mail)) .
+                                   ' n\'est pas enregistrée !';
             header('location: '. $_SERVER["HTTP_REFERER"]);
         }
+        $_SESSION['show_message'] = true;
+        $_SESSION['message'] = 'Vous n\'êtes pas humain !';
+        header('location: '. $_SERVER["HTTP_REFERER"]);
     }
 
     /**
@@ -301,28 +298,24 @@ class Frontend
                 if ($this->usermanager->isValid($_POST['email'])) {
                     if (null !== $this->usermanager->checkPassword($formData)) {
                         header('Location: profile-' . $this->usermanager->checkPassword($formData));
-                    } else {
-                        $_SESSION['show_message'] = true;
-                        $_SESSION['message'] = 'Mauvais login ou mot de passe !';
-                        header('location: '. $_SERVER["HTTP_REFERER"]);
                     }
-                } else {
                     $_SESSION['show_message'] = true;
-                    $_SESSION['message'] = 'L\'addresse email ' . nl2br(htmlspecialchars($_POST['email'])).
-                                            ' n\'a pas encore été validée !';
+                    $_SESSION['message'] = 'Mauvais login ou mot de passe !';
                     header('location: '. $_SERVER["HTTP_REFERER"]);
                 }
-            } else {
                 $_SESSION['show_message'] = true;
                 $_SESSION['message'] = 'L\'addresse email ' . nl2br(htmlspecialchars($_POST['email'])).
-                                       ' n\'est pas enregistrée !';
+                                       ' n\'a pas encore été validée !';
                 header('location: '. $_SERVER["HTTP_REFERER"]);
             }
-        } else {
             $_SESSION['show_message'] = true;
-            $_SESSION['message'] = 'Vous n\'êtes pas humain !';
-            header('location: connexion');
+            $_SESSION['message'] = 'L\'addresse email ' . nl2br(htmlspecialchars($_POST['email'])).
+                                   ' n\'est pas enregistrée !';
+            header('location: '. $_SERVER["HTTP_REFERER"]);
         }
+        $_SESSION['show_message'] = true;
+        $_SESSION['message'] = 'Vous n\'êtes pas humain !';
+        header('location: connexion');
     }
 
     /**
@@ -367,6 +360,7 @@ class Frontend
             // On check que l'adresse mail soit valide
             if (preg_match("#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#", $_POST['email'])) {
                 $email_valid = true;
+                $email = strip_tags($_POST['email']);
             } else {
                 $_SESSION['show_message'] = true;
                 $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($_POST['email'])) .
@@ -377,9 +371,7 @@ class Frontend
             if ($email_valid) {
                 $email_valid = false;
 
-                if (!$this->usermanager->exists($_POST['email'])) {
-                    $email = strip_tags($_POST['email']);
-                } else {
+                if ($this->usermanager->exists($email)) {
                     $_SESSION['show_message'] = true;
                     $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($_POST['email'])) .
                                            ' a deja été enregistrée !';
@@ -399,7 +391,7 @@ class Frontend
                             'asleep' => 'Yes',
                             'lastname' => nl2br(htmlspecialchars($_POST['lastname']))];
 
-                $user = new Bastien\Blog\Model\User($formData);
+                $user = new User($formData);
                 $this->usermanager->add($user);
 
                 include_once 'vendor/autoload.php';
@@ -426,11 +418,10 @@ class Frontend
                                         .nl2br(htmlspecialchars($email)) . ' pour valider votre compte !';
                 header('location: connexion');
             }
-        } else {
-            $_SESSION['show_message'] = true;
-            $_SESSION['message'] = 'Vous n\'êtes pas humain !';
-            header('location: connexion');
         }
+        $_SESSION['show_message'] = true;
+        $_SESSION['message'] = 'Vous n\'êtes pas humain !';
+        header('location: connexion');
     }
 
     // GETTERS //

@@ -72,7 +72,7 @@ class PostManagerPDO extends PostManager
 
         $post = $req->fetch();
 
-        if ($post->image() != 'no-image.jpeg') {
+        if ($post->image() != 'no-image.jpg') {
             unlink('public/upload/'.$post->image());
         }
 

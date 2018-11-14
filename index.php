@@ -24,30 +24,31 @@ try {
             $backend->writePostView();
         } elseif ($_GET['action'] == 'addPost') {
             $backend = new Backend();
-
+            $myfile = $_FILES;
             $formData = ['title' => nl2br(htmlspecialchars($_POST['title'])),
                         'chapo' => nl2br(htmlspecialchars($_POST['chapo'])),
                         'content' => nl2br(htmlspecialchars($_POST['content'])),
                         'idUser' => nl2br(htmlspecialchars($_SESSION['user'] -> idUser())),
-                        'image' => $backend->checkFile($_FILES)];
+                        'image' => $backend->checkFile($myfile)];
             $backend->addPost($formData);
         } elseif ($_GET['action'] == 'editPostView') {
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
+            if (isset($_GET['id']) && $_GET['id'] > 0 && filter_var($_GET['id'], FILTER_VALIDATE_INT) !== false) {
+                $idPost = $_GET['id'];
                 $backend = new Backend();
-                $backend->editPostView($_GET['id']);
-            } else {
-                throw new \Exception('Aucun identifiant de billet envoyé');
+                $backend->editPostView($idPost);
             }
+            throw new \Exception('Aucun identifiant de billet envoyé');
         } elseif ($_GET['action'] == 'deleteComment') {
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
+            if (isset($_GET['id']) && $_GET['id'] > 0 && filter_var($_GET['id'], FILTER_VALIDATE_INT) !== false) {
+                $idComment = $_GET['id'];
                 $backend = new Backend();
-                $backend->deleteComment($_GET['id']);
-            } else {
-                throw new \Exception('Aucun identifiant de billet envoyé');
+                $backend->deleteComment($idComment);
             }
+            throw new \Exception('Aucun identifiant de billet envoyé');
         } elseif ($_GET['action'] == 'editPost') {
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
-                $formData = ['idPost' => nl2br(htmlspecialchars($_GET['id'])),
+            if (isset($_GET['id']) && $_GET['id'] > 0 && filter_var($_GET['id'], FILTER_VALIDATE_INT) !== false) {
+                $idPost = $_GET['id'];
+                $formData = ['idPost' => nl2br(htmlspecialchars($idPost)),
                             'title' => nl2br(htmlspecialchars($_POST['title'])),
                             'chapo' => nl2br(htmlspecialchars($_POST['chapo'])),
                             'content' => nl2br(htmlspecialchars($_POST['content'])),
@@ -55,44 +56,43 @@ try {
 
                 $backend = new Backend();
                 $backend->editPost($formData);
-            } else {
-                throw new \Exception('Aucun identifiant de billet envoyé');
             }
+            throw new \Exception('Aucun identifiant de billet envoyé');
         } elseif ($_GET['action'] == 'deletePost') {
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
+            if (isset($_GET['id']) && $_GET['id'] > 0 && filter_var($_GET['id'], FILTER_VALIDATE_INT) !== false) {
+                $idPost = $_GET['id'];
                 $backend = new Backend();
-                $backend->deletePost($_GET['id']);
-            } else {
-                throw new \Exception('Aucun identifiant de billet envoyé');
+                $backend->deletePost($idPost);
             }
+            throw new \Exception('Aucun identifiant de billet envoyé');
         } elseif ($_GET['action'] == 'readPost') {
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
+            if (isset($_GET['id']) && $_GET['id'] > 0 && filter_var($_GET['id'], FILTER_VALIDATE_INT) !== false) {
+                $idPost = $_GET['id'];
                 $frontend = new Frontend();
-                $frontend->getPost($_GET['id']);
-            } else {
-                throw new \Exception('Aucun identifiant de billet envoyé');
+                $frontend->getPost($idPost);
             }
+            throw new \Exception('Aucun identifiant de billet envoyé');
         } elseif ($_GET['action'] == 'getUser') {
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
+            if (isset($_GET['id']) && $_GET['id'] > 0 && filter_var($_GET['id'], FILTER_VALIDATE_INT) !== false) {
+                $idUser = $_GET['id'];
                 $backend = new Backend();
-                $backend->getUser($_GET['id']);
-            } else {
-                throw new \Exception('Aucun identifiant de billet envoyé');
+                $backend->getUser($idUser);
             }
+            throw new \Exception('Aucun identifiant de billet envoyé');
         } elseif ($_GET['action'] == 'deleteUser') {
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
+            if (isset($_GET['id']) && $_GET['id'] > 0 && filter_var($_GET['id'], FILTER_VALIDATE_INT) !== false) {
+                $idUser = $_GET['id'];
                 $backend = new Backend();
-                $backend->deleteUser($_GET['id']);
-            } else {
-                throw new \Exception('Aucun identifiant de billet envoyé');
+                $backend->deleteUser($idUser);
             }
+            throw new \Exception('Aucun identifiant de billet envoyé');
         } elseif ($_GET['action'] == 'addComment') {
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
+            if (isset($_GET['id']) && $_GET['id'] > 0 && filter_var($_GET['id'], FILTER_VALIDATE_INT) !== false) {
+                $idComment = $_GET['id'];
                 $backend = new Backend();
-                $backend->addComment($_GET['id']);
-            } else {
-                throw new \Exception('Aucun identifiant de billet envoyé');
+                $backend->addComment($idComment);
             }
+            throw new \Exception('Aucun identifiant de billet envoyé');
         } elseif ($_GET['action'] == 'postsList') {
                 $frontend = new Frontend();
                 $frontend->getPosts();
@@ -124,33 +124,33 @@ try {
                 $backend = new Backend();
                 $backend->getPendingComments();
         } elseif ($_GET['action'] == 'getUsersView') {
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
+            if (isset($_GET['id']) && $_GET['id'] > 0 && filter_var($_GET['id'], FILTER_VALIDATE_INT) !== false) {
+                $idUser = $_GET['id'];
                 $backend = new Backend();
-                $backend->getUsers($_GET['id']);
-            } else {
-                throw new \Exception('Aucun identifiant de billet envoyé');
+                $backend->getUsers($idUser);
             }
+            throw new \Exception('Aucun identifiant de billet envoyé');
         } elseif ($_GET['action'] == 'awakeUser') {
             if (isset($_GET['email'])) {
+                $email = nl2br(htmlspecialchars($_GET['email']));
                 $backend = new Backend();
-                $backend->awakeUser($_GET['email']);
-            } else {
-                throw new \Exception('Aucun identifiant de billet envoyé');
+                $backend->awakeUser($email);
             }
+            throw new \Exception('Aucun identifiant de billet envoyé');
         } elseif ($_GET['action'] == 'validateUser') {
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
+            if (isset($_GET['id']) && $_GET['id'] > 0 && filter_var($_GET['id'], FILTER_VALIDATE_INT) !== false) {
+                $idUser = $_GET['id'];
                 $backend = new Backend();
-                $backend->validateUser($_GET['id']);
-            } else {
-                throw new \Exception('Aucun identifiant de billet envoyé');
+                $backend->validateUser($idUser);
             }
+            throw new \Exception('Aucun identifiant de billet envoyé');
         } elseif ($_GET['action'] == 'validateComment') {
-            if (isset($_GET['id']) && $_GET['id'] > 0) {
+            if (isset($_GET['id']) && $_GET['id'] > 0 && filter_var($_GET['id'], FILTER_VALIDATE_INT) !== false) {
+                $idComment = $_GET['id'];
                 $backend = new Backend();
-                $backend->validateComment($_GET['id']);
-            } else {
-                throw new \Exception('Aucun identifiant de billet envoyé');
+                $backend->validateComment($idComment);
             }
+            throw new \Exception('Aucun identifiant de billet envoyé');
         } elseif ($_GET['action'] == 'signUp') {
             // On check que le formulaire a été envoyé
             if (isset($_POST['email'])) {
@@ -182,10 +182,9 @@ try {
             $frontend = new Frontend();
             $frontend->contact();
         }
-    } else {
-        $frontend = new Frontend();
-        $frontend->homeView();
     }
+    $frontend = new Frontend();
+    $frontend->homeView();
 } catch (\Exception $e) {
     $errorMessage = $e->getMessage();
 

@@ -11,7 +11,7 @@ ob_start();
         <div class="col-md-2"> </div>
         <div class="col-md-8 center">
             <h1 class="my-3"> <?= nl2br(htmlspecialchars($title)) ?> </h1>
-            <form action="modifie-article-<?= nl2br(htmlspecialchars($post->id_post())) ?>" method="post">
+            <form action="modifie-article-<?= nl2br(htmlspecialchars($post->idPost())) ?>" method="post">
                 <div class="form-group">
                     <label>Titre</label>
                     <input type="text" class="form-control" name="title" maxlength="100"

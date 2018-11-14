@@ -107,10 +107,9 @@ class Backend
             imagejpeg($output, "$uploads_dir/$file_name2", 100);
 
             return $file_name2;
-        } else {
-            $file_name2 ='no-image.jpg';
-            return $file_name2;
         }
+        $file_name2 ='no-image.jpg';
+        return $file_name2;
     }
 
     /**
@@ -121,21 +120,20 @@ class Backend
 
     public function addPost($formData)
     {
-
-        $this->allow(__FUNCTION__);
+        $action = __FUNCTION__;
+        $this->allow($action);
 
         if (!$this->postmanager->exists($formData['title'])) {
-            $post = new Bastien\Blog\Model\Post($formData);
+            $post = new Post($formData);
             $this->postmanager->add($post);
             $post = $this->postmanager->get($post->idPost());
             $_SESSION['show_message'] = true;
             $_SESSION['message'] = 'Votre article est publié !';
 
             header('location: article-'.$post->idPost());
-        } else {
-            $_SESSION['show_message'] = true;
-            $_SESSION['message'] = 'Votre article est publié !';
         }
+        $_SESSION['show_message'] = true;
+        $_SESSION['message'] = 'Un article avec le même titre existe déja !';
     }
 
     /**
@@ -147,7 +145,8 @@ class Backend
     public function addComment($idPost)
     {
 
-        $this->allow(__FUNCTION__);
+        $action = __FUNCTION__;
+        $this->allow($action);
 
         if (strpos($_SESSION['user'] -> permAction(), 'validateComment') === false) {
             $valid = 'No';
@@ -155,12 +154,12 @@ class Backend
             $valid = 'Yes';
         }
 
-        $formData = ['id_post' => $id_post,
+        $formData = ['idPost' => $idPost,
                     'content' => nl2br(htmlspecialchars($_POST['content'])),
                     'valid' => $valid,
-                    'id_user' => nl2br(htmlspecialchars($_SESSION['user'] -> idUser()))];
+                    'idUser' => nl2br(htmlspecialchars($_SESSION['user'] -> idUser()))];
 
-        $comment = new Bastien\Blog\Model\Comment($formData);
+        $comment = new Comment($formData);
         $this->commentmanager->add($comment);
 
         if ($valid == 'No') {
@@ -179,7 +178,8 @@ class Backend
 
     public function writePostView()
     {
-        $this->allow(__FUNCTION__);
+        $action = __FUNCTION__;
+        $this->allow($action);
         include 'view/backend/writePost.php';
     }
 
@@ -192,7 +192,8 @@ class Backend
     public function editPostView($idPost)
     {
 
-        $this->allow(__FUNCTION__);
+         $action = __FUNCTION__;
+        $this->allow($action);
         $post = $this->postmanager->get($idPost);
 
         include 'view/backend/editPost.php';
@@ -207,8 +208,9 @@ class Backend
     public function editPost($formData)
     {
 
-        $this->allow(__FUNCTION__);
-        $post = new Bastien\Blog\Model\Post($formData);
+        $action = __FUNCTION__;
+        $this->allow($action);
+        $post = new Post($formData);
         $this->postmanager->update($post);
         $post = $this->postmanager->get($post->idPost());
         $_SESSION['show_message'] = true;
@@ -225,7 +227,8 @@ class Backend
     public function deletePost($idPost)
     {
 
-        $this->allow(__FUNCTION__);
+        $action = __FUNCTION__;
+        $this->allow($action);
 
         $this->postmanager->delete($idPost);
         $_SESSION['show_message'] = true;
@@ -243,7 +246,8 @@ class Backend
     public function deleteComment($idComment)
     {
 
-        $this->allow(__FUNCTION__);
+        $action = __FUNCTION__;
+        $this->allow($action);
 
         $this->commentmanager->delete($idComment);
 
@@ -261,10 +265,10 @@ class Backend
 
     public function getUser($idUser)
     {
-
+        $action = __FUNCTION__;
+        $this->allow($action);
         $user = $this->usermanager->get($idUser);
         $_SESSION['user'] = $user;
-        $this->allow(__FUNCTION__);
         include 'view/backend/userView.php';
 
         $this->usermanager->updateSigninDate($idUser);
@@ -279,7 +283,8 @@ class Backend
     public function getUsers($idUser)
     {
 
-        $this->allow(__FUNCTION__);
+        $action = __FUNCTION__;
+        $this->allow($action);
         $users = $this->usermanager->getList($idUser);
 
         include 'view/backend/usersListView.php';
@@ -294,7 +299,8 @@ class Backend
     public function validateUser($idUser)
     {
 
-        $this->allow(__FUNCTION__);
+        $action = __FUNCTION__;
+        $this->allow($action);
 
         $this->usermanager->validate($idUser);
         $user = $this->usermanager->get($idUser);
@@ -330,7 +336,8 @@ class Backend
     public function validateComment($idComment)
     {
 
-        $this->allow(__FUNCTION__);
+        $action = __FUNCTION__;
+        $this->allow($action);
 
         $this->commentmanager->validate($idComment);
         $_SESSION['show_message'] = true;
@@ -381,9 +388,10 @@ class Backend
     public function getPendingUsers()
     {
 
-        $this->allow(__FUNCTION__);
+        $action = __FUNCTION__;
+        $this->allow($action);
 
-        $users = $this->usermanager->getPendingList();
+        $this->usermanager->getPendingList();
 
         include 'view/backend/pendingUsersListView.php';
     }
@@ -397,9 +405,10 @@ class Backend
     public function getPendingComments()
     {
 
-        $this->allow(__FUNCTION__);
+        $action = __FUNCTION__;
+        $this->allow($action);
 
-        $comments = $this->commentmanager->getPendingList();
+        $this->commentmanager->getPendingList();
 
         include 'view/backend/pendingCommentsListView.php';
     }
@@ -410,10 +419,11 @@ class Backend
     * @return void
     */
 
-    public function deleteUser($id_user)
+    public function deleteUser($idUser)
     {
 
-        $this->allow(__FUNCTION__);
+        $action = __FUNCTION__;
+        $this->allow($action);
 
         $this->usermanager->delete($idUser);
         $_SESSION['show_message'] = true;

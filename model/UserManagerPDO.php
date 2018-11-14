@@ -276,9 +276,8 @@ class UserManagerPDO extends UserManager
         // Comparaison du pass envoyé via le formulaire avec celui de la base
         if (password_verify($formData['password'], $result['password'])) {
             return $idUser;
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**

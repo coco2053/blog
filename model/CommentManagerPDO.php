@@ -5,7 +5,7 @@
 * @author Bastien Vacherand.
 */
 
-namespace Bastien\blog\model;
+namespace Bastien\model;
 
 class CommentManagerPDO extends CommentManager
 {
@@ -93,7 +93,7 @@ class CommentManagerPDO extends CommentManager
 
             $req->execute();
 
-            $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\\Bastien\\blog\\model\\Comment');
+            $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\\Bastien\\model\\Comment');
             $comments = $req->fetchAll();
 
             // On parcourt notre liste de news pour pouvoir placer des instances de DateTime en guise de dates d'ajout.
@@ -127,7 +127,7 @@ class CommentManagerPDO extends CommentManager
                                         ORDER BY comment.creationDate');
 
         $req->execute();
-        $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\\Bastien\\blog\\model\\Comment');
+        $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\\Bastien\\model\\Comment');
         $comments = $req->fetchAll();
 
         /* On parcourt notre liste de news pour pouvoir placer des instances de DateTime en guise

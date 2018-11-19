@@ -14,11 +14,11 @@ ob_start();
             <form action="ecrire-article" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label>Titre</label>
-                    <input type="text" class="form-control" name="title" maxlength="100" placeholder="Entrez le titre" />
+                    <input type="text" class="form-control" name="title" maxlength="100" placeholder="Entrez le titre" required/>
                     <label>Chapo</label>
-                    <input type="text" class="form-control" name="chapo" maxlength="100" placeholder="Entrez le chapo" />
+                    <input type="text" class="form-control" name="chapo" maxlength="100" placeholder="Entrez le chapo" required/>
                     <label>Contenu</label>
-                    <textarea name="content" class="form-control" placeholder="Entrez le contenu" rows="4" cols="40">  </textarea>
+                    <textarea name="content" class="form-control" placeholder="Entrez le contenu" rows="4" cols="40" required>  </textarea>
                     <labelfor="my_file">Image : Fichier (format jpeg | max. 1 Mo)</labelfor>
                     <input type="file" name="my_file" id="my_file"/><br />
                     <button type="submit" class="btn btn-primary" name="addPost" id="i_submit">Valider</button>
@@ -48,19 +48,19 @@ $('#my_file').change( function() {
         if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
 
             alert("Mauvais format ! Seul le JPEG est accepté !");
-            $("input[type=submit]").attr('disabled','disabled');
+            $("#i_submit").attr('disabled','disabled');
         }
 
 
         if(fsize>1048576) {
 
             alert(fsize +" octets\nFichier trop volumineux !");
-            $("input[type=submit]").attr('disabled','disabled');
+            $("#i_submit").attr('disabled','disabled');
         }
 
         if($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) > -1  && fsize<1048576 ) {
 
-            $("input[type=submit]").removeAttr('disabled');
+            $("#i_submit").removeAttr('disabled');
         }
     }
 });

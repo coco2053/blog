@@ -5,7 +5,7 @@
 * @author Bastien Vacherand.
 */
 
-namespace Bastien\blog\model;
+namespace Bastien\model;
 
 class DBFactory
 {
@@ -16,7 +16,7 @@ class DBFactory
     * @return object PDO
     */
 
-    public static function getMysqlConnexionWithPDO()
+    public function getMysqlConnexionWithPDO()
     {
 
         $data = require __DIR__ . '/../config/connect.php';
@@ -35,7 +35,7 @@ class DBFactory
     * @return object MySQLi
     */
 
-    public static function getMysqlConnexionWithMySQLi()
+    public function getMysqlConnexionWithMySQLi()
     {
 
         return new MySQLi('localhost', 'root', '', 'blog');

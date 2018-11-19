@@ -6,15 +6,15 @@
 */
 
 
-namespace Bastien\blog\controller;
+namespace Bastien\controller;
 
-use \Bastien\blog\model\PostManagerPDO;
-use \Bastien\blog\model\UserManagerPDO;
-use \Bastien\blog\model\CommentManagerPDO;
-use \Bastien\blog\model\DBFactory;
-use \Bastien\blog\model\Comment;
-use \Bastien\blog\model\Post;
-use \Bastien\blog\model\User;
+use \Bastien\model\PostManagerPDO;
+use \Bastien\model\UserManagerPDO;
+use \Bastien\model\CommentManagerPDO;
+use \Bastien\model\DBFactory;
+use \Bastien\model\Comment;
+use \Bastien\model\Post;
+use \Bastien\model\User;
 
 class Backend
 {
@@ -23,6 +23,7 @@ class Backend
     protected $usermanager;
     protected $commentmanager;
     protected $database;
+
     /**
     * Constructeur de la classe qui permet d'instancier la bdd et les managers.
     * @param void
@@ -31,10 +32,10 @@ class Backend
 
     public function __construct()
     {
-        $this->database = DBFactory::getMysqlConnexionWithPDO();
-        $this->postmanager = new PostManagerPDO($this->database);
-        $this->usermanager = new UserManagerPDO($this->database);
-        $this->commentmanager = new CommentManagerPDO($this->database);
+        $this->database = new DBFactory();
+        $this->postmanager = new PostManagerPDO($this->database->getMysqlConnexionWithPDO());
+        $this->usermanager = new UserManagerPDO($this->database->getMysqlConnexionWithPDO());
+        $this->commentmanager = new CommentManagerPDO($this->database->getMysqlConnexionWithPDO());
     }
 
     /**
@@ -71,41 +72,33 @@ class Backend
         if ($_FILES['my_file']['size'] > 100) {
             if ($_FILES['my_file']['error'] > 0) {
                 echo "Erreur lors du transfert";
+                return;
             }
-
             $maxsize = 1048576;
             $uploads_dir = 'public/upload';
             $valid_extensions = array( 'jpg' , 'jpeg' );
             $extension_upload = strtolower(substr(strrchr($_FILES['my_file']['name'], '.'), 1));
-
             if (!in_array($extension_upload, $valid_extensions)) {
                 echo "Extension incorrecte";
+                return;
             }
-
             if ($_FILES['my_file']['size'] > $maxsize) {
                 echo "Le fichier est trop gros";
+                return;
             }
-
             $file_name1 = time();
             $file_name2 = "{$file_name1}.{$extension_upload}";
-
+            $result = move_uploaded_file($_FILES['my_file']['tmp_name'], "$uploads_dir/$file_name2");
             $width = 700;
             $height = 350;
-
             $image = imagecreatefromjpeg("$uploads_dir/$file_name2");
             $size = getimagesize("$uploads_dir/$file_name2");
-
             $output = imagecreatetruecolor($width, $height);
-
             $ratio = min($size[0]/$width, $size[1]/$height);
-
             $deltax = $size[0]-($ratio * $width);
             $deltay = $size[1]-($ratio * $height);
-
             imagecopyresampled($output, $image, 0, 0, $deltax/2, $deltay/2, $width, $height, $size[0]-$deltax, $size[1]-$deltay);
-
             imagejpeg($output, "$uploads_dir/$file_name2", 100);
-
             return $file_name2;
         }
         $file_name2 ='no-image.jpg';
@@ -131,6 +124,7 @@ class Backend
             $_SESSION['message'] = 'Votre article est publié !';
 
             header('location: article-'.$post->idPost());
+            return;
         }
         $_SESSION['show_message'] = true;
         $_SESSION['message'] = 'Un article avec le même titre existe déja !';
@@ -153,7 +147,6 @@ class Backend
         } else {
             $valid = 'Yes';
         }
-
         $formData = ['idPost' => $idPost,
                     'content' => nl2br(htmlspecialchars($_POST['content'])),
                     'valid' => $valid,
@@ -192,7 +185,7 @@ class Backend
     public function editPostView($idPost)
     {
 
-         $action = __FUNCTION__;
+        $action = __FUNCTION__;
         $this->allow($action);
         $post = $this->postmanager->get($idPost);
 
@@ -265,13 +258,12 @@ class Backend
 
     public function getUser($idUser)
     {
-        $action = __FUNCTION__;
-        $this->allow($action);
         $user = $this->usermanager->get($idUser);
         $_SESSION['user'] = $user;
-        include 'view/backend/userView.php';
-
+        $action = __FUNCTION__;
+        $this->allow($action);
         $this->usermanager->updateSigninDate($idUser);
+        include 'view/backend/userView.php';
     }
 
     /**
@@ -323,7 +315,7 @@ class Backend
         // Send the message
         $mailer->send($message);
         $_SESSION['show_message'] = true;
-        $_SESSION['message'] = 'Compte validé ! Email envoyé à l\'utilisateur. Si vous ne voyez pas l\'email, regardez dans vos courriers indésirables.';
+        $_SESSION['message'] = 'Compte validé ! Email envoyé à l\'utilisateur.';
         header('location: '. $_SERVER["HTTP_REFERER"]);
     }
 
@@ -391,7 +383,7 @@ class Backend
         $action = __FUNCTION__;
         $this->allow($action);
 
-        $this->usermanager->getPendingList();
+        $users = $this->usermanager->getPendingList();
 
         include 'view/backend/pendingUsersListView.php';
     }
@@ -408,7 +400,7 @@ class Backend
         $action = __FUNCTION__;
         $this->allow($action);
 
-        $this->commentmanager->getPendingList();
+        $comments = $this->commentmanager->getPendingList();
 
         include 'view/backend/pendingCommentsListView.php';
     }

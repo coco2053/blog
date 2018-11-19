@@ -1,7 +1,12 @@
 {
-"require": {
-  "php": ">=7.0",
-
-  "swiftmailer/swiftmailer": "v6.1.2"
-}
+    "require": {
+        "php": ">=7.0",
+        "swiftmailer/swiftmailer": "v6.1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bastien\\controller\\": "controller/",
+            "Bastien\\model\\": "model/"
+        }
+    }
 }

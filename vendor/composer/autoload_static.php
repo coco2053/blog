@@ -15,12 +15,25 @@ class ComposerStaticInitc04590396e286032e49065e2b7ba69c8
         array (
             'Egulias\\EmailValidator\\' => 23,
         ),
+        'B' => 
+        array (
+            'Bastien\\model\\' => 14,
+            'Bastien\\controller\\' => 19,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
         'Egulias\\EmailValidator\\' => 
         array (
             0 => __DIR__ . '/..' . '/egulias/email-validator/EmailValidator',
+        ),
+        'Bastien\\model\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/model',
+        ),
+        'Bastien\\controller\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/controller',
         ),
     );
 

@@ -5,15 +5,15 @@
 * @author Bastien Vacherand.
 */
 
-namespace Bastien\blog\controller;
+namespace Bastien\controller;
 
-use \Bastien\blog\model\PostManagerPDO;
-use \Bastien\blog\model\UserManagerPDO;
-use \Bastien\blog\model\CommentManagerPDO;
-use \Bastien\blog\model\DBFactory;
-use \Bastien\blog\model\Comment;
-use \Bastien\blog\model\Post;
-use \Bastien\blog\model\User;
+use \Bastien\model\PostManagerPDO;
+use \Bastien\model\UserManagerPDO;
+use \Bastien\model\CommentManagerPDO;
+use \Bastien\model\DBFactory;
+use \Bastien\model\Comment;
+use \Bastien\model\Post;
+use \Bastien\model\User;
 
 class Frontend
 {
@@ -31,11 +31,10 @@ class Frontend
 
     public function __construct()
     {
-
-        $this->database = DBFactory::getMysqlConnexionWithPDO();
-        $this->postmanager = new PostManagerPDO($this->database);
-        $this->usermanager = new UserManagerPDO($this->database);
-        $this->commentmanager = new CommentManagerPDO($this->database);
+        $this->database = new DBFactory();
+        $this->postmanager = new PostManagerPDO($this->database->getMysqlConnexionWithPDO());
+        $this->usermanager = new UserManagerPDO($this->database->getMysqlConnexionWithPDO());
+        $this->commentmanager = new CommentManagerPDO($this->database->getMysqlConnexionWithPDO());
     }
 
     /**
@@ -89,7 +88,6 @@ class Frontend
             // On supprime les retour à la ligne
             $secure_mail = str_replace(array("\n","\r", PHP_EOL), '', $_POST['email']);
 
-            include_once 'vendor/autoload.php';
             include_once 'model/transport.php';
 
             // Create the Mailer using your created Transport
@@ -109,9 +107,12 @@ class Frontend
             $mailer->send($message);
             $_SESSION['show_message'] = true;
             $_SESSION['message'] = 'Votre message a bien été envoyé. Nous vous répondrons dans les plus brefs délais.';
-
             header('location: '. $_SERVER["HTTP_REFERER"]);
+            return;
         }
+        $_SESSION['show_message'] = true;
+        $_SESSION['message'] = 'Vous n\'êtes pas humain !';
+        header('location: '. $_SERVER["HTTP_REFERER"]);
     }
 
     /**
@@ -122,7 +123,6 @@ class Frontend
 
     public function getPost($idPost)
     {
-
         $post = $this->postmanager->get($idPost);
         $comments = $this->commentmanager->getList($idPost);
 
@@ -188,34 +188,29 @@ class Frontend
     {
 
         // On check que le mdp fasse au moins 8 caracteres
-        if (preg_match("#.{8,60}#", $_POST['password'])) {
-            $password = strip_tags($_POST['password']);
-        } else {
+        if (!preg_match("#.{8,60}#", $_POST['password'])) {
             $_SESSION['show_message'] = true;
             $_SESSION['message'] = 'Votre mot de passe doit comporter au moins 8 caracteres !';
             header('location: '. $_SERVER["HTTP_REFERER"]);
+            return;
         }
-
         // On check que les 2 mdp soient les mêmes
-        if ($_POST['passwordbis'] == $_POST['password']) {
-            $passwordbis = strip_tags($_POST['passwordbis']);
-        } else {
+        if ($_POST['passwordbis'] !== $_POST['password']) {
             $_SESSION['show_message'] = true;
             $_SESSION['message'] = 'Veuillez retapper votre mot de passe !';
             header('location: '. $_SERVER["HTTP_REFERER"]);
+            return;
         }
 
-        if (isset($password, $passwordbis)) {
-            $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-
-            $formData = ['email' => nl2br(htmlspecialchars($_POST['email'])),
+        $password = strip_tags($_POST['password']);
+        $passwordbis = strip_tags($_POST['password']);
+        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+        $formData = ['email' => nl2br(htmlspecialchars($_POST['email'])),
                         'password' => $hashed_password];
-
-            $this->usermanager->updatePassword($formData);
-            $_SESSION['show_message'] = true;
-            $_SESSION['message'] = 'Votre nouveau mot de passe a bien été enregistré !';
-            header('location: connexion');
-        }
+        $this->usermanager->updatePassword($formData);
+        $_SESSION['show_message'] = true;
+        $_SESSION['message'] = 'Votre nouveau mot de passe a bien été enregistré !';
+        header('location: connexion');
     }
 
     /**
@@ -256,11 +251,13 @@ class Frontend
                                         pas l\'email, regardez dans vos courriers indésirables.';
 
                 header('location: connexion');
+                return;
             }
             $_SESSION['show_message'] = true;
             $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($secure_mail)) .
                                    ' n\'est pas enregistrée !';
             header('location: '. $_SERVER["HTTP_REFERER"]);
+            return;
         }
         $_SESSION['show_message'] = true;
         $_SESSION['message'] = 'Vous n\'êtes pas humain !';
@@ -287,37 +284,35 @@ class Frontend
 
     public function signIn()
     {
-
         include_once 'model/recaptcha.php';
-
         if ($decode['success'] == true) {
             $formData = ['email' => nl2br(htmlspecialchars($_POST['email'])),
                          'password' => nl2br(htmlspecialchars($_POST['password']))];
-
             if ($this->usermanager->exists($_POST['email'])) {
                 if ($this->usermanager->isValid($_POST['email'])) {
                     if (null !== $this->usermanager->checkPassword($formData)) {
                         header('Location: profile-' . $this->usermanager->checkPassword($formData));
+                        return;
                     }
                     $_SESSION['show_message'] = true;
                     $_SESSION['message'] = 'Mauvais login ou mot de passe !';
                     header('location: '. $_SERVER["HTTP_REFERER"]);
+                    return;
                 }
                 $_SESSION['show_message'] = true;
-                $_SESSION['message'] = 'L\'addresse email ' . nl2br(htmlspecialchars($_POST['email'])).
-                                       ' n\'a pas encore été validée !';
+                $_SESSION['message'] = 'L\'addresse email ' . nl2br(htmlspecialchars($_POST['email'])).' n\'a pas encore été validée !';
                 header('location: '. $_SERVER["HTTP_REFERER"]);
+                return;
             }
             $_SESSION['show_message'] = true;
-            $_SESSION['message'] = 'L\'addresse email ' . nl2br(htmlspecialchars($_POST['email'])).
-                                   ' n\'est pas enregistrée !';
+            $_SESSION['message'] = 'L\'addresse email ' . nl2br(htmlspecialchars($_POST['email'])).' n\'est pas enregistrée !';
             header('location: '. $_SERVER["HTTP_REFERER"]);
+            return;
         }
         $_SESSION['show_message'] = true;
         $_SESSION['message'] = 'Vous n\'êtes pas humain !';
         header('location: connexion');
     }
-
     /**
     * Methode qui permet d'enregistrer un nouvel utilisateur.
     * @param void
@@ -331,98 +326,94 @@ class Frontend
 
         if ($decode['success'] == true) {
             // On check que le pseudo soit valide
-            if (preg_match("#[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]{3,60}#i", $_POST['username']) and preg_match("#[^0-9]#", $_POST['username'])) {
-                $username = strip_tags($_POST['username']);
-            } else {
-                 $_SESSION['show_message'] = true;
-                 $_SESSION['message'] = 'Pseudo non valide !';
-                 header('location: '. $_SERVER["HTTP_REFERER"]);
+            if (!preg_match("#[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]{3,60}#i", $_POST['username']) or !preg_match("#[^0-9]#", $_POST['username'])) {
+                $_SESSION['show_message'] = true;
+                $_SESSION['message'] = 'Pseudo non valide !';
+                header('location: '. $_SERVER["HTTP_REFERER"]);
+                return;
             }
 
             // On check que le mdp fasse au moins 8 caracteres
-            if (preg_match("#.{8,60}#", $_POST['password'])) {
-                $password = strip_tags($_POST['password']);
-            } else {
-                 $_SESSION['show_message'] = true;
-                 $_SESSION['message'] = 'Votre mot de passe doit comporter au moins 8 caracteres !';
-                 header('location: '. $_SERVER["HTTP_REFERER"]);
+            if (!preg_match("#.{8,60}#", $_POST['password'])) {
+                $_SESSION['show_message'] = true;
+                $_SESSION['message'] = 'Votre mot de passe doit comporter au moins 8 caracteres !';
+                header('location: '. $_SERVER["HTTP_REFERER"]);
+                return;
             }
 
             // On check que les 2 mdp soient les mêmes
-            if ($_POST['passwordbis'] == $_POST['password']) {
-                $passwordbis = strip_tags($_POST['passwordbis']);
-            } else {
-                 $_SESSION['show_message'] = true;
-                 $_SESSION['message'] = 'Veuillez retapper votre mot de passe !';
-                 header('location: '. $_SERVER["HTTP_REFERER"]);
+            if ($_POST['passwordbis'] !== $_POST['password']) {
+                $_SESSION['show_message'] = true;
+                $_SESSION['message'] = 'Veuillez retapper votre mot de passe !';
+                header('location: '. $_SERVER["HTTP_REFERER"]);
+                return;
             }
 
             // On check que l'adresse mail soit valide
-            if (preg_match("#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#", $_POST['email'])) {
-                $email_valid = true;
-                $email = strip_tags($_POST['email']);
-            } else {
+            if (!preg_match("#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#", $_POST['email'])) {
                 $_SESSION['show_message'] = true;
                 $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($_POST['email'])) .
                                        ' n\'est pas valide, recommencez !';
                 header('location: '. $_SERVER["HTTP_REFERER"]);
+                return;
             }
 
-            if ($email_valid) {
-                $email_valid = false;
-
-                if ($this->usermanager->exists($email)) {
-                    $_SESSION['show_message'] = true;
-                    $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($_POST['email'])) .
-                                           ' a deja été enregistrée !';
-                    header('location: '. $_SERVER["HTTP_REFERER"]);
-                }
-            }
-
-            if (isset($username, $password, $passwordbis, $email)) {
-                $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-
-                $formData = ['id_role' => '1',
-                            'email' => $email,
-                            'password' => $hashed_password,
-                            'username' => $username,
-                            'firstname' => nl2br(htmlspecialchars($_POST['firstname'])),
-                            'valid' => 'No',
-                            'asleep' => 'Yes',
-                            'lastname' => nl2br(htmlspecialchars($_POST['lastname']))];
-
-                $user = new User($formData);
-                $this->usermanager->add($user);
-
-                include_once 'vendor/autoload.php';
-                include_once 'model/transport.php';
-
-                // Create the Mailer using your created Transport
-                $mailer = new \Swift_Mailer($transport);
-
-                // Create a message
-                $message = (new \Swift_Message())
-
-                    ->setSubject('Blog, validez votre compte')
-                    ->setFrom([nl2br(htmlspecialchars($data['email'])) => nl2br(htmlspecialchars($data['name']))])
-                    ->setTo([nl2br(htmlspecialchars($_POST['email'])), nl2br(htmlspecialchars($data['email']))])
-                    ->setBody('Cliquez sur le lien pour <a href=\''.nl2br(htmlspecialchars($data['address']))
-                              .'?action=awakeUser&email='. nl2br(htmlspecialchars($_POST['email']))
-                              .'\'>valider votre compte.</a>', 'text/html');
-
-                // Send the message
-                $mailer->send($message);
-
+            if ($this->usermanager->exists($email)) {
                 $_SESSION['show_message'] = true;
-                $_SESSION['message'] = 'Un email a été envoyé à l\'adresse : '
-                                        .nl2br(htmlspecialchars($email)) . ' pour valider votre compte !';
-                header('location: connexion');
+                $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($_POST['email'])) .
+                                           ' a deja été enregistrée !';
+                header('location: '. $_SERVER["HTTP_REFERER"]);
+                return;
             }
+            $username = strip_tags($_POST['username']);
+            $password = strip_tags($_POST['password']);
+            $passwordbis = strip_tags($_POST['passwordbis']);
+            $email = strip_tags($_POST['email']);
+
+            $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
+            $formData = ['idRole' => '1',
+                        'email' => $email,
+                        'password' => $hashed_password,
+                        'username' => $username,
+                        'firstname' => nl2br(htmlspecialchars($_POST['firstname'])),
+                        'valid' => 'No',
+                        'asleep' => 'Yes',
+                        'lastname' => nl2br(htmlspecialchars($_POST['lastname']))];
+
+            $user = new User($formData);
+            $this->usermanager->add($user);
+
+            include_once 'model/transport.php';
+
+            // Create the Mailer using your created Transport
+            $mailer = new \Swift_Mailer($transport);
+
+            // Create a message
+            $message = (new \Swift_Message())
+
+                ->setSubject('Blog, validez votre compte')
+                ->setFrom([nl2br(htmlspecialchars($data['email'])) => nl2br(htmlspecialchars($data['name']))])
+                ->setTo([nl2br(htmlspecialchars($_POST['email'])), nl2br(htmlspecialchars($data['email']))])
+                ->setBody('Cliquez sur le lien pour <a href=\''.nl2br(htmlspecialchars($data['address']))
+                         .'?action=awakeUser&email='. nl2br(htmlspecialchars($_POST['email']))
+                         .'\'>valider votre compte.</a>', 'text/html');
+
+            // Send the message
+            $mailer->send($message);
+
+            $_SESSION['show_message'] = true;
+            $_SESSION['message'] = 'Un email a été envoyé à l\'adresse : '
+                                        .nl2br(htmlspecialchars($email)) . ' pour valider votre compte ! Si vous ne voyez
+                                        pas l\'email, regardez dans vos courriers indésirables.';
+            header('location: connexion');
+            return;
         }
         $_SESSION['show_message'] = true;
         $_SESSION['message'] = 'Vous n\'êtes pas humain !';
         header('location: connexion');
     }
+
 
     // GETTERS //
 

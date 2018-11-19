@@ -5,7 +5,7 @@
 * @author Bastien Vacherand.
 */
 
-namespace Bastien\blog\model;
+namespace Bastien\model;
 
 abstract class PostManager
 {

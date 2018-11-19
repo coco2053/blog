@@ -1,10 +1,11 @@
 <?php
 
 //Mise en place des parametres de swiftMailer.
-$data = __DIR__ . 'config/mailer.php';
+
+$data = require __DIR__ . '/../config/mailer.php';
 
 // Create the Transport
-$transport = (new Swift_SmtpTransport($data['smpt'], $data['port'], $data['mode']))
+$transport = (new \Swift_SmtpTransport($data['smpt'], $data['port'], $data['mode']))
     ->setUsername($data['username'])
     ->setPassword($data['password'])
     ->setStreamOptions(array('ssl' => array(

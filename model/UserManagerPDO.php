@@ -5,7 +5,7 @@
 * @author Bastien Vacherand.
 */
 
-namespace Bastien\blog\model;
+namespace Bastien\model;
 
 class UserManagerPDO extends UserManager
 {
@@ -36,7 +36,6 @@ class UserManagerPDO extends UserManager
         // Préparation de la requête d'insertion.
         $req = $this->database->prepare('INSERT INTO user(email, password, username, lastname,
                                              firstname, asleep, valid, signupDate, signinDate, idRole)
-
                                  VALUES (:email, :password, :username, :lastname, :firstname,
                                          :asleep, :valid,  NOW(), NOW(), :idRole)');
 
@@ -97,7 +96,7 @@ class UserManagerPDO extends UserManager
         $req->bindValue(':idUser', (int) $idUser, \PDO::PARAM_INT);
 
         $req->execute();
-        $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\\Bastien\\blog\\model\\User');
+        $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\\Bastien\\model\\User');
         $users = $req->fetchAll();
 
         /* On parcourt notre liste de news pour pouvoir placer des instances
@@ -136,7 +135,7 @@ class UserManagerPDO extends UserManager
                                         ORDER BY user.signupDate');
 
         $req->execute();
-        $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\\Bastien\\blog\\model\\User');
+        $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\\Bastien\\model\\User');
         $users = $req->fetchAll();
 
         /* On parcourt notre liste de news pour pouvoir placer des instances
@@ -176,7 +175,7 @@ class UserManagerPDO extends UserManager
 
         $req->execute();
 
-        $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\\Bastien\\blog\\model\\User');
+        $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\\Bastien\\model\\User');
 
         $user = $req->fetch();
 

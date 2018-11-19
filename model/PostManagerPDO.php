@@ -5,7 +5,7 @@
 * @author Bastien Vacherand.
 */
 
-namespace Bastien\blog\model;
+namespace Bastien\model;
 
 class PostManagerPDO extends PostManager
 {
@@ -68,7 +68,7 @@ class PostManagerPDO extends PostManager
 
         $req->execute();
 
-        $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\\Bastien\\blog\\model\\Post');
+        $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\\Bastien\\model\\Post');
 
         $post = $req->fetch();
 
@@ -136,7 +136,7 @@ class PostManagerPDO extends PostManager
 
 
         $req = $this->database->query($sql);
-        $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\\Bastien\\blog\\model\\Post');
+        $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\\Bastien\\model\\Post');
         $posts = $req->fetchAll();
 
         // On parcourt notre liste de news pour pouvoir placer des instances de DateTime en guise de dates d'ajout et de modification.
@@ -173,7 +173,7 @@ class PostManagerPDO extends PostManager
 
         $req->execute();
 
-        $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\\Bastien\\blog\\model\\Post');
+        $req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, '\\Bastien\\model\\Post');
 
         $post = $req->fetch();
 

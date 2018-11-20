@@ -40,48 +40,6 @@ class Frontend
         $this->commentmanager = new CommentManagerPDO($this->database->getMysqlConnexionWithPDO());
     }
 
-    /**
-    * Methode qui permet d'afficher la page contact.
-    * @param void
-    * @return void
-    */
-
-    public function homeView()
-    {
-
-        include 'view/frontend/home.php';
-    }
-
-    /**
-    * Methode qui permet d'afficher la page cv.
-    * @param void
-    * @return void
-    */
-
-    public function cvView()
-    {
-
-        include 'view/frontend/cv.php';
-    }
-
-    /**
-    * Methode qui permet d'afficher la page contact.
-    * @param void
-    * @return void
-    */
-
-    public function contactView()
-    {
-
-        include 'view/frontend/contact.php';
-    }
-
-    /**
-    * Methode qui permet d'envoyer le message de l'utilisateur à l'administrateur du site.
-    * @param void
-    * @return void
-    */
-
     public function contact()
     {
 
@@ -118,74 +76,6 @@ class Frontend
         header('location: '. $_SERVER["HTTP_REFERER"]);
     }
 
-    /**
-    * Methode qui permet de recuperer un post et de l'afficher.
-    * @param int, id du post.
-    * @return void
-    */
-
-    public function getPost($idPost)
-    {
-        $post = $this->postmanager->get($idPost);
-        $comments = $this->commentmanager->getList($idPost);
-
-        include 'view/frontend/postView.php';
-    }
-
-    /**
-    * Methode qui permet de recuperer la liste de tous les posts et de les afficher.
-    * @param void
-    * @return void
-    */
-
-    public function getPosts()
-    {
-
-        $posts = $this->postmanager->getList();
-        include 'view/frontend/postsListView.php';
-    }
-
-    /**
-    * Methode qui permet d'afficher la page d'inscription.
-    * @param void
-    * @return void
-    */
-
-    public function signUpView()
-    {
-
-        include 'view/frontend/signupView.php';
-    }
-
-    /**
-    * Methode qui permet d'afficher la page de recuperation du mot de passe.
-    * @param void
-    * @return void
-    */
-
-    public function forgotPasswordView()
-    {
-
-        include 'view/frontend/forgotpasswordView.php';
-    }
-
-    /**
-    * Methode qui permet d'afficher la page de reinitialisation du mot de passe.
-    * @param void
-    * @return void
-    */
-
-    public function resetPasswordView()
-    {
-
-        include 'view/frontend/resetpasswordView.php';
-    }
-
-    /**
-    * Methode qui permet de reinitialiser le mot de passe.
-    * @param void
-    * @return void
-    */
 
     public function resetPassword()
     {
@@ -264,18 +154,6 @@ class Frontend
         $this->session->set('show_message', true);
         $this->session->set('message', 'Vous n\'êtes pas humain !');
         header('location: '. $_SERVER["HTTP_REFERER"]);
-    }
-
-    /**
-    * Methode qui permet d'afficher la page de connexion.
-    * @param void
-    * @return void
-    */
-
-    public function signInView()
-    {
-
-        include 'view/frontend/signinView.php';
     }
 
     /**

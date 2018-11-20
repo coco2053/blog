@@ -4,7 +4,8 @@
 Projet 5 - Parcours développeur d'application PHP/Symfony - OpenClassrooms
 --------------------------------------------------------------------------
 
-- [![SymfonyInsight](https://insight.symfony.com/projects/e159fc00-1216-4c07-af1c-f878b2e13831/big.svg)](https://insight.symfony.com/projects/e159fc00-1216-4c07-af1c-f878b2e13831)
+[![SymfonyInsight](https://insight.symfony.com/projects/db527d54-43b6-4adc-bc27-148092a615b0/big.svg)](https://insight.symfony.com/projects/db527d54-43b6-4adc-bc27-148092a615b0)
+
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/60d62b4aea024fa0887f58955f6b395a)](https://www.codacy.com/app/coco2053/blog?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=coco2053/blog&amp;utm_campaign=Badge_Grade)
 
 ### ___Installation sur serveur___

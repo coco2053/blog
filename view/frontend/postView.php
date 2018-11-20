@@ -22,11 +22,11 @@ $updateDate = $post->updateDate();
 
 if ($creationDate !== $updateDate) {
     ?>
-    </span>• mise à jour le <span class="date"><?=nl2br(htmlspecialchars($post->updateDate()))?></span>
+    </span>• mise à jour le <span class="date"><?=nl2br(htmlspecialchars($post->updateDate())) ?></span>
     <?php
 }
 ?>
-par <span class="username"> <?=nl2br(htmlspecialchars($post->username()))?></span></br>
+ par <span class="username"> <?=nl2br(htmlspecialchars($post->username()))?></span></br>
 
 <?php
 

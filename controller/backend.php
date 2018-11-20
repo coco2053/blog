@@ -15,6 +15,7 @@ use \Bastien\model\DBFactory;
 use \Bastien\model\Comment;
 use \Bastien\model\Post;
 use \Bastien\model\User;
+use \Bastien\model\Session;
 
 class Backend
 {
@@ -23,6 +24,7 @@ class Backend
     protected $usermanager;
     protected $commentmanager;
     protected $database;
+    protected $session;
 
     /**
     * Constructeur de la classe qui permet d'instancier la bdd et les managers.
@@ -33,6 +35,7 @@ class Backend
     public function __construct()
     {
         $this->database = new DBFactory();
+        $this->session = new Session();
         $this->postmanager = new PostManagerPDO($this->database->getMysqlConnexionWithPDO());
         $this->usermanager = new UserManagerPDO($this->database->getMysqlConnexionWithPDO());
         $this->commentmanager = new CommentManagerPDO($this->database->getMysqlConnexionWithPDO());
@@ -48,13 +51,13 @@ class Backend
     {
 
         // On verifie que l'utilisateur dispose des droits necessaires
-        if (empty($_SESSION['user'])) {
-            $_SESSION['show_message'] = true;
-            $_SESSION['message'] = 'Vous ne disposez pas des droits requis pour acceder à cette page !';
+        if (empty($this->session->get('user'))) {
+            $this->session->set('show_message', true);
+            $this->session->set('message', 'Vous ne disposez pas des droits requis pour acceder à cette page !');
             header('location: '. $_SERVER["HTTP_REFERER"]);
-        } else if (strpos($_SESSION['user'] -> permAction(), $action) === false) {
-            $_SESSION['show_message'] = true;
-            $_SESSION['message'] = 'Vous ne disposez pas des droits requis pour acceder à cette page !';
+        } else if (strpos($this->session->get('user') -> permAction(), $action) === false) {
+            $this->session->set('show_message', true);
+            $this->session->set('message', 'Vous ne disposez pas des droits requis pour acceder à cette page !');
             header('location: '. $_SERVER["HTTP_REFERER"]);
         }
     }
@@ -66,29 +69,29 @@ class Backend
     * @return string
     */
 
-    public function checkFile($file)
+    public function checkFile($myfile)
     {
 
-        if ($_FILES['my_file']['size'] > 100) {
-            if ($_FILES['my_file']['error'] > 0) {
+        if ($myfile['my_file']['size'] > 100) {
+            if ($myfile['my_file']['error'] > 0) {
                 echo "Erreur lors du transfert";
                 return;
             }
             $maxsize = 1048576;
             $uploads_dir = 'public/upload';
             $valid_extensions = array( 'jpg' , 'jpeg' );
-            $extension_upload = strtolower(substr(strrchr($_FILES['my_file']['name'], '.'), 1));
+            $extension_upload = strtolower(substr(strrchr($myfile['my_file']['name'], '.'), 1));
             if (!in_array($extension_upload, $valid_extensions)) {
                 echo "Extension incorrecte";
                 return;
             }
-            if ($_FILES['my_file']['size'] > $maxsize) {
+            if ($myfile['my_file']['size'] > $maxsize) {
                 echo "Le fichier est trop gros";
                 return;
             }
             $file_name1 = time();
             $file_name2 = "{$file_name1}.{$extension_upload}";
-            $result = move_uploaded_file($_FILES['my_file']['tmp_name'], "$uploads_dir/$file_name2");
+            move_uploaded_file($myfile['my_file']['tmp_name'], "$uploads_dir/$file_name2");
             $width = 700;
             $height = 350;
             $image = imagecreatefromjpeg("$uploads_dir/$file_name2");
@@ -120,14 +123,14 @@ class Backend
             $post = new Post($formData);
             $this->postmanager->add($post);
             $post = $this->postmanager->get($post->idPost());
-            $_SESSION['show_message'] = true;
-            $_SESSION['message'] = 'Votre article est publié !';
+            $this->session->set('show_message', true);
+            $this->session->set('message', 'Votre article est publié !');
 
             header('location: article-'.$post->idPost());
             return;
         }
-        $_SESSION['show_message'] = true;
-        $_SESSION['message'] = 'Un article avec le même titre existe déja !';
+        $this->session->set('show_message', true);
+        $this->session->set('message', 'Un article avec le même titre existe déja !');
     }
 
     /**
@@ -142,22 +145,24 @@ class Backend
         $action = __FUNCTION__;
         $this->allow($action);
 
-        if (strpos($_SESSION['user'] -> permAction(), 'validateComment') === false) {
+        if (strpos($this->session->get('user') -> permAction(), 'validateComment') === false) {
             $valid = 'No';
-        } else {
+        }
+
+        if (strpos($this->session->get('user') -> permAction(), 'validateComment') === true) {
             $valid = 'Yes';
         }
         $formData = ['idPost' => $idPost,
                     'content' => nl2br(htmlspecialchars($_POST['content'])),
                     'valid' => $valid,
-                    'idUser' => nl2br(htmlspecialchars($_SESSION['user'] -> idUser()))];
+                    'idUser' => nl2br(htmlspecialchars($this->session->get('user') -> idUser()))];
 
         $comment = new Comment($formData);
         $this->commentmanager->add($comment);
 
         if ($valid == 'No') {
-            $_SESSION['show_message'] = true;
-            $_SESSION['message'] = 'Votre commentaire est en attente de validation par un administrateur.';
+            $this->session->set('show_message', true);
+            $this->session->set('message', 'Votre commentaire est en attente de validation par un administrateur.');
         }
 
         header('location: article-'.$idPost);
@@ -206,8 +211,8 @@ class Backend
         $post = new Post($formData);
         $this->postmanager->update($post);
         $post = $this->postmanager->get($post->idPost());
-        $_SESSION['show_message'] = true;
-        $_SESSION['message'] = 'Article modifié !';
+        $this->session->set('show_message', true);
+        $this->session->set('message', 'Article modifié !');
         header('location: article-'.$post->idPost());
     }
 
@@ -224,8 +229,8 @@ class Backend
         $this->allow($action);
 
         $this->postmanager->delete($idPost);
-        $_SESSION['show_message'] = true;
-        $_SESSION['message'] = 'Article supprimé !';
+        $this->session->set('show_message', true);
+        $this->session->set('message', 'Article supprimé !');
 
         header('Location: articles');
     }
@@ -244,8 +249,8 @@ class Backend
 
         $this->commentmanager->delete($idComment);
 
-        $_SESSION['show_message'] = true;
-        $_SESSION['message'] = 'Commentaire supprimé !';
+        $this->session->set('show_message', true);
+        $this->session->set('message', 'Commentaire supprimé !');
 
         header('location: '. $_SERVER["HTTP_REFERER"]);
     }
@@ -259,7 +264,7 @@ class Backend
     public function getUser($idUser)
     {
         $user = $this->usermanager->get($idUser);
-        $_SESSION['user'] = $user;
+        $this->session->set('user', $user);
         $action = __FUNCTION__;
         $this->allow($action);
         $this->usermanager->updateSigninDate($idUser);
@@ -314,8 +319,8 @@ class Backend
 
         // Send the message
         $mailer->send($message);
-        $_SESSION['show_message'] = true;
-        $_SESSION['message'] = 'Compte validé ! Email envoyé à l\'utilisateur.';
+        $this->session->set('show_message', true);
+        $this->session->set('message', 'Compte validé ! Email envoyé à l\'utilisateur.');
         header('location: '. $_SERVER["HTTP_REFERER"]);
     }
 
@@ -332,8 +337,8 @@ class Backend
         $this->allow($action);
 
         $this->commentmanager->validate($idComment);
-        $_SESSION['show_message'] = true;
-        $_SESSION['message'] = 'Commentaire validé !';
+        $this->session->set('show_message', true);
+        $this->session->set('message', 'Commentaire validé !');
         header('location: '. $_SERVER["HTTP_REFERER"]);
     }
 
@@ -346,9 +351,9 @@ class Backend
     {
 
         $this->usermanager->awake($email);
-        $_SESSION['show_message'] = true;
-        $_SESSION['message'] = 'Votre inscription a bien été prise en compte.
-                                Un administrateur doit maintenant la valider.';
+        $this->session->set('show_message', true);
+        $this->session->set('message', 'Votre inscription a bien été prise en compte.
+                                Un administrateur doit maintenant la valider.');
 
         header('location: connexion');
     }
@@ -361,12 +366,9 @@ class Backend
     public function signOut()
     {
 
-        $_SESSION = array();
-        session_destroy();
-        session_start();
-
-        $_SESSION['show_message'] = true;
-        $_SESSION['message'] = 'Vous avez été deconnecté.';
+        $this->session->destroy();
+        $this->session->set('show_message', true);
+        $this->session->set('message', 'Vous avez été deconnecté.');
 
         header('location: articles');
     }
@@ -418,8 +420,8 @@ class Backend
         $this->allow($action);
 
         $this->usermanager->delete($idUser);
-        $_SESSION['show_message'] = true;
-        $_SESSION['message'] = 'Compte supprimé !';
+        $this->session->set('show_message', true);
+        $this->session->set('message', 'Compte supprimé !');
 
         header('location: '. $_SERVER["HTTP_REFERER"]);
     }
@@ -450,6 +452,12 @@ class Backend
         return $this->database;
     }
 
+    public function session()
+    {
+
+        return $this->session;
+    }
+
     // SETTERS //
 
     public function setPostmanager($postmanager)
@@ -474,5 +482,11 @@ class Backend
     {
 
         $this->database = $database;
+    }
+
+    public function setSession($session)
+    {
+
+        $this->session = $session;
     }
 }

@@ -2,11 +2,13 @@
 
 use \Bastien\controller\Frontend;
 use \Bastien\controller\Backend;
+use \Bastien\model\Session;
 
 //Autoload
-require_once 'vendor\autoload.php';
+require_once 'vendor/autoload.php';
 
-session_start();
+$session = new Session();
+$session->start();
 
 try {
     if (isset($_GET['action'])) {
@@ -20,7 +22,7 @@ try {
             $formData = ['title' => strip_tags($_POST['title']),
                         'chapo' => strip_tags($_POST['chapo']),
                         'content' => strip_tags($_POST['content']),
-                        'idUser' => nl2br(htmlspecialchars($_SESSION['user'] -> idUser())),
+                        'idUser' => $session->get('user') -> idUser(),
                         'image' => $backend->checkFile($myfile)];
             $backend->addPost($formData);
             return;

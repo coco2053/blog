@@ -14,6 +14,7 @@ use \Bastien\model\DBFactory;
 use \Bastien\model\Comment;
 use \Bastien\model\Post;
 use \Bastien\model\User;
+use \Bastien\model\Session;
 
 class Frontend
 {
@@ -22,6 +23,7 @@ class Frontend
     protected $usermanager;
     protected $commentmanager;
     protected $database;
+    protected $session;
 
     /**
     * Constructeur de la classe qui permet d'instancier la bdd et les managers.
@@ -32,6 +34,7 @@ class Frontend
     public function __construct()
     {
         $this->database = new DBFactory();
+        $this->session = new Session();
         $this->postmanager = new PostManagerPDO($this->database->getMysqlConnexionWithPDO());
         $this->usermanager = new UserManagerPDO($this->database->getMysqlConnexionWithPDO());
         $this->commentmanager = new CommentManagerPDO($this->database->getMysqlConnexionWithPDO());
@@ -105,13 +108,13 @@ class Frontend
 
             // Send the message
             $mailer->send($message);
-            $_SESSION['show_message'] = true;
-            $_SESSION['message'] = 'Votre message a bien été envoyé. Nous vous répondrons dans les plus brefs délais.';
+            $this->session->set('show_message', true);
+            $this->session->set('message', 'Votre message a bien été envoyé. Nous vous répondrons dans les plus brefs délais.');
             header('location: '. $_SERVER["HTTP_REFERER"]);
             return;
         }
-        $_SESSION['show_message'] = true;
-        $_SESSION['message'] = 'Vous n\'êtes pas humain !';
+        $this->session->set('show_message', true);
+        $this->session->set('message', 'Vous n\'êtes pas humain !');
         header('location: '. $_SERVER["HTTP_REFERER"]);
     }
 
@@ -189,27 +192,26 @@ class Frontend
 
         // On check que le mdp fasse au moins 8 caracteres
         if (!preg_match("#.{8,60}#", $_POST['password'])) {
-            $_SESSION['show_message'] = true;
-            $_SESSION['message'] = 'Votre mot de passe doit comporter au moins 8 caracteres !';
+            $this->session->set('show_message', true);
+            $this->session->set('message', 'Votre mot de passe doit comporter au moins 8 caracteres !');
             header('location: '. $_SERVER["HTTP_REFERER"]);
             return;
         }
         // On check que les 2 mdp soient les mêmes
         if ($_POST['passwordbis'] !== $_POST['password']) {
-            $_SESSION['show_message'] = true;
-            $_SESSION['message'] = 'Veuillez retapper votre mot de passe !';
+            $this->session->set('show_message', true);
+            $this->session->set('message', 'Veuillez retapper votre mot de passe !');
             header('location: '. $_SERVER["HTTP_REFERER"]);
             return;
         }
 
         $password = strip_tags($_POST['password']);
-        $passwordbis = strip_tags($_POST['password']);
         $hashed_password = password_hash($password, PASSWORD_BCRYPT);
         $formData = ['email' => nl2br(htmlspecialchars($_POST['email'])),
                         'password' => $hashed_password];
         $this->usermanager->updatePassword($formData);
-        $_SESSION['show_message'] = true;
-        $_SESSION['message'] = 'Votre nouveau mot de passe a bien été enregistré !';
+        $this->session->set('show_message', true);
+        $this->session->set('message', 'Votre nouveau mot de passe a bien été enregistré !');
         header('location: connexion');
     }
 
@@ -245,22 +247,22 @@ class Frontend
 
                 // Send the message
                 $mailer->send($message);
-                $_SESSION['show_message'] = true;
-                $_SESSION['message'] = 'Un email vous a été envoyé à ' . nl2br(htmlspecialchars($secure_mail)) .
+                $this->session->set('show_message', true);
+                $this->session->set('message', 'Un email vous a été envoyé à ' . nl2br(htmlspecialchars($secure_mail)) .
                                        ' comprenant un lien pour réinitialiser votre mot de passe. Si vous ne voyez
-                                        pas l\'email, regardez dans vos courriers indésirables.';
+                                        pas l\'email, regardez dans vos courriers indésirables.');
 
                 header('location: connexion');
                 return;
             }
-            $_SESSION['show_message'] = true;
-            $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($secure_mail)) .
-                                   ' n\'est pas enregistrée !';
+            $this->session->set('show_message', true);
+            $this->session->set('message', 'L\'adresse ' . nl2br(htmlspecialchars($secure_mail)) .
+                                   ' n\'est pas enregistrée !');
             header('location: '. $_SERVER["HTTP_REFERER"]);
             return;
         }
-        $_SESSION['show_message'] = true;
-        $_SESSION['message'] = 'Vous n\'êtes pas humain !';
+        $this->session->set('show_message', true);
+        $this->session->set('message', 'Vous n\'êtes pas humain !');
         header('location: '. $_SERVER["HTTP_REFERER"]);
     }
 
@@ -294,23 +296,23 @@ class Frontend
                         header('Location: profile-' . $this->usermanager->checkPassword($formData));
                         return;
                     }
-                    $_SESSION['show_message'] = true;
-                    $_SESSION['message'] = 'Mauvais login ou mot de passe !';
+                    $this->session->set('show_message', true);
+                    $this->session->set('message', 'Mauvais login ou mot de passe !');
                     header('location: '. $_SERVER["HTTP_REFERER"]);
                     return;
                 }
-                $_SESSION['show_message'] = true;
-                $_SESSION['message'] = 'L\'addresse email ' . nl2br(htmlspecialchars($_POST['email'])).' n\'a pas encore été validée !';
+                $this->session->set('show_message', true);
+                $this->session->set('message', 'L\'addresse email ' . nl2br(htmlspecialchars($_POST['email'])).' n\'a pas encore été validée !');
                 header('location: '. $_SERVER["HTTP_REFERER"]);
                 return;
             }
-            $_SESSION['show_message'] = true;
-            $_SESSION['message'] = 'L\'addresse email ' . nl2br(htmlspecialchars($_POST['email'])).' n\'est pas enregistrée !';
+            $this->session->set('show_message', true);
+            $this->session->set('message', 'L\'addresse email ' . nl2br(htmlspecialchars($_POST['email'])).' n\'est pas enregistrée !');
             header('location: '. $_SERVER["HTTP_REFERER"]);
             return;
         }
-        $_SESSION['show_message'] = true;
-        $_SESSION['message'] = 'Vous n\'êtes pas humain !';
+        $this->session->set('show_message', true);
+        $this->session->set('message', 'Vous n\'êtes pas humain !');
         header('location: connexion');
     }
     /**
@@ -327,47 +329,46 @@ class Frontend
         if ($decode['success'] == true) {
             // On check que le pseudo soit valide
             if (!preg_match("#[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]{3,60}#i", $_POST['username']) or !preg_match("#[^0-9]#", $_POST['username'])) {
-                $_SESSION['show_message'] = true;
-                $_SESSION['message'] = 'Pseudo non valide !';
+                $this->session->set('show_message', true);
+                $this->session->set('message', 'Pseudo non valide !');
                 header('location: '. $_SERVER["HTTP_REFERER"]);
                 return;
             }
 
             // On check que le mdp fasse au moins 8 caracteres
             if (!preg_match("#.{8,60}#", $_POST['password'])) {
-                $_SESSION['show_message'] = true;
-                $_SESSION['message'] = 'Votre mot de passe doit comporter au moins 8 caracteres !';
+                $this->session->set('show_message', true);
+                $this->session->set('message', 'Votre mot de passe doit comporter au moins 8 caracteres !');
                 header('location: '. $_SERVER["HTTP_REFERER"]);
                 return;
             }
 
             // On check que les 2 mdp soient les mêmes
             if ($_POST['passwordbis'] !== $_POST['password']) {
-                $_SESSION['show_message'] = true;
-                $_SESSION['message'] = 'Veuillez retapper votre mot de passe !';
+                $this->session->set('show_message', true);
+                $this->session->set('message', 'Veuillez retapper votre mot de passe !');
                 header('location: '. $_SERVER["HTTP_REFERER"]);
                 return;
             }
 
             // On check que l'adresse mail soit valide
             if (!preg_match("#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#", $_POST['email'])) {
-                $_SESSION['show_message'] = true;
-                $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($_POST['email'])) .
-                                       ' n\'est pas valide, recommencez !';
+                $this->session->set('show_message', true);
+                $this->session->set('message', 'L\'adresse ' . nl2br(htmlspecialchars($_POST['email'])) .
+                                       ' n\'est pas valide, recommencez !');
                 header('location: '. $_SERVER["HTTP_REFERER"]);
                 return;
             }
 
             if ($this->usermanager->exists($email)) {
-                $_SESSION['show_message'] = true;
-                $_SESSION['message'] = 'L\'adresse ' . nl2br(htmlspecialchars($_POST['email'])) .
-                                           ' a deja été enregistrée !';
+                $this->session->set('show_message', true);
+                $this->session->set('message', 'L\'adresse ' . nl2br(htmlspecialchars($_POST['email'])) .
+                                           ' a deja été enregistrée !');
                 header('location: '. $_SERVER["HTTP_REFERER"]);
                 return;
             }
             $username = strip_tags($_POST['username']);
             $password = strip_tags($_POST['password']);
-            $passwordbis = strip_tags($_POST['passwordbis']);
             $email = strip_tags($_POST['email']);
 
             $hashed_password = password_hash($password, PASSWORD_BCRYPT);
@@ -402,15 +403,15 @@ class Frontend
             // Send the message
             $mailer->send($message);
 
-            $_SESSION['show_message'] = true;
-            $_SESSION['message'] = 'Un email a été envoyé à l\'adresse : '
+            $this->session->set('show_message', true);
+            $this->session->set('message', 'Un email a été envoyé à l\'adresse : '
                                         .nl2br(htmlspecialchars($email)) . ' pour valider votre compte ! Si vous ne voyez
-                                        pas l\'email, regardez dans vos courriers indésirables.';
+                                        pas l\'email, regardez dans vos courriers indésirables.');
             header('location: connexion');
             return;
         }
-        $_SESSION['show_message'] = true;
-        $_SESSION['message'] = 'Vous n\'êtes pas humain !';
+        $this->session->set('show_message', true);
+        $this->session->set('message', 'Vous n\'êtes pas humain !');
         header('location: connexion');
     }
 
@@ -441,6 +442,12 @@ class Frontend
         return $this->database;
     }
 
+    public function session()
+    {
+
+        return $this->session;
+    }
+
     // SETTERS //
 
     public function setPostmanager($postmanager)
@@ -465,5 +472,11 @@ class Frontend
     {
 
         $this->database = $database;
+    }
+
+    public function setSession($session)
+    {
+
+        $this->session = $session;
     }
 }

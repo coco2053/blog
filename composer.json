@@ -1,4 +1,8 @@
 {
+    "name": "Bastien/blog",
+    "license": "proprietary",
+    "description": "OpenClassRooms website P5",
+    "type": "project",
     "require": {
         "php": ">=7.0",
         "swiftmailer/swiftmailer": "v6.1.2"

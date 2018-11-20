@@ -30,3 +30,12 @@ RewriteRule ^contacter ?action=contact
 RewriteRule ^contact ?action=contactView
 RewriteRule ^cv ?action=cvView
 RewriteRule ^accueil ?action=homeView
+
+
+<FilesMatch composer.json>
+Deny from all
+</FilesMatch>
+
+<FilesMatch README.md>
+Deny from all
+</FilesMatch>

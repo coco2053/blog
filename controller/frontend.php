@@ -328,7 +328,7 @@ class Frontend
 
         if ($decode['success'] == true) {
             // On check que le pseudo soit valide
-            if (!preg_match("#[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]{3,60}#i", $_POST['username']) or !preg_match("#[^0-9]#", $_POST['username'])) {
+            if (!preg_match("#[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]{3,60}#i", $_POST['username'])) {
                 $this->session->set('show_message', true);
                 $this->session->set('message', 'Pseudo non valide !');
                 header('location: '. $_SERVER["HTTP_REFERER"]);

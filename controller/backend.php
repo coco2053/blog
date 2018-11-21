@@ -147,11 +147,10 @@ class Backend
 
         if (strpos($this->session->get('user') -> permAction(), 'validateComment') === false) {
             $valid = 'No';
-        }
-
-        if (strpos($this->session->get('user') -> permAction(), 'validateComment') === true) {
+        } else {
             $valid = 'Yes';
         }
+
         $formData = ['idPost' => $idPost,
                     'content' => nl2br(htmlspecialchars($_POST['content'])),
                     'valid' => $valid,

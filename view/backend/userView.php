@@ -26,6 +26,20 @@ ob_start();
             <?php
 
             if (!empty($_SESSION['user'])) {
+                if (strpos($_SESSION['user'] -> permAction(), 'writePostView') == false) {
+                    ?>
+                    </br>
+                    </br>
+                    <p>
+                        <strong>Bienvenue ! </strong></br>
+                        Vous pouvez désormais commenter les articles.<br>
+                        Rendez-vous sur la page d'un article.
+                    </p>
+                    <?php
+                }
+            }
+
+            if (!empty($_SESSION['user'])) {
                 if (strpos($_SESSION['user'] -> permAction(), 'getUsers') !== false) {
                     ?>
                     <p>
